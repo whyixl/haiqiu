@@ -5,7 +5,7 @@
                 <el-row :gutter="10">
                     <el-col :span="3">
                         <el-input placeholder="姓名"></el-input>
-                    </el-col>
+                    </el-col>test
                     <el-col :span="3">
                         <!-- 这里点击事件，去查后台所有球队 -->
                         <el-select placeholder="位置" v-model="position">
