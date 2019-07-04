@@ -77,20 +77,26 @@
                            :page-sizes="$store.state.paginationPageSizes" :total="pager.total"
                            class="pagination text-right"></el-pagination>
         </el-card>
-
+        <!-- 编辑页面 -->
         <el-dialog :visible.sync="dialogVisible" title="添加赛事">
-
             <el-form :label-position="'right'" label-width="80px">
                 <el-tabs>
                     <el-tab-pane label="常规信息">
                         <el-form ref="form" :model="form" label-width="80px">
                             <el-form-item label="全称(描述)">
                                 <!-- name -->
-                                <el-input v-model="competitionName"></el-input>
+                                <el-input v-model="name" style="width: 350px"></el-input>
+                            </el-form-item>
+                            <el-form-item label="运动类型" >
+                                <el-select placeholder="国家" v-model="sport" >
+                                    <el-option :label="'男性'" :value="1"></el-option>
+                                    <el-option :label="'女性'" :value="2"></el-option>
+                                    <el-option :label="'混合'" :value="3"></el-option>
+                                </el-select>
                             </el-form-item>
                             <!-- country -->
-                            <el-form-item label="国家">
-                                <el-select placeholder="性别" v-model="gender">
+                            <el-form-item label="国家" >
+                                <el-select placeholder="国家" v-model="country" >
                                     <el-option :label="'男性'" :value="1"></el-option>
                                     <el-option :label="'女性'" :value="2"></el-option>
                                     <el-option :label="'混合'" :value="3"></el-option>
@@ -98,27 +104,19 @@
                             </el-form-item>
                             <!-- 地区列表，从后台查出来 -->
                             <el-form-item label="地区">
-                                <el-input placeholder="请输入地区" class="input-with-select">
-                                    <el-select slot="prepend" placeholder="地区" style="width: 80px">
-                                        <el-option label="中国" value="86"></el-option>
-                                        <el-option label="英国" value="44"></el-option>
-                                        <el-option label="秘鲁" value="51"></el-option>
-                                    </el-select>
-                                </el-input>
+                                <el-select placeholder="地区" v-model="federation" >
+                                    <el-option :label="'男性'" :value="1"></el-option>
+                                    <el-option :label="'女性'" :value="2"></el-option>
+                                    <el-option :label="'混合'" :value="3"></el-option>
+                                </el-select>
                             </el-form-item>
                             <!-- 这个直接存的属性，页面写死算了 -->
                             <el-form-item label="类型">
-                                <el-input placeholder="请选择类型" class="input-with-select">
-                                    <el-select slot="prepend" placeholder="类型" style="width: 80px">
-                                        <el-option label="俱乐部" value="club"></el-option>
-                                        <el-option label="国内" value="national"></el-option>
-                                    </el-select>
-                                </el-input>
+                                <el-select placeholder="类型" v-model="type" >
+                                    <el-option :label="'俱乐部'" :value="club"></el-option>
+                                    <el-option :label="'国际'" :value="national"></el-option>
+                                </el-select>
                             </el-form-item>
-                            <!--<el-form-item label="性别">
-                                <el-radio v-model="radio" label="1">男</el-radio>
-                                <el-radio v-model="radio" label="2">女</el-radio>
-                            </el-form-item>-->
                             <el-form-item label="有效期">
                                 <el-col :span="6">
                                     <el-date-picker :picker-options="$store.state.dateRangePickerOptions"
@@ -140,10 +138,17 @@
                         <el-form ref="form" :model="form" label-width="80px">
                             <el-form-item label="简称">
                                 <!-- shortName/microName -->
-                                <el-input v-model="shortName"></el-input>
+                                <el-input v-model="shortName" style="width: 220px"></el-input>
                             </el-form-item>
                             <el-form-item label="性别">
                                 <el-select placeholder="性别" v-model="gender">
+                                    <el-option :label="'男性'" :value="1"></el-option>
+                                    <el-option :label="'女性'" :value="2"></el-option>
+                                    <el-option :label="'混合'" :value="3"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="年龄">
+                                <el-select placeholder="年龄" v-model="age">
                                     <el-option :label="'男性'" :value="1"></el-option>
                                     <el-option :label="'女性'" :value="2"></el-option>
                                     <el-option :label="'混合'" :value="3"></el-option>
@@ -259,13 +264,18 @@
         },
         methods: {
             season() {
-
             },
             query() {
-                this.$http.get("/user").then(res => {
+                this.$http.get('http://192.168.0.250:8090/club', {
+                    params: {
+                        id: 1,
+                        name: '1'
+                    }
+                }).then(res => {
                     this.pager = res.data;
                 });
             },
+
             edit() {
                 this.dialogVisible = true;
             },
