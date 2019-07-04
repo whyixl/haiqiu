@@ -1,0 +1,33 @@
+{
+  "name": "element-admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@antv/g2": "^3.2.8",
+    "axios": "^0.18.0",
+    "element-ui": "^2.4.7",
+    "lodash": "^4.17.11",
+    "moment": "^2.22.2",
+    "register-service-worker": "^1.5.2",
+    "vue": "^2.5.17",
+    "vue-moment": "^4.0.0",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.3",
+    "@vue/cli-plugin-eslint": "^3.0.3",
+    "@vue/cli-plugin-pwa": "^3.0.3",
+    "@vue/cli-service": "^3.0.3",
+    "@vue/eslint-config-prettier": "^3.0.3",
+    "mockjs": "^1.0.1-beta3",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "vue-template-compiler": "^2.5.17"
+  }
+}
