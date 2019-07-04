@@ -27,13 +27,6 @@ npm run serve
 # build for production with minification
 npm run build
 ```
-
-### 扫码领红包:
-![image](https://raw.githubusercontent.com/wiki/yupeng957/element-admin/Alipay.png)
-
-### Contact :family:
-QQ群(PowerTeam) 466234012
-
 ## Screenshot
 ![image](https://raw.githubusercontent.com/wiki/yupeng957/element-admin/login.png)
 ![image](https://raw.githubusercontent.com/wiki/yupeng957/element-admin/dashboard.png)
@@ -42,6 +35,3 @@ QQ群(PowerTeam) 466234012
 ![image](https://raw.githubusercontent.com/wiki/yupeng957/element-admin/setting.png)
 ![image](https://raw.githubusercontent.com/wiki/yupeng957/element-admin/sidebar.png)
 
-## Donation :moneybag:
-If you find Element useful, you can buy us a cup of coffee
-![image](https://raw.githubusercontent.com/wiki/yupeng957/element-admin/Pay.png)

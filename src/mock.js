@@ -1,9 +1,7 @@
 const Mock = require("mockjs");
 
 const signIn = () => ({
-    token:
-        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTUzMDMyODY2MywiaWF0IjoxNTI5NzIzODYzfQ.cgmhRgLhy8P0U2l1oLhZqHwlsetp4tUGWjxaDRjHq2uKYOKSveZikhsl_r1drbNQ8lg8ErviShknFVgo-nXg1g"
-});
+    token: "12321"});
 
 const queryUserAuthority = () => ({
     menus: [
@@ -45,7 +43,7 @@ const queryUserAuthority = () => ({
             icon: "el-icon-menu",
             lft: 5,
             rgt: 6,
-            depth: 2
+            depth: 3
         },
         {
             menuId: 4,
@@ -65,7 +63,7 @@ const queryUserAuthority = () => ({
             icon: "el-icon-menu",
             lft: 5,
             rgt: 6,
-            depth: 2
+            depth: 3
         },
         {
             menuId: 6,
@@ -109,8 +107,16 @@ const queryUserAuthority = () => ({
         }
     ],
     authorities: [
-        {authority_id: 1, authority_code: "AddUser", authority_name: "新增用户"},
-        {authority_id: 2, authority_code: "EditUser", authority_name: "修改用户"},
+        {
+            authority_id: 1,
+            authority_code: "AddUser",
+            authority_name: "新增用户"
+        },
+        {
+            authority_id: 2,
+            authority_code: "EditUser",
+            authority_name: "修改用户"
+        },
         {
             authority_id: 3,
             authority_code: "DeleteUser",
@@ -184,102 +190,6 @@ const queryUser = () => ({
         },
         {
             userId: 4,
-            userName: "user",
-            password: "$2a$10$llOd5/mvInD.OTVkPr/hqeFaa6wX4DCbtKIJwRq5vhKLd3mJNtLqi",
-            nation: 86,
-            phone: 15985859933,
-            avatar: null,
-            email: "test@test.com",
-            gender: null,
-            birthday: "2018-07-16T00:50:31.000+0000",
-            enabled: true,
-            type: 1,
-            createDate: "2018-07-16T00:50:31.000+0000",
-            lastDate: "2018-07-16T00:50:31.000+0000",
-            signInDate: "2018-07-16T00:50:31.000+0000"
-        },
-        {
-            userId: 5,
-            userName: "user",
-            password: "$2a$10$llOd5/mvInD.OTVkPr/hqeFaa6wX4DCbtKIJwRq5vhKLd3mJNtLqi",
-            nation: 86,
-            phone: 15985859933,
-            avatar: null,
-            email: "test@test.com",
-            gender: null,
-            birthday: "2018-07-16T00:50:31.000+0000",
-            enabled: true,
-            type: 1,
-            createDate: "2018-07-16T00:50:31.000+0000",
-            lastDate: "2018-07-16T00:50:31.000+0000",
-            signInDate: "2018-07-16T00:50:31.000+0000"
-        },
-        {
-            userId: 6,
-            userName: "user",
-            password: "$2a$10$llOd5/mvInD.OTVkPr/hqeFaa6wX4DCbtKIJwRq5vhKLd3mJNtLqi",
-            nation: 86,
-            phone: 15985859933,
-            avatar: null,
-            email: "test@test.com",
-            gender: null,
-            birthday: "2018-07-16T00:50:31.000+0000",
-            enabled: true,
-            type: 1,
-            createDate: "2018-07-16T00:50:31.000+0000",
-            lastDate: "2018-07-16T00:50:31.000+0000",
-            signInDate: "2018-07-16T00:50:31.000+0000"
-        },
-        {
-            userId: 7,
-            userName: "user",
-            password: "$2a$10$llOd5/mvInD.OTVkPr/hqeFaa6wX4DCbtKIJwRq5vhKLd3mJNtLqi",
-            nation: 86,
-            phone: 15985859933,
-            avatar: null,
-            email: "test@test.com",
-            gender: null,
-            birthday: "2018-07-16T00:50:31.000+0000",
-            enabled: true,
-            type: 1,
-            createDate: "2018-07-16T00:50:31.000+0000",
-            lastDate: "2018-07-16T00:50:31.000+0000",
-            signInDate: "2018-07-16T00:50:31.000+0000"
-        },
-        {
-            userId: 8,
-            userName: "user",
-            password: "$2a$10$llOd5/mvInD.OTVkPr/hqeFaa6wX4DCbtKIJwRq5vhKLd3mJNtLqi",
-            nation: 86,
-            phone: 15985859933,
-            avatar: null,
-            email: "test@test.com",
-            gender: null,
-            birthday: "2018-07-16T00:50:31.000+0000",
-            enabled: true,
-            type: 1,
-            createDate: "2018-07-16T00:50:31.000+0000",
-            lastDate: "2018-07-16T00:50:31.000+0000",
-            signInDate: "2018-07-16T00:50:31.000+0000"
-        },
-        {
-            userId: 9,
-            userName: "user",
-            password: "$2a$10$llOd5/mvInD.OTVkPr/hqeFaa6wX4DCbtKIJwRq5vhKLd3mJNtLqi",
-            nation: 86,
-            phone: 15985859933,
-            avatar: null,
-            email: "test@test.com",
-            gender: null,
-            birthday: "2018-07-16T00:50:31.000+0000",
-            enabled: true,
-            type: 1,
-            createDate: "2018-07-16T00:50:31.000+0000",
-            lastDate: "2018-07-16T00:50:31.000+0000",
-            signInDate: "2018-07-16T00:50:31.000+0000"
-        },
-        {
-            userId: 10,
             userName: "user",
             password: "$2a$10$llOd5/mvInD.OTVkPr/hqeFaa6wX4DCbtKIJwRq5vhKLd3mJNtLqi",
             nation: 86,

@@ -38,9 +38,10 @@
                       style="width: 100%" v-loading="$store.state.loading">
                 <el-table-column align="center" type="selection" width="55">
                 </el-table-column>
-                <el-table-column label="联赛图片" prop="null" width="100">
+                <el-table-column label="联赛图片" prop="null" width="100" @click="season()">
                     <el-icon ref="www.haiqiu.com/hq.ico"></el-icon>
                 </el-table-column>
+
                 <el-table-column label="赛事简称" prop="userName" width="140"></el-table-column>
                 <el-table-column label="国家/地区" prop="userName" width="140"></el-table-column>
                 <el-table-column label="年龄" prop="userName" width="140"></el-table-column>
@@ -77,9 +78,111 @@
                            class="pagination text-right"></el-pagination>
         </el-card>
 
-        <el-dialog :visible.sync="dialogVisible" title="新增用户">
+        <el-dialog :visible.sync="dialogVisible" title="添加赛事">
+
             <el-form :label-position="'right'" label-width="80px">
-                <el-form-item label="用户名">
+                <el-tabs>
+                    <el-tab-pane label="常规信息">
+                        <el-form ref="form" :model="form" label-width="80px">
+                            <el-form-item label="全称(描述)">
+                                <!-- name -->
+                                <el-input v-model="competitionName"></el-input>
+                            </el-form-item>
+                            <!-- country -->
+                            <el-form-item label="国家">
+                                <el-select placeholder="性别" v-model="gender">
+                                    <el-option :label="'男性'" :value="1"></el-option>
+                                    <el-option :label="'女性'" :value="2"></el-option>
+                                    <el-option :label="'混合'" :value="3"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <!-- 地区列表，从后台查出来 -->
+                            <el-form-item label="地区">
+                                <el-input placeholder="请输入地区" class="input-with-select">
+                                    <el-select slot="prepend" placeholder="地区" style="width: 80px">
+                                        <el-option label="中国" value="86"></el-option>
+                                        <el-option label="英国" value="44"></el-option>
+                                        <el-option label="秘鲁" value="51"></el-option>
+                                    </el-select>
+                                </el-input>
+                            </el-form-item>
+                            <!-- 这个直接存的属性，页面写死算了 -->
+                            <el-form-item label="类型">
+                                <el-input placeholder="请选择类型" class="input-with-select">
+                                    <el-select slot="prepend" placeholder="类型" style="width: 80px">
+                                        <el-option label="俱乐部" value="club"></el-option>
+                                        <el-option label="国内" value="national"></el-option>
+                                    </el-select>
+                                </el-input>
+                            </el-form-item>
+                            <!--<el-form-item label="性别">
+                                <el-radio v-model="radio" label="1">男</el-radio>
+                                <el-radio v-model="radio" label="2">女</el-radio>
+                            </el-form-item>-->
+                            <el-form-item label="有效期">
+                                <el-col :span="6">
+                                    <el-date-picker :picker-options="$store.state.dateRangePickerOptions"
+                                                    align="right" end-placeholder="注册结束日期" range-separator="至"
+                                                    start-placeholder="注册开始日期" type="daterange"
+                                                    unlink-panels
+                                                    v-model="dateRange">
+                                    </el-date-picker>
+                                </el-col>
+                                <!--<el-date-picker align="right" type="date" placeholder="选择出生日期" :picker-options="$store.state.datePickerOptions" style="width: 100%;"></el-date-picker>-->
+                            </el-form-item>
+                            <el-form-item>
+                                <!-- 点击更新把当前填的信息保存到临时变量里，点击确定提交到后台 -->
+                                <el-button type="primary">更新</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-tab-pane>
+                    <el-tab-pane label="详细信息">
+                        <el-form ref="form" :model="form" label-width="80px">
+                            <el-form-item label="简称">
+                                <!-- shortName/microName -->
+                                <el-input v-model="shortName"></el-input>
+                            </el-form-item>
+                            <el-form-item label="性别">
+                                <el-select placeholder="性别" v-model="gender">
+                                    <el-option :label="'男性'" :value="1"></el-option>
+                                    <el-option :label="'女性'" :value="2"></el-option>
+                                    <el-option :label="'混合'" :value="3"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="新密码">
+                                <el-input type="password"></el-input>
+                            </el-form-item>
+                            <el-form-item label="确认密码">
+                                <el-input type="password"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary">更新</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-tab-pane>
+                    <el-tab-pane label="赛季管理">
+                        <el-row type="flex" justify="center">
+                            <el-col :span="3">文章推送</el-col>
+                            <el-col :span="3">
+                                <el-switch></el-switch>
+                            </el-col>
+                        </el-row>
+                        <el-row type="flex" justify="center">
+                            <el-col :span="3">支付推送</el-col>
+                            <el-col :span="3">
+                                <el-switch></el-switch>
+                            </el-col>
+                        </el-row>
+                        <el-row type="flex" justify="center">
+                            <el-col :span="3">订单推送</el-col>
+                            <el-col :span="3">
+                                <el-switch></el-switch>
+                            </el-col>
+                        </el-row>
+                    </el-tab-pane>
+                </el-tabs>
+                <!--<el-form-item label="用户名">
                     <el-input placeholder="请输入用户名"></el-input>
                 </el-form-item>
                 <el-form-item label="密码">
@@ -117,7 +220,7 @@
                     <el-upload :action="this.$http.defaults.baseURL+'/oss/upload'" :data="{bucketName:bucketName}"
                                :headers="{Authorization:'Bearer '+$store.state.token}" :on-remove="onRemoveFile"
                                list-type="picture-card"><i class="el-icon-plus"></i></el-upload>
-                </el-form-item>
+                </el-form-item>-->
             </el-form>
             <div class="dialog-footer" slot="footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
@@ -126,6 +229,7 @@
         </el-dialog>
     </div>
 </template>
+
 <style>
     .input-with-select /*.el-input-group__prepend*/
     {
@@ -140,6 +244,7 @@
                 dialogVisible: false,
                 team: null,
                 position: null,
+                gender: null,
                 dateRange: null,
                 test: null,
                 test1: null,
@@ -153,10 +258,8 @@
             this.query();
         },
         methods: {
-            getTeamList() {
-                this.$http.get("http://192.168.0.253:9527/sap/en/teams-by-club/cl1039").then(res => {
-                    this.teamList = res;
-                });
+            season() {
+
             },
             query() {
                 this.$http.get("/user").then(res => {
