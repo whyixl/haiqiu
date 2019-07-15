@@ -31,27 +31,22 @@
                 </el-row>
                 <br>-->
                 <el-button @click="dialogVisible = true" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-                <el-button :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>
+                <el-button :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
             </div>
             <!-- 这一部分是赛事列表 -->
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
-                <el-table-column align="center" type="selection" width="55">
-                </el-table-column>
-                <el-table-column label="联赛图片" prop="null" width="100" @click="season()">
-                    <el-icon ref="www.haiqiu.com/hq.ico"></el-icon>
-                </el-table-column>
-
-                <el-table-column label="赛事简称" prop="userName" width="140"></el-table-column>
-                <el-table-column label="国家/地区" prop="userName" width="140"></el-table-column>
-                <el-table-column label="年龄" prop="userName" width="140"></el-table-column>
-
+                <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
+                <el-table-column label="赛事简称" prop="name" width="140"></el-table-column>
+                <el-table-column label="国家/地区" prop="name" width="140"></el-table-column>
+                <el-table-column label="年龄" prop="name" width="140"></el-table-column>
+                
                 <!--<el-table-column label="手机号码" width="150">
                     <template slot-scope="scope">
                         {{ '+' + scope.row.nation + ' ' + scope.row.phone }}
                     </template>
                 </el-table-column>-->
-
+                
                 <el-table-column label="有效期自" width="140">
                     <template slot-scope="scope">
                         {{ scope.row.createDate | moment('YYYY-MM-DD hh:mm') }}
@@ -62,7 +57,7 @@
                         {{ scope.row.signInDate | moment('YYYY-MM-DD hh:mm') }}
                     </template>
                 </el-table-column>
-
+                
                 <el-table-column label="操作" width="140">
                     <template slot-scope="scope">
                         <el-button @click="edit()" size="small" type="text">编辑</el-button>
@@ -71,59 +66,61 @@
                 </el-table-column>
             </el-table>
             <!-- 赛事列表结束 -->
-
+            
             <!-- 分页组件 -->
             <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
                            :page-sizes="$store.state.paginationPageSizes" :total="pager.total"
                            class="pagination text-right"></el-pagination>
         </el-card>
+        
         <!-- 编辑页面 -->
         <el-dialog :visible.sync="dialogVisible" title="添加赛事">
             <el-form :label-position="'right'" label-width="80px">
                 <el-tabs>
                     <el-tab-pane label="常规信息">
-                        <el-form ref="form" :model="form" label-width="80px">
-                            <el-form-item label="全称(描述)">
+                        <el-form :model="competitionForm" :rules="competitionRule" label-width="80px" ref="competitionForm">
+                            <el-form-item label="全称(描述)" prop="name">
                                 <!-- name -->
-                                <el-input v-model="name" style="width: 350px"></el-input>
+                                <el-input style="width: 350px" v-model="competitionForm.name"></el-input>
                             </el-form-item>
-                            <el-form-item label="运动类型" >
-                                <el-select placeholder="国家" v-model="sport" >
+                             <!--运动类型不要了，目前都写足球
+                            <el-form-item label="运动类型">
+                                <el-select placeholder="国家" v-model="sport">
                                     <el-option :label="'男性'" :value="1"></el-option>
                                     <el-option :label="'女性'" :value="2"></el-option>
                                     <el-option :label="'混合'" :value="3"></el-option>
                                 </el-select>
-                            </el-form-item>
+                            </el-form-item>-->
                             <!-- country -->
-                            <el-form-item label="国家" >
-                                <el-select placeholder="国家" v-model="country" >
-                                    <el-option :label="'男性'" :value="1"></el-option>
+                            <el-form-item label="国家" prop="country">
+                                <el-select placeholder="国家" v-model="competitionForm.country">
+                                    <el-option :label="'男性-待修改'" :value="1"></el-option>
                                     <el-option :label="'女性'" :value="2"></el-option>
                                     <el-option :label="'混合'" :value="3"></el-option>
                                 </el-select>
                             </el-form-item>
                             <!-- 地区列表，从后台查出来 -->
-                            <el-form-item label="地区">
-                                <el-select placeholder="地区" v-model="federation" >
-                                    <el-option :label="'男性'" :value="1"></el-option>
+                            <el-form-item label="地区" prop="federation">
+                                <el-select placeholder="地区" v-model="competitionForm.federation">
+                                    <el-option :label="'男性—待修改'" :value="1"></el-option>
                                     <el-option :label="'女性'" :value="2"></el-option>
                                     <el-option :label="'混合'" :value="3"></el-option>
                                 </el-select>
                             </el-form-item>
                             <!-- 这个直接存的属性，页面写死算了 -->
-                            <el-form-item label="类型">
-                                <el-select placeholder="类型" v-model="type" >
+                            <el-form-item label="类型" prop="type">
+                                <el-select placeholder="类型" v-model="competitionForm.type">
                                     <el-option :label="'俱乐部'" :value="club"></el-option>
                                     <el-option :label="'国际'" :value="national"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="有效期">
+                            <el-form-item label="有效期" prop="dateRange">
                                 <el-col :span="6">
                                     <el-date-picker :picker-options="$store.state.dateRangePickerOptions"
                                                     align="right" end-placeholder="注册结束日期" range-separator="至"
                                                     start-placeholder="注册开始日期" type="daterange"
                                                     unlink-panels
-                                                    v-model="dateRange">
+                                                    v-model="competitionForm.dateRange">
                                     </el-date-picker>
                                 </el-col>
                                 <!--<el-date-picker align="right" type="date" placeholder="选择出生日期" :picker-options="$store.state.datePickerOptions" style="width: 100%;"></el-date-picker>-->
@@ -134,11 +131,12 @@
                             </el-form-item>
                         </el-form>
                     </el-tab-pane>
+                    <!-- 详细信息 -->
                     <el-tab-pane label="详细信息">
-                        <el-form ref="form" :model="form" label-width="80px">
+                        <el-form :model="competitionForm" label-width="80px" ref="form">
                             <el-form-item label="简称">
                                 <!-- shortName/microName -->
-                                <el-input v-model="shortName" style="width: 220px"></el-input>
+                                <el-input style="width: 220px" v-model="shortName"></el-input>
                             </el-form-item>
                             <el-form-item label="性别">
                                 <el-select placeholder="性别" v-model="gender">
@@ -154,37 +152,30 @@
                                     <el-option :label="'混合'" :value="3"></el-option>
                                 </el-select>
                             </el-form-item>
-
-                            <el-form-item label="新密码">
-                                <el-input type="password"></el-input>
-                            </el-form-item>
-                            <el-form-item label="确认密码">
-                                <el-input type="password"></el-input>
-                            </el-form-item>
+                            
                             <el-form-item>
                                 <el-button type="primary">更新</el-button>
                             </el-form-item>
                         </el-form>
                     </el-tab-pane>
+                    <!-- 赛季管理 -->
                     <el-tab-pane label="赛季管理">
-                        <el-row type="flex" justify="center">
-                            <el-col :span="3">文章推送</el-col>
-                            <el-col :span="3">
-                                <el-switch></el-switch>
-                            </el-col>
-                        </el-row>
-                        <el-row type="flex" justify="center">
-                            <el-col :span="3">支付推送</el-col>
-                            <el-col :span="3">
-                                <el-switch></el-switch>
-                            </el-col>
-                        </el-row>
-                        <el-row type="flex" justify="center">
-                            <el-col :span="3">订单推送</el-col>
-                            <el-col :span="3">
-                                <el-switch></el-switch>
-                            </el-col>
-                        </el-row>
+                        <el-form :model="competitionForm" label-width="80px" ref="form">
+                            <el-form-item label="赛季时间" prop="seasonDateRange">
+                                <el-date-picker :picker-options="$store.state.dateRangePickerOptions" align="right"
+                                                end-placeholder="结束日期" range-separator="至"
+                                                start-placeholder="开始日期" type="daterange"
+                                                unlink-panels
+                                                v-model="competitionForm.seasonDateRange">
+                                </el-date-picker>
+                            </el-form-item>
+                            <el-form-item label="名称" prop="seasonName">
+                                <el-input style="width: 350px" type="text" v-model="competitionForm.seasonName"></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <el-form-item>
+                            <el-button type="primary">更新</el-button>
+                        </el-form-item>
                     </el-tab-pane>
                 </el-tabs>
                 <!--<el-form-item label="用户名">
@@ -229,53 +220,105 @@
             </el-form>
             <div class="dialog-footer" slot="footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary">确 定</el-button>
+                <el-button @click="submit('competitionForm')" type="primary">提 交</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 
 <style>
-    .input-with-select /*.el-input-group__prepend*/
-    {
+    .input-with-select .el-input-group__prepend {
         background-color: #fff;
     }
 </style>
 <script>
+    
     export default {
         name: "user",
+        formData: {
+            competitionForm: {
+                name: '',
+                country: '',
+                federation: ''
+            }
+        },
         data() {
+            const name = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('不能为空'));
+                } else {
+                    return callback() // 一些同学的问题可能就出在这里
+                }
+            };
+            const country = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('不能为空'));
+                } else {
+                    return callback() // 一些同学的问题可能就出在这里
+                }
+            };
+            const federation = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('不能为空'));
+                } else {
+                    return callback() // 一些同学的问题可能就出在这里
+                }
+            };
             return {
+                competitionForm: {
+                    name: '',
+                    country: '',
+                    federation: ''
+                },
+                seasonDateRange: null,
+                club: null,
+                national: null,
+                shortName: null,
+                seasonName: null,
                 dialogVisible: false,
+                sport: null,
+                type: null,
+                age: null,
                 team: null,
                 position: null,
                 gender: null,
                 dateRange: null,
-                test: null,
-                test1: null,
                 selectedRows: [],
-                bucketName: "public",
                 pager: {current: 1, size: 10, total: 0, records: []},
-                teamList: []
+                competitionRule: {
+                    name: [{
+                        validator: name,
+                        trigger: 'blur'
+                    }]
+                }
             };
         },
         mounted() {
             this.query();
         },
         methods: {
-            season() {
+            submit(form) {
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        this.$http.post('http://localhost:8090/club', {
+                            data: this.competitionForm
+                        })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
             },
             query() {
-                this.$http.get('http://192.168.0.250:8090/club', {
+                this.$http.get('http://localhost:8090/club', {
                     params: {
-                        id: 1,
-                        name: '1'
-                    }
+                        id: 1039,
+                        name: "内蒙古中优"
+                    },
                 }).then(res => {
                     this.pager = res.data;
                 });
             },
-
             edit() {
                 this.dialogVisible = true;
             },
@@ -290,7 +333,9 @@
                 });
             },
             onRemoveFile(file) {
-                this.$http.delete(`/oss/remove/${this.bucketName}/${file.response}`);
+                this.$http.delete(
+                    `/oss/remove/${this.bucketName}/${file.response}`
+                );
             }
         }
     };

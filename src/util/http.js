@@ -53,7 +53,7 @@ axios.interceptors.response.use(
     return response;
   },
   error => {
-    let message = codeMessage[error.response.status];
+    let message = codeMessage[error.response.statusCode];
     if (error.response.data && error.response.data.message) {
       message = error.response.data.message;
     }

@@ -5,7 +5,7 @@
                 <el-row :gutter="10">
                     <el-col :span="3">
                         <el-input placeholder="姓名"></el-input>
-                    </el-col>test
+                    </el-col>
                     <el-col :span="3">
                         <!-- 这里点击事件，去查后台所有球队 -->
                         <el-select placeholder="位置" v-model="position">
@@ -35,6 +35,7 @@
                 <el-button icon="el-icon-download" size="medium">导出</el-button>
                 <el-button :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>
             </div>
+
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
                 <el-table-column align="center" type="selection" width="55">
