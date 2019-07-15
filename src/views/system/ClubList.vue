@@ -9,7 +9,7 @@
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
                 <el-table-column align="center" type="selection" width="55">
-                </el-table-column>
+                </el-table-column>123213
                 <el-table-column label="用户名" prop="userName"></el-table-column>
                 <el-table-column label="手机号码" width="150">
                     <template slot-scope="scope">
