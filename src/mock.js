@@ -68,7 +68,7 @@ const queryUserAuthority = () => ({
 
         {
             menuId: 7,
-            menuName: "数据管理",
+            menuName: "赛事",
             menuCode: "system",
             link: "/system",
             icon: "el-icon-menu",
@@ -105,28 +105,7 @@ const queryUserAuthority = () => ({
             lft: 15,
             rgt: 18,
             depth: 2
-        }/*,
-
-       {
-            menuId: 13,
-            menuName: "主数据管理",
-            menuCode: "mdm",
-            link: "/mdm",
-            icon: "el-icon-menu",
-            lft: 10,
-            rgt: 13,
-            depth: 1
-        },
-        {
-            menuId: 14,
-            menuName: "业务字典",
-            menuCode: "dict",
-            link: "/mdm/dict",
-            icon: "el-icon-menu",
-            lft: 11,
-            rgt: 12,
-            depth: 2
-        }*/
+        }
     ],
     authorities: [
         {
