@@ -300,7 +300,7 @@
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://localhost:8090/club', {
+                        this.$http.post('http://192.168.0.253:8090/club', {
                             data: this.competitionForm
                         })
                     } else {
@@ -310,7 +310,7 @@
                 });
             },
             query() {
-                this.$http.get('http://localhost:8090/club', {
+                this.$http.get('http://192.168.0.253:8090/club', {
                     params: {
                         id: 1039,
                         name: "内蒙古中优"

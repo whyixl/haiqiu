@@ -12,44 +12,34 @@ const queryUserAuthority = () => ({
             link: "/root",
             icon: "el-icon-menu",
             lft: 1,
-            rgt: 14,
+            rgt: 30,
             depth: 0
         },
         {
             menuId: 2,
-            menuName: "首页",
-            menuCode: "dashboard",
-            link: "/dashboard",
-            icon: "el-icon-menu",
-            lft: 5,
-            rgt: 5,
-            depth: 3
-        },
-        {
-            menuId: 3,
-            menuName: "数据管理",
-            menuCode: "system",
-            link: "/system",
+            menuName: "俱乐部",
+            menuCode: "club",
+            link: "/club",
             icon: "el-icon-menu",
             lft: 4,
             rgt: 9,
             depth: 1
         },
         {
-            menuId: 9,
-            menuName: "俱乐部",
-            menuCode: "club",
-            link: "/system/club",
+            menuId: 3,
+            menuName: "首页",
+            menuCode: "dashboard",
+            link: "/club/dashboard",
             icon: "el-icon-menu",
             lft: 5,
             rgt: 6,
-            depth: 3
+            depth: 2
         },
         {
             menuId: 4,
-            menuName: "赛事赛季",
-            menuCode: "competition",
-            link: "/system/competition",
+            menuName: "球队",
+            menuCode: "team",
+            link: "/club/team",
             icon: "el-icon-menu",
             lft: 5,
             rgt: 6,
@@ -57,36 +47,68 @@ const queryUserAuthority = () => ({
         },
         {
             menuId: 5,
-            menuName: "人员管理",
-            menuCode: "person",
-            link: "/system/person",
+            menuName: "球员",
+            menuCode: "player",
+            link: "/club/player",
             icon: "el-icon-menu",
-            lft: 5,
-            rgt: 6,
-            depth: 3
-        },
-        {
-            menuId: 6,
-            menuName: "比赛信息",
-            menuCode: "match",
-            link: "/system/match",
-            icon: "el-icon-menu",
-            lft: 5,
+            lft: 7,
             rgt: 8,
             depth: 2
         },
         {
-            menuId: 10,
-            menuName: "比赛信息",
-            menuCode: "match",
-            link: "/system/match/test",
+            menuId: 6,
+            menuName: "职员",
+            menuCode: "staff",
+            link: "/club/staff",
             icon: "el-icon-menu",
-            lft: 6,
-            rgt: 7,
+            lft: 7,
+            rgt: 8,
+            depth: 2
+        },
+
+        {
+            menuId: 7,
+            menuName: "数据管理",
+            menuCode: "system",
+            link: "/system",
+            icon: "el-icon-menu",
+            lft: 14,
+            rgt: 19,
+            depth: 1
+        },
+        {
+            menuId: 9,
+            menuName: "赛事赛季",
+            menuCode: "competition",
+            link: "/system/competition",
+            icon: "el-icon-menu",
+            lft: 15,
+            rgt: 16,
+            depth: 2
+        },
+        {
+            menuId: 10,
+            menuName: "人员管理",
+            menuCode: "person",
+            link: "/system/person",
+            icon: "el-icon-menu",
+            lft: 15,
+            rgt: 16,
             depth: 3
         },
         {
-            menuId: 7,
+            menuId: 11,
+            menuName: "比赛信息",
+            menuCode: "match",
+            link: "/system/match",
+            icon: "el-icon-menu",
+            lft: 15,
+            rgt: 18,
+            depth: 2
+        }/*,
+
+       {
+            menuId: 13,
             menuName: "主数据管理",
             menuCode: "mdm",
             link: "/mdm",
@@ -96,7 +118,7 @@ const queryUserAuthority = () => ({
             depth: 1
         },
         {
-            menuId: 8,
+            menuId: 14,
             menuName: "业务字典",
             menuCode: "dict",
             link: "/mdm/dict",
@@ -104,7 +126,7 @@ const queryUserAuthority = () => ({
             lft: 11,
             rgt: 12,
             depth: 2
-        }
+        }*/
     ],
     authorities: [
         {

@@ -14,26 +14,10 @@ export const constantRouter = [
 
 export const asyncRouter = [
     {
-        path: "/dashboard",
-        component: BasicLayout,
-        children: [
-            {
-                path: "/",
-                name: "dashboard",
-                component: () => import("@/views/system/ClubList.vue"),
-                meta: {menuName: "俱乐部"}
-            }
-        ]
-    },
-    {
         path: "/system",
         component: BasicLayout,
         children: [
-            {
-                path: "/system/club",
-                name: "club",
-                component: () => import("@/views/system/ClubList.vue")
-            },
+
             {
                 path: "/system/competition",
                 name: "competition",
@@ -48,11 +32,33 @@ export const asyncRouter = [
                 path: "/system/match",
                 name: "match",
                 component: () => import("@/views/system/MatchList.vue")
+            }
+
+        ]
+    },
+    {
+        path: "/club",
+        component: BasicLayout,
+        children: [
+            {
+                path: "/club/dashboard",
+                name: "dashboard",
+                component: () => import("@/views/club/dashboard.vue")
             },
             {
-                path: "/system/match/test",
-                name: "match",
-                component: () => import("@/views/system/MatchList.vue")
+                path: "/club/team",
+                name: "team",
+                component: () => import("@/views/club/team.vue")
+            },
+            {
+                path: "/club/player",
+                name: "player",
+                component: () => import("@/views/club/player.vue")
+            },
+            {
+                path: "/club/staff",
+                name: "staff",
+                component: () => import("@/views/club/staff.vue")
             }
         ]
     }
