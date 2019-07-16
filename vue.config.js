@@ -9,7 +9,7 @@ module.exports = {
         //hotOnly: false, // See https://github.com/vuejs/vue-cli/blob/dev/docs/cli-service.md#configuring-proxy
         proxy:  {
             '/api': {
-                target: 'http://127.0.0.1:9527/', //对应自己的接口
+                target: 'http://127.0.0.1:8090/', //对应自己的接口
                 changeOrigin: true,
                 ws: true,
                 pathRewrite: {
