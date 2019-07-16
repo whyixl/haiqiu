@@ -6,30 +6,30 @@
                 <el-button :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
             </div>
             <!-- 这一部分是赛事列表 -->
-            <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
-                      style="width: 100%" v-loading="$store.state.loading">
-                <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
-                <el-table-column label="赛季名称" prop="name" width="140"></el-table-column>
-                <el-table-column label="相关赛事名称" prop="competition" width="140"></el-table-column>
-                <el-table-column label="赛季开始日期" width="140">
-                    <template slot-scope="scope">
-                        {{ scope.row.start | moment('YYYY-MM-DD') }}
-                    </template>
-                </el-table-column>
-                <el-table-column label="赛季结束日期" width="140">
-                    <template slot-scope="scope">
-                        {{ scope.row.end | moment('YYYY-MM-DD') }}
-                    </template>
-                </el-table-column>
+              <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
+                       style="width: 100%" v-loading="$store.state.loading">
+                 <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
+                 <el-table-column label="赛季名称" prop="name" width="140"></el-table-column>
+                 <el-table-column label="相关赛事名称" prop="competition" width="140"></el-table-column>
+                   <el-table-column label="赛季开始日期" width="140">
+                       <template slot-scope="scope">
+                           {{ scope.row.start | moment('YYYY-MM-DD') }}
+                       </template>
+                   </el-table-column>
+                   <el-table-column label="赛季结束日期" width="140">
+                       <template slot-scope="scope">
+                           {{ scope.row.end | moment('YYYY-MM-DD') }}
+                       </template>
+                   </el-table-column>
 
-                <el-table-column label="操作" width="140">
-                    <template slot-scope="scope">
-                        <el-button @click="edit()" size="small" type="text">编辑</el-button>
-                        <el-button @click="remove()" size="small" type="text">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <!-- 赛事列表结束 -->
+                  <el-table-column label="操作" width="140">
+                      <template slot-scope="scope">
+                          <el-button @click="edit()" size="small" type="text">编辑</el-button>
+                          <el-button @click="remove()" size="small" type="text">删除</el-button>
+                      </template>
+                  </el-table-column>
+              </el-table>
+              <!-- 赛事列表结束 -->
 
             <!-- 分页组件 -->
             <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
@@ -40,12 +40,12 @@
         <!-- 编辑页面 -->
         <el-dialog :visible.sync="dialogVisible" title="添加赛季">
             <el-form :label-position="'right'" label-width="80px">
-                <el-form :model="seasonForm" :rules="seasonRule" label-width="80px" ref="seasonForm">
+                <el-form :model="seasonForm" :rules="seasonRule" label-width="160px" ref="seasonForm">
                     <el-form-item label="名称" prop="name" >
                         <!-- name -->
                         <el-input  placeholder="请输入赛季名称" v-model="seasonForm.name"></el-input>
                     </el-form-item>
-                    <el-form-item label="相关赛事名称" >
+                    <el-form-item label="相关赛事" >
                         <el-select  placeholder="请选择相关赛事" v-model="competition" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
                             <el-option :label="'女性'" :value="2"></el-option>
@@ -111,8 +111,12 @@
                     { name:'',
                       dateRange :''
                     },
+                selectedRows: [],
                 seasonRule:null,
-                competition:null
+                competition:null,
+                dialogVisible: false,
+                daterange:null,
+                pager: {current: 1, size: 10, total: 0, records: []}
             };
         },
         mounted() {

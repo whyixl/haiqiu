@@ -24,6 +24,11 @@ export const asyncRouter = [
                 component: () => import("@/views/system/CompetitionList.vue")
             },
             {
+                path: "/system/season",
+                name: "season",
+                component: () => import("@/views/system/season.vue")
+            },
+            {
                 path: "/system/person",
                 name: "person",
                 component: () => import("@/views/system/PersonList.vue")
