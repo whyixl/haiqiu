@@ -66,26 +66,6 @@
                     </el-form-item>
 
                 </el-form>
-
-
-
-                <!-- 赛季管理 -->
-                <!-- <el-tab-pane label="赛季管理">
-                    <el-form :model="competitionForm" label-width="80px" ref="form">
-                        <el-form-item label="赛季时间" prop="seasonDateRange">
-                            <el-date-picker :picker-options="$store.state.dateRangePickerOptions" align="right"
-                                            end-placeholder="结束日期" range-separator="至"
-                                            start-placeholder="开始日期" type="daterange"
-                                            unlink-panels
-                                            v-model="competitionForm.seasonDateRange">
-                            </el-date-picker>
-                        </el-form-item>
-
-            <el-form-item label="头像">
-                <el-upload :action="this.$http.defaults.baseURL+'/oss/upload'" :data="{bucketName:bucketName}"
-                           :headers="{Authorization:'Bearer '+$store.state.token}" :on-remove="onRemoveFile"
-                           list-type="picture-card"><i class="el-icon-plus"></i></el-upload>
-            </el-form-item>-->
             </el-form>
             <div class="dialog-footer" slot="footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
