@@ -167,12 +167,12 @@
                      </el-form-item>
 
                  </el-form>
-                
-                <el-form-item label="头像">
-                    <el-upload :action="this.$http.defaults.baseURL+'/oss/upload'" :data="{bucketName:bucketName}"
-                               :headers="{Authorization:'Bearer '+$store.state.token}" :on-remove="onRemoveFile"
-                               list-type="picture-card"><i class="el-icon-plus"></i></el-upload>
-                </el-form-item>-->
+
+                <!--  <el-form-item label="头像">
+                     <el-upload :action="this.$http.defaults.baseURL+'/oss/upload'" :data="{bucketName:bucketName}"
+                                :headers="{Authorization:'Bearer '+$store.state.token}" :on-remove="onRemoveFile"
+                                list-type="picture-card"><i class="el-icon-plus"></i></el-upload>
+                 </el-form-item>-->
             </el-form>
             <div class="dialog-footer" slot="footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
