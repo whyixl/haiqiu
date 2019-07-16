@@ -24,7 +24,7 @@
                 <el-button size="medium" icon="el-icon-delete" :disabled="selectedRows.length==0">删除</el-button>
             </div>
 
-            <!-- 这一部分是赛事赛季与球队的关系列表 -->
+
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
                 <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
@@ -46,7 +46,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <!-- 赛事赛季与球队的关系列表结束 -->
+
 
             <!-- 分页组件 -->
             <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
