@@ -165,7 +165,6 @@
                 start: null,
                 end: null,
                 roles:[],
-                team3:null,
                 roleName:'',
                 positions:[],
                 daterange:null,
