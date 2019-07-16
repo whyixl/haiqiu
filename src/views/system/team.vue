@@ -2,34 +2,42 @@
     <div>
         <el-card :body-style="{ padding: '0px' }" shadow="never">
             <div slot="header">
-                <el-button @click="dialogVisible = true" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-                <el-button :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
+                <el-row :gutter="10">
+                    <el-col :span="4">
+                        <el-select v-model="season" placeholder="赛季">
+                            <el-option :label="'中国足球协会甲级联赛2019'" :value="1"></el-option>
+                            <el-option :label="'内蒙古中优'" :value="2"></el-option>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-select v-model="team" placeholder="球队">
+                            <el-option :label="'北京北体大'" :value="1"></el-option>
+                            <el-option :label="'内蒙古中优'" :value="2"></el-option>
+                        </el-select>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-button type="primary" icon="el-icon-search">查询</el-button>
+                    </el-col>
+                </el-row>
+                <br>
+                <el-button size="medium" type="primary" icon="el-icon-plus" @click="dialogVisible = true">新增</el-button>
+                <el-button size="medium" icon="el-icon-delete" :disabled="selectedRows.length==0">删除</el-button>
             </div>
-            <!-- 这一部分是赛季列表 -->
-              <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
-                       style="width: 100%" v-loading="$store.state.loading">
-                 <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
-                 <el-table-column label="赛季名称" align="center" prop="name" width="370"></el-table-column>
-                 <el-table-column label="相关赛事名称" align="center" prop="competition" width="370"></el-table-column>
-                   <el-table-column label="赛季开始日期" align="center" width="200">
-                       <template slot-scope="scope">
-                           {{ scope.row.start | moment('YYYY-MM-DD') }}
-                       </template>
-                   </el-table-column>
-                   <el-table-column label="赛季结束日期" align="center" width="200">
-                       <template slot-scope="scope">
-                           {{ scope.row.end | moment('YYYY-MM-DD') }}
-                       </template>
-                   </el-table-column>
 
-                  <el-table-column label="操作" align="center" width="200">
-                      <template slot-scope="scope">
-                          <el-button @click="edit()" size="small" type="text">编辑</el-button>
-                          <el-button @click="remove()" size="small" type="text">删除</el-button>
-                      </template>
-                  </el-table-column>
-              </el-table>
-              <!-- 赛季列表结束 -->
+            <!-- 这一部分是赛事赛季与球队的关系列表 -->
+            <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
+                      style="width: 100%" v-loading="$store.state.loading">
+                <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
+                <el-table-column label="赛季名称" align="center" prop="name" width="500"></el-table-column>
+                <el-table-column label="相关球队名称" align="center" prop="competition" width="500"></el-table-column>
+                <el-table-column label="操作" align="center" width="350">
+                    <template slot-scope="scope">
+                        <el-button @click="edit()" size="small" type="text">编辑</el-button>
+                        <el-button @click="remove()" size="small" type="text">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <!-- 赛事赛季与球队的关系列表结束 -->
 
             <!-- 分页组件 -->
             <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
@@ -38,31 +46,22 @@
         </el-card>
 
         <!-- 编辑页面 -->
-        <el-dialog :visible.sync="dialogVisible" title="添加赛季">
+        <el-dialog :visible.sync="dialogVisible" title="添加球队">
             <el-form :label-position="'right'" label-width="80px">
                 <el-form :model="seasonForm" :rules="seasonRule" label-width="160px" ref="seasonForm">
-                    <el-form-item label="名称" prop="name" >
-                        <!-- name -->
-                        <el-input  placeholder="请输入赛季名称" v-model="seasonForm.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="相关赛事" >
-                        <el-select  placeholder="请选择相关赛事" v-model="competition" style="width:100%" >
+                    <el-form-item label="赛季名称" prop="name" >
+                        <el-select  placeholder="请选择相关赛季" v-model="season2" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
                             <el-option :label="'女性'" :value="2"></el-option>
                             <el-option :label="'混合'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="时间" prop="dateRange" >
-                        <el-col :span="6" >
-                            <el-date-picker :picker-options="$store.state.dateRangePickerOptions"
-                                            align="right" end-placeholder="赛季开始时间" range-separator="至"
-                                            start-placeholder="赛季结束时间" type="daterange"
-                                            unlink-panels
-                                            v-model="seasonForm.dateRange" style="width: 400%">
-
-                            </el-date-picker>
-                        </el-col>
-
+                    <el-form-item label="球队" >
+                        <el-select  placeholder="请选择相关球队" v-model="team4" style="width:100%" >
+                            <el-option :label="'男性'" :value="1"></el-option>
+                            <el-option :label="'女性'" :value="2"></el-option>
+                            <el-option :label="'混合'" :value="3"></el-option>
+                        </el-select>
                     </el-form-item>
 
                 </el-form>
@@ -87,15 +86,13 @@
 
         data() {
             return {
-                seasonForm:
-                    { name:'',
-                      dateRange :''
-                    },
                 selectedRows: [],
                 seasonRule:null,
-                competition:null,
+                season:null,
+                season2:null,
+                team:null,
+                team5:null,
                 dialogVisible: false,
-                daterange:null,
                 pager: {current: 1, size: 10, total: 0, records: []}
             };
         },

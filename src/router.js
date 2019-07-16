@@ -29,14 +29,9 @@ export const asyncRouter = [
                 component: () => import("@/views/system/season.vue")
             },
             {
-                path: "/system/person",
-                name: "person",
-                component: () => import("@/views/system/PersonList.vue")
-            },
-            {
-                path: "/system/match",
-                name: "match",
-                component: () => import("@/views/system/MatchList.vue")
+                path: "/system/team",
+                name: "team",
+                component: () => import("@/views/system/team.vue")
             }
 
         ]
@@ -64,6 +59,27 @@ export const asyncRouter = [
                 path: "/club/staff",
                 name: "staff",
                 component: () => import("@/views/club/staff.vue")
+            }
+        ]
+    },
+    {
+        path: "/match",
+        component: BasicLayout,
+        children: [
+            {
+                path: "/match/dashboard",
+                name: "match_dashboard",
+                component: () => import("@/views/match/dashboard.vue")
+            },
+            {
+                path: "/match/lineup",
+                name: "lineup",
+                component: () => import("@/views/match/lineup.vue")
+            },
+            {
+                path: "/match/matchStatistics",
+                name: "matchStatistics",
+                component: () => import("@/views/match/matchStatistics.vue")
             }
         ]
     }
