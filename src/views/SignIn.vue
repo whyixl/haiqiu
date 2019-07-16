@@ -61,7 +61,7 @@ export default {
       this.$http.post("/passport/signIn", this.user).then(res => {
         if (res.data.token) {
           this.$store.commit("setToken", res.data.token);
-          this.$router.push({ path: "/dashboard" });
+          this.$router.push({ path: "/club/dashboard" });
         }
       });
     }

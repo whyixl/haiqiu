@@ -68,7 +68,7 @@ const queryUserAuthority = () => ({
 
         {
             menuId: 7,
-            menuName: "赛事",
+            menuName: "赛事赛季",
             menuCode: "system",
             link: "/system",
             icon: "el-icon-menu",
