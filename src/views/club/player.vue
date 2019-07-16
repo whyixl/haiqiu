@@ -76,9 +76,6 @@
 
         <el-dialog title="新增球员" :visible.sync="dialogVisible">
             <el-form :label-position="'right'" label-width="80px">
-                <el-form-item label="id">
-                    <el-input placeholder="请输入id"></el-input>
-                </el-form-item>
                 <el-form-item label="姓名">
                     <el-input placeholder="请输入姓名"></el-input>
                 </el-form-item>
@@ -155,7 +152,7 @@
 </style>
 <script>
     export default {
-        name: "person",
+        name: "player",
         data() {
             return {
                 dialogVisible: false,

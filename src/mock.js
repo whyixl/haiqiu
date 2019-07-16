@@ -78,7 +78,7 @@ const queryUserAuthority = () => ({
         },
         {
             menuId: 9,
-            menuName: "赛事赛季",
+            menuName: "赛事",
             menuCode: "competition",
             link: "/system/competition",
             icon: "el-icon-menu",
@@ -88,6 +88,16 @@ const queryUserAuthority = () => ({
         },
         {
             menuId: 10,
+            menuName: "赛季",
+            menuCode: "season",
+            link: "/system/season",
+            icon: "el-icon-menu",
+            lft: 15,
+            rgt: 16,
+            depth: 2
+        },
+        {
+            menuId: 11,
             menuName: "人员管理",
             menuCode: "person",
             link: "/system/person",
@@ -97,7 +107,7 @@ const queryUserAuthority = () => ({
             depth: 3
         },
         {
-            menuId: 11,
+            menuId: 12,
             menuName: "比赛信息",
             menuCode: "match",
             link: "/system/match",

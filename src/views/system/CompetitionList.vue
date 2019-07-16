@@ -37,10 +37,13 @@
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
                 <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
-                <el-table-column label="赛事简称" prop="name" width="140"></el-table-column>
-                <el-table-column label="国家/地区" prop="name" width="140"></el-table-column>
-                <el-table-column label="年龄" prop="name" width="140"></el-table-column>
-                
+                <el-table-column label="描述" prop="name" width="140"></el-table-column>
+                <el-table-column label="简称" prop="shortname" width="140"></el-table-column>
+                <el-table-column label="性别" prop="gender" width="140"></el-table-column>
+                <el-table-column label="年龄" prop="age" width="140"></el-table-column>
+                <el-table-column label="类型" prop="type" width="140"></el-table-column>
+                <el-table-column label="国家/地区" prop="country" width="140"></el-table-column>
+                <el-table-column label="联盟" prop="federation" width="140"></el-table-column>
                 <!--<el-table-column label="手机号码" width="150">
                     <template slot-scope="scope">
                         {{ '+' + scope.row.nation + ' ' + scope.row.phone }}
@@ -49,12 +52,12 @@
                 
                 <el-table-column label="有效期自" width="140">
                     <template slot-scope="scope">
-                        {{ scope.row.createDate | moment('YYYY-MM-DD hh:mm') }}
+                        {{ scope.row.createDate | moment('YYYY-MM-DD') }}
                     </template>
                 </el-table-column>
                 <el-table-column label="有效期至" width="140">
                     <template slot-scope="scope">
-                        {{ scope.row.signInDate | moment('YYYY-MM-DD hh:mm') }}
+                        {{ scope.row.signInDate | moment('YYYY-MM-DD') }}
                     </template>
                 </el-table-column>
                 
@@ -76,13 +79,50 @@
         <!-- 编辑页面 -->
         <el-dialog :visible.sync="dialogVisible" title="添加赛事">
             <el-form :label-position="'right'" label-width="80px">
-                <el-tabs>
-                    <el-tab-pane label="常规信息">
-                        <el-form :model="competitionForm" :rules="competitionRule" label-width="80px" ref="competitionForm">
-                            <el-form-item label="全称(描述)" prop="name">
-                                <!-- name -->
-                                <el-input style="width: 350px" v-model="competitionForm.name"></el-input>
-                            </el-form-item>
+                 <el-form :model="competitionForm" :rules="competitionRule" label-width="80px" ref="competitionForm">
+                     <el-form-item label="描述" prop="name" >
+                                 <!-- name -->
+                         <el-input  placeholder="请输入赛事全称" v-model="competitionForm.name"></el-input>
+                     </el-form-item>
+                     <el-form-item label="简称">
+                                <!-- shortName/microName -->
+                         <el-input placeholder="请输入赛事简称" v-model="shortName"></el-input>
+                     </el-form-item>
+                     <el-form-item label="性别" >
+                         <el-select  placeholder="请选择性别" v-model="gender" style="width:100%" >
+                             <el-option :label="'男性'" :value="1"></el-option>
+                             <el-option :label="'女性'" :value="2"></el-option>
+                             <el-option :label="'混合'" :value="3"></el-option>
+                         </el-select>
+                     </el-form-item>
+                     <el-form-item label="年龄">
+                         <el-select placeholder="请选择年龄段" v-model="age" style="width:100%">
+                             <el-option :label="'--'" :value="1"></el-option>
+                             <el-option :label="'职业'" :value="2"></el-option>
+                             <el-option :label="'U23'" :value="4"></el-option>
+                             <el-option :label="'U21'" :value="5"></el-option>
+                             <el-option :label="'U20'" :value="6"></el-option>
+                             <el-option :label="'U19'" :value="7"></el-option>
+                             <el-option :label="'U18'" :value="8"></el-option>
+                             <el-option :label="'U17'" :value="9"></el-option>
+                             <el-option :label="'U16'" :value="10"></el-option>
+                             <el-option :label="'U15'" :value="11"></el-option>
+                             <el-option :label="'U14'" :value="12"></el-option>
+                             <el-option :label="'U13'" :value="13"></el-option>
+                             <el-option :label="'U12'" :value="14"></el-option>
+                             <el-option :label="'U11'" :value="15"></el-option>
+                             <el-option :label="'U10'" :value="16"></el-option>
+                             <el-option :label="'U9'" :value="17"></el-option>
+                             <el-option :label="'U8'" :value="18"></el-option>
+                             <el-option :label="'U7'" :value="19"></el-option>
+                         </el-select>
+                     </el-form-item>
+                     <el-form-item label="类型" prop="type">
+                         <el-select placeholder="请输入类型" v-model="competitionForm.type" style="width:100%">
+                             <el-option :label="'俱乐部'" :value="club"></el-option>
+                             <el-option :label="'国内'" :value="national"></el-option>
+                         </el-select>
+                     </el-form-item>
                              <!--运动类型不要了，目前都写足球
                             <el-form-item label="运动类型">
                                 <el-select placeholder="国家" v-model="sport">
@@ -92,131 +132,47 @@
                                 </el-select>
                             </el-form-item>-->
                             <!-- country -->
-                            <el-form-item label="国家" prop="country">
-                                <el-select placeholder="国家" v-model="competitionForm.country">
-                                    <el-option :label="'男性-待修改'" :value="1"></el-option>
-                                    <el-option :label="'女性'" :value="2"></el-option>
-                                    <el-option :label="'混合'" :value="3"></el-option>
-                                </el-select>
-                            </el-form-item>
+                     <el-form-item label="国家" prop="country">
+                         <el-select placeholder="请输入国家" v-model="competitionForm.country" style="width:100%">
+                             <el-option :label="'男性-待修改'" :value="1"></el-option>
+                             <el-option :label="'女性'" :value="2"></el-option>
+                             <el-option :label="'混合'" :value="3"></el-option>
+                         </el-select>
+                     </el-form-item>
                             <!-- 地区列表，从后台查出来 -->
-                            <el-form-item label="地区" prop="federation">
-                                <el-select placeholder="地区" v-model="competitionForm.federation">
-                                    <el-option :label="'男性—待修改'" :value="1"></el-option>
-                                    <el-option :label="'女性'" :value="2"></el-option>
-                                    <el-option :label="'混合'" :value="3"></el-option>
-                                </el-select>
-                            </el-form-item>
+                     <el-form-item label="联盟" prop="federation">
+                         <el-select placeholder="请输选择联盟" v-model="competitionForm.federation" style="width:100%">
+                             <el-option :label="'--'" :value="1"></el-option>
+                             <el-option :label="'世界'" :value="2"></el-option>
+                             <el-option :label="'欧洲'" :value="3"></el-option>
+                             <el-option :label="'南美洲'" :value="4"></el-option>
+                             <el-option :label="'北美洲/中美洲'" :value="5"></el-option>
+                             <el-option :label="'亚洲'" :value="6"></el-option>
+                             <el-option :label="'非洲'" :value="7"></el-option>
+                             <el-option :label="'大洋洲'" :value="8"></el-option>
+                         </el-select>
+                     </el-form-item>
                             <!-- 这个直接存的属性，页面写死算了 -->
-                            <el-form-item label="类型" prop="type">
-                                <el-select placeholder="类型" v-model="competitionForm.type">
-                                    <el-option :label="'俱乐部'" :value="club"></el-option>
-                                    <el-option :label="'国际'" :value="national"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="有效期" prop="dateRange">
-                                <el-col :span="6">
-                                    <el-date-picker :picker-options="$store.state.dateRangePickerOptions"
-                                                    align="right" end-placeholder="注册结束日期" range-separator="至"
-                                                    start-placeholder="注册开始日期" type="daterange"
-                                                    unlink-panels
-                                                    v-model="competitionForm.dateRange">
-                                    </el-date-picker>
-                                </el-col>
-                                <!--<el-date-picker align="right" type="date" placeholder="选择出生日期" :picker-options="$store.state.datePickerOptions" style="width: 100%;"></el-date-picker>-->
-                            </el-form-item>
-                            <el-form-item>
-                                <!-- 点击更新把当前填的信息保存到临时变量里，点击确定提交到后台 -->
-                                <el-button type="primary">更新</el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-tab-pane>
-                    <!-- 详细信息 -->
-                    <el-tab-pane label="详细信息">
-                        <el-form :model="competitionForm" label-width="80px" ref="form">
-                            <el-form-item label="简称">
-                                <!-- shortName/microName -->
-                                <el-input style="width: 220px" v-model="shortName"></el-input>
-                            </el-form-item>
-                            <el-form-item label="性别">
-                                <el-select placeholder="性别" v-model="gender">
-                                    <el-option :label="'男性'" :value="1"></el-option>
-                                    <el-option :label="'女性'" :value="2"></el-option>
-                                    <el-option :label="'混合'" :value="3"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="年龄">
-                                <el-select placeholder="年龄" v-model="age">
-                                    <el-option :label="'男性'" :value="1"></el-option>
-                                    <el-option :label="'女性'" :value="2"></el-option>
-                                    <el-option :label="'混合'" :value="3"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            
-                            <el-form-item>
-                                <el-button type="primary">更新</el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-tab-pane>
-                    <!-- 赛季管理 -->
-                    <el-tab-pane label="赛季管理">
-                        <el-form :model="competitionForm" label-width="80px" ref="form">
-                            <el-form-item label="赛季时间" prop="seasonDateRange">
-                                <el-date-picker :picker-options="$store.state.dateRangePickerOptions" align="right"
-                                                end-placeholder="结束日期" range-separator="至"
-                                                start-placeholder="开始日期" type="daterange"
-                                                unlink-panels
-                                                v-model="competitionForm.seasonDateRange">
-                                </el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="名称" prop="seasonName">
-                                <el-input style="width: 350px" type="text" v-model="competitionForm.seasonName"></el-input>
-                            </el-form-item>
-                        </el-form>
-                        <el-form-item>
-                            <el-button type="primary">更新</el-button>
-                        </el-form-item>
-                    </el-tab-pane>
-                </el-tabs>
-                <!--<el-form-item label="用户名">
-                    <el-input placeholder="请输入用户名"></el-input>
-                </el-form-item>
-                <el-form-item label="密码">
-                    <el-input placeholder="请输入密码" type="password"></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码">
-                    <el-input placeholder="再次确认密码" type="password"></el-input>
-                </el-form-item>
-                <el-form-item label="手机号码">
-                    <el-input class="input-with-select" placeholder="请输入手机号码" v-model="test">
-                        <el-select placeholder="国际码" slot="prepend" style="width:90px;" v-model="test1">
-                            <el-option label="+86" value="86"></el-option>
-                            <el-option label="+80" value="80"></el-option>
-                            <el-option label="+88" value="88"></el-option>
-                            <el-option label="+202" value="202"></el-option>
-                        </el-select>
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="电子邮件">
-                    <el-input placeholder="请输入电子邮件"></el-input>
-                </el-form-item>
-                <el-form-item label="性别">
-                    <el-select placeholder="请选择性别" style="width:100%" v-model="test1">
-                        <el-option label="男" value="true"></el-option>
-                        <el-option label="女" value="false"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="出生日期">
-                    <el-date-picker :picker-options="$store.state.datePickerOptions" align="right" placeholder="选择日期"
-                                    style="width: 100%;"
-                                    type="date"
-                                    v-model="test"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="头像">
-                    <el-upload :action="this.$http.defaults.baseURL+'/oss/upload'" :data="{bucketName:bucketName}"
-                               :headers="{Authorization:'Bearer '+$store.state.token}" :on-remove="onRemoveFile"
-                               list-type="picture-card"><i class="el-icon-plus"></i></el-upload>
-                </el-form-item>-->
+                     <el-form-item label="有效期" prop="dateRange" >
+                         <el-col :span="6" >
+                             <el-date-picker :picker-options="$store.state.dateRangePickerOptions"
+                                             align="right" end-placeholder="注册结束日期" range-separator="至"
+                                             start-placeholder="注册开始日期" type="daterange"
+                                             unlink-panels
+                                             v-model="competitionForm.dateRange" style="width: 400%">
+
+                             </el-date-picker>
+                         </el-col>
+
+                     </el-form-item>
+
+                 </el-form>
+
+                <!--  <el-form-item label="头像">
+                     <el-upload :action="this.$http.defaults.baseURL+'/oss/upload'" :data="{bucketName:bucketName}"
+                                :headers="{Authorization:'Bearer '+$store.state.token}" :on-remove="onRemoveFile"
+                                list-type="picture-card"><i class="el-icon-plus"></i></el-upload>
+                 </el-form-item>-->
             </el-form>
             <div class="dialog-footer" slot="footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
