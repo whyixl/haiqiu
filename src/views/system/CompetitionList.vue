@@ -37,31 +37,31 @@
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
                 <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
-                <el-table-column label="描述" prop="name" width="140"></el-table-column>
-                <el-table-column label="简称" prop="shortname" width="140"></el-table-column>
-                <el-table-column label="性别" prop="gender" width="140"></el-table-column>
-                <el-table-column label="年龄" prop="age" width="140"></el-table-column>
-                <el-table-column label="类型" prop="type" width="140"></el-table-column>
-                <el-table-column label="国家/地区" prop="country" width="140"></el-table-column>
-                <el-table-column label="联盟" prop="federation" width="140"></el-table-column>
+                <el-table-column label="描述" align="center" prop="name" width="140"></el-table-column>
+                <el-table-column label="简称" align="center" prop="shortname" width="140"></el-table-column>
+                <el-table-column label="性别" align="center" prop="gender" width="120"></el-table-column>
+                <el-table-column label="年龄" align="center" prop="age" width="120"></el-table-column>
+                <el-table-column label="类型" align="center" prop="type" width="130"></el-table-column>
+                <el-table-column label="国家/地区" align="center" prop="country" width="140"></el-table-column>
+                <el-table-column label="联盟" align="center" prop="federation" width="140"></el-table-column>
                 <!--<el-table-column label="手机号码" width="150">
                     <template slot-scope="scope">
                         {{ '+' + scope.row.nation + ' ' + scope.row.phone }}
                     </template>
                 </el-table-column>-->
                 
-                <el-table-column label="有效期自" width="140">
+                <el-table-column label="有效期自" align="center" width="140">
                     <template slot-scope="scope">
                         {{ scope.row.createDate | moment('YYYY-MM-DD') }}
                     </template>
                 </el-table-column>
-                <el-table-column label="有效期至" width="140">
+                <el-table-column label="有效期至" align="center" width="140">
                     <template slot-scope="scope">
                         {{ scope.row.signInDate | moment('YYYY-MM-DD') }}
                     </template>
                 </el-table-column>
                 
-                <el-table-column label="操作" width="140">
+                <el-table-column label="操作" align="center" width="140">
                     <template slot-scope="scope">
                         <el-button @click="edit()" size="small" type="text">编辑</el-button>
                         <el-button @click="remove()" size="small" type="text">删除</el-button>

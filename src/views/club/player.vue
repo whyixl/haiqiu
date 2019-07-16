@@ -34,36 +34,35 @@
 
                 <el-table-column type="selection" width="55" align="center">
                 </el-table-column>
-                <el-table-column prop="id" label="id"></el-table-column>
-                <el-table-column prop="name" label="姓名"></el-table-column>
-                <el-table-column prop="surname" label="英文名"></el-table-column>
-                <el-table-column prop="gender" label="性别"></el-table-column>
-                <el-table-column prop="birthday" label="出生日期" width="100">
+                <el-table-column align="center" prop="name" label="姓名"></el-table-column>
+                <el-table-column align="center" prop="surname" label="英文名"></el-table-column>
+                <el-table-column align="center" prop="gender" label="性别"></el-table-column>
+                <el-table-column align="center" prop="birthday" label="出生日期" width="100">
                     <template slot-scope="scope">
                         {{ scope.row.birthday | moment('YYYY-MM-DD') }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="height" label="身高"></el-table-column>
-                <el-table-column prop="weight" label="体重"></el-table-column>
-                <el-table-column prop="country" label="出生国家/地区"></el-table-column>
-                <el-table-column prop="place" label="出生地"></el-table-column>
-                <el-table-column prop="shoesize" label="鞋子尺寸"></el-table-column>
-                <el-table-column  prop="preferred_side" label="惯用脚"></el-table-column>
-                <el-table-column  prop="team" label="所属球队"></el-table-column>
-                <el-table-column  prop="role" label="位置组"></el-table-column>
-                <el-table-column  prop="position" label="确切位置"></el-table-column>
-                <el-table-column  prop="shirtnumber" label="球衣号"></el-table-column>
-                <el-table-column prop="start" label="开始时间" width="140">
+                <el-table-column align="center" prop="height" label="身高"></el-table-column>
+                <el-table-column align="center" prop="weight" label="体重"></el-table-column>
+                <el-table-column align="center" prop="country" label="出生国家/地区"></el-table-column>
+                <el-table-column align="center" prop="place" label="出生地"></el-table-column>
+                <el-table-column align="center" prop="shoesize" label="鞋子尺寸"></el-table-column>
+                <el-table-column  align="center" prop="preferred_side" label="惯用脚"></el-table-column>
+                <el-table-column  align="center" prop="team" label="所属球队"></el-table-column>
+                <el-table-column  align="center" prop="role" label="位置组"></el-table-column>
+                <el-table-column  align="center" prop="position" label="确切位置"></el-table-column>
+                <el-table-column  align="center" prop="shirtnumber" label="球衣号"></el-table-column>
+                <el-table-column align="center" prop="start" label="开始时间" width="100">
                     <template slot-scope="scope">
                         {{ scope.row.start | moment('YYYY-MM-DD') }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="end" label="结束时间" width="140">
+                <el-table-column align="center" prop="end" label="结束时间" width="100">
                     <template slot-scope="scope">
                         {{ scope.row.end | moment('YYYY-MM-DD') }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="200">
+                <el-table-column align="center" label="操作" width="100">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="edit()">编辑</el-button>
                         <el-button type="text" size="small" @click="remove()">删除</el-button>
@@ -166,6 +165,7 @@
                 roles:[],
                 roleName:'',
                 positions:[],
+                daterange:null,
                 areas:[],
                 positionName:'',
                 selectedRows: [],

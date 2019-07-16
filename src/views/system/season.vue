@@ -9,20 +9,20 @@
               <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                        style="width: 100%" v-loading="$store.state.loading">
                  <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
-                 <el-table-column label="赛季名称" prop="name" width="140"></el-table-column>
-                 <el-table-column label="相关赛事名称" prop="competition" width="140"></el-table-column>
-                   <el-table-column label="赛季开始日期" width="140">
+                 <el-table-column label="赛季名称" align="center" prop="name" width="370"></el-table-column>
+                 <el-table-column label="相关赛事名称" align="center" prop="competition" width="370"></el-table-column>
+                   <el-table-column label="赛季开始日期" align="center" width="200">
                        <template slot-scope="scope">
                            {{ scope.row.start | moment('YYYY-MM-DD') }}
                        </template>
                    </el-table-column>
-                   <el-table-column label="赛季结束日期" width="140">
+                   <el-table-column label="赛季结束日期" align="center" width="200">
                        <template slot-scope="scope">
                            {{ scope.row.end | moment('YYYY-MM-DD') }}
                        </template>
                    </el-table-column>
 
-                  <el-table-column label="操作" width="140">
+                  <el-table-column label="操作" align="center" width="200">
                       <template slot-scope="scope">
                           <el-button @click="edit()" size="small" type="text">编辑</el-button>
                           <el-button @click="remove()" size="small" type="text">删除</el-button>
