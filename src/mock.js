@@ -72,8 +72,8 @@ const queryUserAuthority = () => ({
             menuCode: "system",
             link: "/system",
             icon: "el-icon-menu",
-            lft: 14,
-            rgt: 19,
+            lft: 10,
+            rgt: 15,
             depth: 1
         },
         {
@@ -82,8 +82,8 @@ const queryUserAuthority = () => ({
             menuCode: "competition",
             link: "/system/competition",
             icon: "el-icon-menu",
-            lft: 15,
-            rgt: 16,
+            lft: 11,
+            rgt: 12,
             depth: 2
         },
         {
@@ -92,8 +92,8 @@ const queryUserAuthority = () => ({
             menuCode: "season",
             link: "/system/season",
             icon: "el-icon-menu",
-            lft: 15,
-            rgt: 16,
+            lft: 12,
+            rgt: 13,
             depth: 2
         },
         {
@@ -102,17 +102,47 @@ const queryUserAuthority = () => ({
             menuCode: "team",
             link: "/system/team",
             icon: "el-icon-menu",
-            lft: 15,
-            rgt: 16,
+            lft: 13,
+            rgt: 14,
             depth: 2
         },
         {
             menuId: 12,
             menuName: "比赛信息",
             menuCode: "match",
-            link: "/system/match",
+            link: "/match",
             icon: "el-icon-menu",
-            lft: 15,
+            lft: 16,
+            rgt: 19,
+            depth: 1
+        },
+        {
+            menuId: 13,
+            menuName: "首页",
+            menuCode: "match_dashboard",
+            link: "/match/dashboard",
+            icon: "el-icon-menu",
+            lft: 17,
+            rgt: 17,
+            depth: 2
+        },
+        {
+            menuId: 14,
+            menuName: "首发阵容",
+            menuCode: "lineup",
+            link: "/match/lineup",
+            icon: "el-icon-menu",
+            lft: 17,
+            rgt: 18,
+            depth: 2
+        },
+        {
+            menuId: 15,
+            menuName: "比赛统计",
+            menuCode: "matchStatistics",
+            link: "/match/matchStatistics",
+            icon: "el-icon-menu",
+            lft: 18,
             rgt: 18,
             depth: 2
         }

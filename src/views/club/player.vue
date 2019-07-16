@@ -109,7 +109,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="所属球队">
-                    <el-input placeholder="请输入所属球队"></el-input>
+                    <el-select  placeholder="请选择球队" v-model="team3" style="width:100%" >
+                        <el-option :label="'男性'" :value="1"></el-option>
+                        <el-option :label="'女性'" :value="2"></el-option>
+                        <el-option :label="'混合'" :value="3"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="球衣号">
                     <el-input placeholder="请输入球衣号"></el-input>
@@ -161,6 +165,7 @@
                 start: null,
                 end: null,
                 roles:[],
+                team3:null,
                 roleName:'',
                 positions:[],
                 daterange:null,
