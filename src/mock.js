@@ -98,13 +98,13 @@ const queryUserAuthority = () => ({
         },
         {
             menuId: 11,
-            menuName: "人员管理",
-            menuCode: "person",
-            link: "/system/person",
+            menuName: "球队",
+            menuCode: "team",
+            link: "/system/team",
             icon: "el-icon-menu",
             lft: 15,
             rgt: 16,
-            depth: 3
+            depth: 2
         },
         {
             menuId: 12,
