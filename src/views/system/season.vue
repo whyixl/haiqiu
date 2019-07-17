@@ -75,16 +75,12 @@
     </div>
 </template>
 
-<style>
-    .input-with-select .el-input-group__prepend {
-        background-color: #fff;
-    }
-</style>
 <script>
+
+    import {$route} from "vue-router";
 
     export default {
         name: "season",
-
         data() {
             return {
                 seasonForm:
@@ -99,8 +95,11 @@
                 pager: {current: 1, size: 10, total: 0, records: []}
             };
         },
+        created() {
+            this.competitionId = this.$route.query.id;
+        },
         mounted() {
-            this.query();
+            this.query(this.competitionId);
         },
         methods: {
             submit(form) {
@@ -115,11 +114,10 @@
                     }
                 });
             },
-            query() {
-                this.$http.get('http://192.168.0.253:8090/club', {
+            query(competitionId) {
+                this.$http.get('http://192.168.0.253:8090/season', {
                     params: {
-                        id: 1039,
-                        name: "内蒙古中优"
+                        competitionId: competitionId,
                     },
                 }).then(res => {
                     this.pager = res.data;
