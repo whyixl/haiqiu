@@ -33,10 +33,10 @@
                 <el-table-column label="性别" align="center" prop="gender" width="175"></el-table-column>
                 <el-table-column label="年龄" align="center" prop="age" width="175"></el-table-column>
                 <el-table-column label="俱乐部名称" align="center" prop="clubId" width="280"></el-table-column>
-                <el-table-column label="操作" align="center" width="240">
+                <el-table-column align="center" fixed="right" label="操作" width="140">
                     <template slot-scope="scope">
-                        <el-button @click="edit()" size="small" type="text">编辑</el-button>
-                        <el-button @click="remove()" size="small" type="text">删除</el-button>
+                        <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
+                        <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -44,8 +44,12 @@
 
             <!-- 分页组件 -->
             <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
-                           :page-sizes="$store.state.paginationPageSizes" :total="pager.total"
-                           class="pagination text-right"></el-pagination>
+                           :page-sizes="$store.state.paginationPageSizes"
+                           :pager-count="7" :total="pager.total"
+                           @current-change="pageChange" @next-click="pageChange" @prev-click="pageChange"
+                           @size-change="sizeChange"
+                           class="pagination text-right">
+            </el-pagination>
         </el-card>
 
         <!-- 编辑页面 -->
@@ -139,7 +143,7 @@
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         this.$http.post('http://192.168.0.253:8090/club', {
-                            data: this.seasonForm
+                            data: this.teamForm
                         })
                     } else {
                         console.log('error submit!!');
@@ -147,34 +151,49 @@
                     }
                 });
             },
-            query() {
-                this.$http.get('http://192.168.0.253:8090/club', {
-                    params: {
-                        id: 1039,
-                        name: "内蒙古中优"
-                    },
-                }).then(res => {
-                    this.pager = res.data;
-                });
-            },
-            edit() {
+            add() {
                 this.dialogVisible = true;
-            },
-            onSelectionChange(rows) {
-                this.selectedRows = rows.map(item => item.userId);
+                this.teamForm = {}
             },
             remove() {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
+                }).then()
+            },
+            deleteBatch() {
+                this.$http.delete('', {
+                    data: {
+                        coIds: this.selectedRows
+                    }
+                })
+            },
+            edit(team) {
+                this.dialogVisible = true;
+                this.teamForm = team
+            },
+            query() {
+                this.$http.get('http://192.168.0.253:8090/club/co', {
+                    params: this.pager,
+                }).then(res => {
+                    this.pager = res.data
                 });
             },
-            onRemoveFile(file) {
-                this.$http.delete(
-                    `/oss/remove/${this.bucketName}/${file.response}`
-                );
+            // 分页组件点击事件
+            pageChange(val) {
+                this.pager.current = val;
+                this.query()
+            },
+            sizeChange(val) {
+                this.pager.size = val;
+                this.query()
+            },
+
+            onSelectionChange(rows) {
+                this.selectedRows = rows.map(item => item.id);
             }
+
         }
     };
 </script>
