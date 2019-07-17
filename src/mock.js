@@ -114,7 +114,7 @@ const queryUserAuthority = () => ({
             icon: "el-icon-menu",
             lft: 18,
             rgt: 25,
-            depth: 1
+            depth: 3
         },
         {
             menuId: 13,
@@ -134,7 +134,7 @@ const queryUserAuthority = () => ({
             icon: "el-icon-menu",
             lft: 19,
             rgt: 20,
-            depth: 2
+            depth: 3
         },
         {
             menuId: 15,
@@ -144,7 +144,7 @@ const queryUserAuthority = () => ({
             icon: "el-icon-menu",
             lft: 19,
             rgt: 19,
-            depth: 2
+            depth: 3
         }
     ],
     authorities: [
