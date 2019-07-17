@@ -30,13 +30,6 @@
             <el-header class="header">
                 <i @click="isCollapse=!isCollapse" class="el-icon-menu sidebarToggle"></i>
                 <div class="float-right">
-                    <!-- <el-dropdown trigger="click" class="header-action">
-                         <span>语言<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i></span>
-                         <el-dropdown-menu slot="dropdown">
-                             <el-dropdown-item>中文</el-dropdown-item>
-                             <el-dropdown-item>English</el-dropdown-item>
-                         </el-dropdown-menu>
-                     </el-dropdown>-->
                     <el-dropdown @command="handleCommand" class="header-action" trigger="click">
                         <span>Admin<i class="el-icon-arrow-down el-icon--right"></i></span>
                         <el-dropdown-menu slot="dropdown">

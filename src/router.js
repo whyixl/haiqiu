@@ -14,24 +14,23 @@ export const constantRouter = [
 
 export const asyncRouter = [
     {
-        path: "/system",
+        path: "/competition",
         component: BasicLayout,
         children: [
-
             {
-                path: "/system/competition",
+                path: "/competition",
                 name: "competition",
-                component: () => import("@/views/system/CompetitionList.vue")
+                component: () => import("@/views/competition/competitionList.vue")
             },
             {
-                path: "/system/season",
+                path: "/competition/season",
                 name: "season",
-                component: () => import("@/views/system/season.vue")
+                component: () => import("@/views/competition/season.vue")
             },
             {
-                path: "/system/team",
+                path: "/competition/team",
                 name: "team",
-                component: () => import("@/views/system/team.vue")
+                component: () => import("@/views/competition/team.vue")
             }
 
         ]

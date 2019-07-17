@@ -3,10 +3,10 @@
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-        <el-button :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
+        <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
       </div>
       <!-- 这一部分是赛事列表 -->
-      <el-table :data="records" @selection-change="onSelectionChange" highlight-current-row stripe
+      <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="competitionId" type="selection" width="40"></el-table-column>
         <el-table-column align="center" label="描述" prop="name" width="180"></el-table-column>
@@ -23,32 +23,34 @@
         </el-table-column>
         <el-table-column align="center" label="类型" prop="type" width="120">
           <template slot-scope="scope">
-            {{ scope.row.type === "club" ?  '俱乐部': '国际' }}
+            {{ scope.row.type === "club" ? '俱乐部': '国际' }}
           </template>
         </el-table-column>
         <el-table-column align="center" label="国家/地区" prop="countryId" width="120"></el-table-column>
         <el-table-column align="center" label="联盟" prop="federationId" width="120"></el-table-column>
-        <el-table-column align="center" label="开始时间" width="140" prop="starttime">
+        <el-table-column align="center" label="开始日期" prop="starttime" width="140">
           <template slot-scope="scope">
-            {{ scope.row.starttime | moment('YYYY-MM-DD hh:mm') }}
+            {{ scope.row.starttime | moment('YYYY-MM-DD') }}
           </template>
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="130">
           <template slot-scope="scope">
-            <el-button @click="edit(scope.$index)" size="small"  icon="el-icon-edit" circle title="编辑"></el-button>
+            <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
             <router-link :to="{path: '/system/season',query: {id: scope.row.id}}">
               <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="赛季"></el-button>
             </router-link>
-            <el-button @click="remove(scope.$index)" size="small"  icon="el-icon-delete" circle title="删除"></el-button>
+            <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
           </template>
         </el-table-column>
       </el-table>
       <!-- 赛事列表结束 -->
       
       <!-- 分页组件 -->
-      <el-pagination :current-page="pager.current" :page-size="pager.size"  :total="pager.total" :pager-count="7"
-                     :layout="$store.state.paginationLayout" :page-sizes="$store.state.paginationPageSizes"
-                     @size-change="sizeChange" @current-change="pageChange" @prev-click="pageChange" @next-click="pageChange"
+      <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
+                     :page-sizes="$store.state.paginationPageSizes"
+                     :pager-count="7" :total="pager.total"
+                     @current-change="pageChange" @next-click="pageChange" @prev-click="pageChange"
+                     @size-change="sizeChange"
                      class="pagination text-right">
       </el-pagination>
     </el-card>
@@ -67,7 +69,7 @@
           </el-form-item>
           <el-form-item label="性别">
             <el-select placeholder="请选择性别" style="width:100%" v-model="competitionForm.gender">
-              <el-option v-for="item in genderOptions" :label=item.label :value=item.value></el-option>
+              <el-option :label=item.label :value=item.value v-for="item in genderOptions"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="年龄">
@@ -119,9 +121,9 @@
           <el-form-item label="开始日期" prop="starttime">
             <el-col :span="6">
               <el-date-picker
-                v-model="competitionForm.starttime"
+                placeholder="选择日期"
                 type="date"
-                placeholder="选择日期">
+                v-model="competitionForm.starttime">
               </el-date-picker>
             </el-col>
           </el-form-item>
@@ -158,11 +160,10 @@
                     federationId: null,
                     starttime: null,
                 },
-                genderOptions: [{label: "男性", value: "male"},{label: "女性", value: "female"}],
+                genderOptions: [{label: "男性", value: "male"}, {label: "女性", value: "female"}],
                 dialogVisible: false,
                 selectedRows: [],
-                pager: {current: 1, size: 10, total: 0},
-                records: [],
+                pager: {current: 1, size: 10, total: 0, records: []},
                 //表单过滤规则
                 competitionRule: {
                     name: [{
@@ -198,27 +199,24 @@
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
-                });
+                }).then()
             },
-            edit(id) {
-                this.dialogVisible = true;
-                this.$http.get('http://192.168.0.253:8090/club/co1', {
-                    params: {
-                        id: this.records[id].id
+            deleteBatch() {
+                this.$http.delete('', {
+                    data: {
+                        coIds: this.selectedRows
                     }
-                    }).then(res => {
-                        this.competitionForm = res.data;
                 })
+            },
+            edit(competition) {
+                this.dialogVisible = true;
+                this.competitionForm = competition
             },
             query() {
                 this.$http.get('http://192.168.0.253:8090/club/co', {
-                    params: {
-                        current: this.pager.current,
-                        size: this.pager.size
-                    },
+                    params: this.pager,
                 }).then(res => {
-                    this.records = res.data.records;
-                    this.pager.total = res.data.records.length
+                    this.pager = res.data
                 });
             },
             // 分页组件点击事件
@@ -230,14 +228,11 @@
                 this.pager.size = val;
                 this.query()
             },
+
             onSelectionChange(rows) {
-                this.selectedRows = rows.map(item => item.userId);
-            },
-            onRemoveFile(file) {
-                this.$http.delete(
-                    `/oss/remove/${this.bucketName}/${file.response}`
-                );
+                this.selectedRows = rows.map(item => item.id);
             }
+
         }
     };
 </script>

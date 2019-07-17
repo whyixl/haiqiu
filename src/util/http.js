@@ -4,7 +4,7 @@ import store from "../store";
 
 require("../mock");
 
-// axios.defaults.baseURL = 'http://localhost:8080';
+// axios.defaults.baseURL = 'http://localhost:8090';
 
 const codeMessage = {
   201: "太棒了，保存成功！",
