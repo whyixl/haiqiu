@@ -24,7 +24,7 @@
                 <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
                 <el-table-column label="俱乐部名称" align="center" prop="name" width="370"></el-table-column>
                 <el-table-column label="简称" align="center" prop="shortname" width="370"></el-table-column>
-                <el-table-column label="国家/地区" align="center" prop="country" width="370"></el-table-column>
+                <el-table-column label="国家/地区" align="center" prop="countryId" width="370"></el-table-column>
                 <el-table-column label="操作" align="center" width="240">
                     <template slot-scope="scope">
                         <el-button @click="edit()" size="small" type="text">编辑</el-button>
@@ -50,8 +50,8 @@
                     <el-form-item label="简称" prop="shortname" >
                         <el-input  placeholder="请输入俱乐部简称 " v-model="clubForm.shortname"></el-input>
                     </el-form-item>
-                    <el-form-item label="国家" prop="country">
-                        <el-select  placeholder="请选择国家" v-model="clubForm.country" style="width:100%" >
+                    <el-form-item label="国家" prop="countryId">
+                        <el-select  placeholder="请选择国家" v-model="clubForm.countryId" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
                             <el-option :label="'女性'" :value="2"></el-option>
                             <el-option :label="'混合'" :value="3"></el-option>
@@ -82,7 +82,7 @@
                 clubForm:
                     { name:'',
                         shortname :'',
-                        country :''
+                        countryId :''
                     },
                 clubSearch:null,
                 countrySearch:null,

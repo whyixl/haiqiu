@@ -9,7 +9,7 @@
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="competitionId" type="selection" width="40"></el-table-column>
-        <el-table-column align="center" label="描述" prop="name" width="180"></el-table-column>
+        <el-table-column align="center" label="描述" prop="name" width="220"></el-table-column>
         <el-table-column align="center" label="简称" prop="shortname" width="120"></el-table-column>
         <el-table-column align="center" label="性别" prop="gender" width="120">
           <template slot-scope="scope">
@@ -26,14 +26,14 @@
             {{ scope.row.type === "club" ? '俱乐部': '国际' }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="国家/地区" prop="countryId" width="120"></el-table-column>
+        <el-table-column align="center" label="国家/地区" prop="countryId" width="140"></el-table-column>
         <el-table-column align="center" label="联盟" prop="federationId" width="120"></el-table-column>
         <el-table-column align="center" label="开始日期" prop="starttime" width="140">
           <template slot-scope="scope">
             {{ scope.row.starttime | moment('YYYY-MM-DD') }}
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="130">
+        <el-table-column align="center" fixed="right" label="操作" width="140">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
             <router-link :to="{path: '/system/season',query: {id: scope.row.id}}">

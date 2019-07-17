@@ -32,7 +32,7 @@
                 <el-table-column label="简称" align="center" prop="shortname" width="200"></el-table-column>
                 <el-table-column label="性别" align="center" prop="gender" width="175"></el-table-column>
                 <el-table-column label="年龄" align="center" prop="age" width="175"></el-table-column>
-                <el-table-column label="俱乐部名称" align="center" prop="club" width="280"></el-table-column>
+                <el-table-column label="俱乐部名称" align="center" prop="clubId" width="280"></el-table-column>
                 <el-table-column label="操作" align="center" width="240">
                     <template slot-scope="scope">
                         <el-button @click="edit()" size="small" type="text">编辑</el-button>
@@ -87,8 +87,8 @@
                             <el-option :label="'U7'" :value="19"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="俱乐部名称" prop="club">
-                        <el-select  placeholder="请选择俱乐部" v-model="teamForm.club" style="width:100%" >
+                    <el-form-item label="俱乐部名称" prop="clubId">
+                        <el-select  placeholder="请选择俱乐部" v-model="teamForm.clubId" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
                             <el-option :label="'女性'" :value="2"></el-option>
                             <el-option :label="'混合'" :value="3"></el-option>
@@ -120,7 +120,7 @@
                     { name:'',
                         shortname :'',
                         age :'',
-                        club :'',
+                        clubId :'',
                         gender :''
                     },
                 clubSearch:null,

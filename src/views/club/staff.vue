@@ -40,15 +40,15 @@
                         {{ scope.row.birthday | moment('YYYY-MM-DD') }}
                     </template>
                 </el-table-column>
-                <el-table-column  align="center" prop="team" label="所属球队"></el-table-column>
-                <el-table-column  align="center" prop="role" label="领域"></el-table-column>
-                <el-table-column  align="center" prop="position" label="角色"></el-table-column>
-                <el-table-column align="center" prop="country" label="出生国家"></el-table-column>
-                <el-table-column align="center" prop="place" label="出生地"></el-table-column>
+                <el-table-column  align="center" prop="teamId" label="所属球队"></el-table-column>
+                <el-table-column  align="center" prop="roleId" label="领域"></el-table-column>
+                <el-table-column  align="center" prop="position1" label="角色"></el-table-column>
+                <el-table-column align="center" prop="birth_countryId" label="出生国家"></el-table-column>
+                <el-table-column align="center" prop="birth_place" label="出生地"></el-table-column>
                 <el-table-column align="center" prop="shoesize" label="球鞋尺寸"></el-table-column>
                 <el-table-column align="center" prop="jerseysize" label="球衣尺寸"></el-table-column>
                 <el-table-column align="center" prop="shortssize" label="短裤尺寸"></el-table-column>
-                <el-table-column align="center" prop="nationality1" label="国籍"></el-table-column>
+                <el-table-column align="center" prop="countryId" label="国籍"></el-table-column>
                 <el-table-column  align="center" prop="nationality2" label="第二国籍"></el-table-column>
                 <el-table-column align="center" prop="start" label="生效日期" width="100">
                     <template slot-scope="scope">
@@ -91,8 +91,8 @@
                             <el-form-item label="出生日期" prop="form.birthday">
                                 <el-date-picker v-model="form.birthday" align="right" type="date" placeholder="选择日期" :picker-options="$store.state.datePickerOptions" style="width: 100%;"></el-date-picker>
                             </el-form-item>
-                            <el-form-item label="出生国家" prop="form.birth_country">
-                                <el-select placeholder="请输入出生国家" v-model="form.birth_country" style="width:100%">
+                            <el-form-item label="出生国家" prop="form.birth_countryId">
+                                <el-select placeholder="请输入出生国家" v-model="form.birth_countryId" style="width:100%">
                                     <el-option label="男" value=1></el-option>
                                     <el-option label="女" value=2></el-option>
                                 </el-select>
@@ -100,8 +100,8 @@
                             <el-form-item label="出生地" prop="form.birth_place">
                                 <el-input placeholder="请输入出生地" v-model="form.birth_place"></el-input>
                             </el-form-item>
-                            <el-form-item label="国籍" prop="form.country">
-                                <el-select placeholder="请输入国籍" v-model="form.country" style="width:100%">
+                            <el-form-item label="国籍" prop="form.countryId">
+                                <el-select placeholder="请输入国籍" v-model="form.countryId" style="width:100%">
                                     <el-option label="男" value=1></el-option>
                                     <el-option label="女" value=2></el-option>
                                 </el-select>
@@ -128,15 +128,15 @@
 
                     <el-tab-pane label="分配信息">
                         <el-form ref="distribution" :model="distribution" label-width="80px">
-                            <el-form-item label="所属球队" prop="distribution.team">
-                                <el-select  placeholder="请选择球队" v-model="distribution.team" style="width:100%" >
+                            <el-form-item label="所属球队" prop="distribution.teamId">
+                                <el-select  placeholder="请选择球队" v-model="distribution.teamId" style="width:100%" >
                                     <el-option :label="'男性'" :value="1"></el-option>
                                     <el-option :label="'女性'" :value="2"></el-option>
                                     <el-option :label="'混合'" :value="3"></el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="领域"  prop="distribution.role">
-                                <el-select name="" id="" @change="getPosition(distribution.role)" v-model="distribution.role" placeholder="请选择领域" style="width:50%;">
+                                <el-select name="" id="" @change="getPosition(distribution.roleId)" v-model="distribution.roleId" placeholder="请选择领域" style="width:50%;">
                                     <el-option :label="role.text " v-for="role in roles" :value="role.id">{{role.text}}</el-option>
                                 </el-select>
                                 <el-select name="" id="" v-model="distribution.position1" placeholder="请选择角色" style="width:50%;">
@@ -184,10 +184,10 @@
                     birthday:'',
                     height:'',
                     weight:'',
-                    birth_country:'',
+                    birth_countryId:'',
                     birth_place:'',
                     nationality2:'',
-                    country:''
+                    countryId:''
                 },
                 detail:{
                     preferred_side:'',
@@ -197,8 +197,8 @@
                     shortssize:''
                 },
                 distribution:{
-                    team:'',
-                    role:'',
+                    teamId:'',
+                    roleId:'',
                     position1:'',
                     shirtnumber:'',
                     start:'',
