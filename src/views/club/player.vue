@@ -42,14 +42,18 @@
                 </el-table-column>
                 <el-table-column align="center" prop="height" label="身高"></el-table-column>
                 <el-table-column align="center" prop="weight" label="体重"></el-table-column>
-                <el-table-column align="center" prop="country" label="出生国家/地区"></el-table-column>
-                <el-table-column align="center" prop="place" label="出生地"></el-table-column>
-                <el-table-column align="center" prop="shoesize" label="鞋子尺寸"></el-table-column>
-                <el-table-column  align="center" prop="preferred_side" label="惯用脚"></el-table-column>
                 <el-table-column  align="center" prop="team" label="所属球队"></el-table-column>
                 <el-table-column  align="center" prop="role" label="位置组"></el-table-column>
                 <el-table-column  align="center" prop="position" label="确切位置"></el-table-column>
                 <el-table-column  align="center" prop="shirtnumber" label="球衣号"></el-table-column>
+                <el-table-column align="center" prop="country" label="出生国家/地区"></el-table-column>
+                <el-table-column align="center" prop="place" label="出生地"></el-table-column>
+                <el-table-column align="center" prop="shoesize" label="球鞋尺寸"></el-table-column>
+                <el-table-column  align="center" prop="preferred_side" label="惯用脚"></el-table-column>
+                <el-table-column align="center" prop="country" label="球衣尺寸"></el-table-column>
+                <el-table-column align="center" prop="place" label="短裤尺寸"></el-table-column>
+                <el-table-column align="center" prop="shoesize" label="国籍"></el-table-column>
+                <el-table-column  align="center" prop="preferred_side" label="第二国籍"></el-table-column>
                 <el-table-column align="center" prop="start" label="开始时间" width="100">
                     <template slot-scope="scope">
                         {{ scope.row.start | moment('YYYY-MM-DD') }}
@@ -97,8 +101,8 @@
                 <el-form-item label="出生地">
                     <el-input placeholder="请输入出生地"></el-input>
                 </el-form-item>
-                <el-form-item label="鞋子尺寸">
-                    <el-input placeholder="请输入鞋子尺寸"></el-input>
+                <el-form-item label="球鞋尺寸">
+                    <el-input placeholder="请输入球鞋尺寸"></el-input>
                 </el-form-item>
                 <el-form-item label="惯用脚">
                     <el-select v-model="foot" placeholder="请选择惯用脚" style="width:100%">
@@ -128,10 +132,10 @@
                         <el-option :label="position.text "  v-for="position in positions":value="position.id">{{position.text}}</el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="开始时间">
+                <el-form-item label="成员生效日期">
                     <el-date-picker v-model="start" align="right" type="date" placeholder="选择日期" :picker-options="$store.state.datePickerOptions" style="width: 100%;"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="结束时间">
+                <el-form-item label="成员生效日期">
                     <el-date-picker v-model="end" align="right" type="date" placeholder="选择日期" :picker-options="$store.state.datePickerOptions" style="width: 100%;"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="出生日期">
@@ -165,6 +169,7 @@
                 start: null,
                 end: null,
                 roles:[],
+                team3:null,
                 roleName:'',
                 positions:[],
                 daterange:null,

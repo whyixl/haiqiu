@@ -106,9 +106,6 @@
                             <el-option :label="'上海申鑫'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="球衣号">
-                        <el-input placeholder="请输入球衣号"></el-input>
-                    </el-form-item>
                     <el-form-item label="球员类型" >
                         <el-select  placeholder="请选择球员类型" v-model="playerType" style="width:100%" >
                             <el-option :label="'首发'" :value="1"></el-option>
