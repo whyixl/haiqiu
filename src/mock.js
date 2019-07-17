@@ -112,19 +112,19 @@ const queryUserAuthority = () => ({
             menuCode: "match",
             link: "/match",
             icon: "el-icon-menu",
-            lft: 16,
-            rgt: 19,
+            lft: 18,
+            rgt: 25,
             depth: 1
         },
         {
             menuId: 13,
-            menuName: "首页",
+            menuName: "赛程信息",
             menuCode: "match_dashboard",
             link: "/match/dashboard",
             icon: "el-icon-menu",
             lft: 17,
             rgt: 17,
-            depth: 2
+            depth: 1
         },
         {
             menuId: 14,
@@ -132,8 +132,8 @@ const queryUserAuthority = () => ({
             menuCode: "lineup",
             link: "/match/lineup",
             icon: "el-icon-menu",
-            lft: 17,
-            rgt: 18,
+            lft: 19,
+            rgt: 20,
             depth: 2
         },
         {
@@ -142,8 +142,8 @@ const queryUserAuthority = () => ({
             menuCode: "matchStatistics",
             link: "/match/matchStatistics",
             icon: "el-icon-menu",
-            lft: 18,
-            rgt: 18,
+            lft: 19,
+            rgt: 19,
             depth: 2
         }
     ],

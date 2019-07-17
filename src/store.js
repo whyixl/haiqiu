@@ -65,7 +65,8 @@ const store = new Vuex.Store({
       ]
     },*/
     // 分页控件的每页显示条目个数
-    paginationPageSizes: [5, 10, 20, 50],
+    // paginationPageSizes: [5, 10, 20, 40],
+    paginationPageSizes: [1, 2, 3, 4],
     // 分页控件组件布局，子组件名用逗号分隔
     paginationLayout: "total, sizes, prev, pager, next, jumper"
   },

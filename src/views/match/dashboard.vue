@@ -21,10 +21,9 @@
                 </el-row>
                 <br>
                 <el-button size="medium" type="primary" icon="el-icon-plus" @click="dialogVisible = true">新增</el-button>
-                <el-button size="medium" icon="el-icon-delete" :disabled="selectedRows.length==0">删除</el-button>
+                <el-button size="medium" icon="el-icon-delete" :disabled="selectedRows.length===0">删除</el-button>
             </div>
-
-
+          
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
                 <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
@@ -35,19 +34,24 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="时间" align="center" prop="time" width="200"></el-table-column>
-                <el-table-column label="主场" align="center" prop="home" width="150"></el-table-column>
-                <el-table-column label="客场" align="center" prop="away" width="150"></el-table-column>
-                <el-table-column label="结果" align="center" prop="result" width="100"></el-table-column>
+                <el-table-column label="主队" align="center" prop="home" width="150"></el-table-column>
+                <el-table-column label="客队" align="center" prop="away" width="150"></el-table-column>
+                <el-table-column label="比分" align="center" prop="result" width="100"></el-table-column>
                 <el-table-column label="地点" align="center" prop="place" width="250"></el-table-column>
-                <el-table-column label="操作" align="center" width="150">
-                    <template slot-scope="scope">
-                        <el-button @click="edit()" size="small" type="text">编辑</el-button>
-                        <el-button @click="remove()" size="small" type="text">删除</el-button>
-                    </template>
-                </el-table-column>
+              <el-table-column align="center" fixed="right" label="操作" width="160">
+                <template slot-scope="scope">
+                  <el-button @click="edit(scope.$index)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
+                  <router-link :to="{path: '/match/lineup',query: {id: scope.row.name}}">
+                    <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="阵容"></el-button>
+                  </router-link>
+                  <router-link :to="{path: '/match/matchStatistics',query: {id: scope.row.name}}">
+                    <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="统计"></el-button>
+                  </router-link>
+                  <el-button @click="remove(scope.$index)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
+                </template>
+              </el-table-column>
             </el-table>
-
-
+          
             <!-- 分页组件 -->
             <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
                            :page-sizes="$store.state.paginationPageSizes" :total="pager.total"
@@ -56,7 +60,7 @@
 
         <!-- 编辑页面 -->
         <el-dialog :visible.sync="dialogVisible" title="添加比赛">
-            <el-form :label-position="'right'" label-width="80px">
+            <el-form :label-position="left" label-width="80px">
                 <el-form :model="seasonForm" :rules="seasonRule" label-width="160px" ref="seasonForm">
                     <el-form-item label="赛季名称" prop="name" >
                         <el-select  placeholder="请选择赛事赛季" v-model="season1" style="width:100%" >
@@ -68,14 +72,14 @@
                     <el-form-item label="日期">
                         <el-date-picker v-model="datatime" align="right" type="date" placeholder="选择日期" :picker-options="$store.state.datePickerOptions" style="width: 100%;"></el-date-picker>
                     </el-form-item>
-                    <el-form-item label="主场" >
+                    <el-form-item label="主队" >
                         <el-select  placeholder="请选择主场球队" v-model="team1" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
                             <el-option :label="'女性'" :value="2"></el-option>
                             <el-option :label="'混合'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="客场" >
+                    <el-form-item label="客队" >
                         <el-select  placeholder="请选择客场球队" v-model="team2" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
                             <el-option :label="'女性'" :value="2"></el-option>
@@ -99,11 +103,6 @@
     </div>
 </template>
 
-<style>
-    .input-with-select .el-input-group__prepend {
-        background-color: #fff;
-    }
-</style>
 <script>
 
     export default {
@@ -111,6 +110,7 @@
 
         data() {
             return {
+                matchForm: {},
                 selectedRows: [],
                 seasonRule:null,
                 season:null,
