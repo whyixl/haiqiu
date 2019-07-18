@@ -100,8 +100,8 @@
             this.query(this.competitionId);
         },
         methods: {
-            submit(form) {
-                this.$refs[form].validate((valid) => {
+            submit(seasonForm) {
+                this.$refs[seasonForm].validate((valid) => {
                     if (valid) {
                         this.$http.post('http://192.168.0.253:8090/club', {
                             data: this.seasonForm
