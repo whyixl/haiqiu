@@ -59,6 +59,9 @@
     <el-dialog :visible.sync="dialogVisible" title="添加赛事">
       <el-form :label-position="'right'" label-width="80px">
         <el-form :model="competitionForm" :rules="competitionRule" label-width="80px" ref="competitionForm">
+          <el-form-item label="id" prop="id" style="display:none" >
+            <el-input  v-model="competitionForm.id"></el-input>
+          </el-form-item>
           <el-form-item label="描述">
             <!-- name -->
             <el-input placeholder="请输入赛事全称" v-model="competitionForm.name"></el-input>
@@ -151,6 +154,7 @@
             };
             return {
                 competitionForm: {
+                   id:'',
                     name: null,
                     shortname: null,
                     type: null,

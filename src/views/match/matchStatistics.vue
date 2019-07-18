@@ -60,6 +60,9 @@
         <el-dialog :visible.sync="dialogVisible" title="添加比赛统计">
             <el-form :label-position="'right'" label-width="80px">
                 <el-form :model="match_eventForm" :rules="match_eventRule" label-width="160px" ref="seasonForm">
+                    <el-form-item label="id" prop="id" style="display:none" >
+                        <el-input  v-model="match_eventForm.id"></el-input>
+                    </el-form-item>
                     <el-form-item label="比赛名称" prop="match_eventForm.matchId" >
                         <el-select  placeholder="请选择比赛名称" v-model="match_eventForm.matchId" style="width:100%" >
                             <el-option :label="'北体大VS中优'" :value="1"></el-option>
@@ -129,6 +132,7 @@
                 selectedRows: [],
                 match_eventRule:null,
                 match_eventForm:{
+                    id:'',
                     created:'',
                     matchId:'',
                     teamId:'',

@@ -62,6 +62,9 @@
         <el-dialog :visible.sync="dialogVisible" title="添加比赛">
             <el-form :label-position="left" label-width="80px">
                 <el-form :model="matchForm" :rules="matchRule" label-width="160px" ref="seasonForm">
+                    <el-form-item label="id" prop="id" style="display:none" >
+                        <el-input  v-model="matchForm.id"></el-input>
+                    </el-form-item>
                     <el-form-item label="赛季名称" prop="matchForm.seasonId" >
                         <el-select  placeholder="请选择赛事赛季" v-model="matchForm.seasonId" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
@@ -116,6 +119,7 @@
                 seasonSearch:null,
                 teamSearch:null,
                matchForm:{
+                    id:'',
                   seasonId: '',
                    datetime:'',
                    homeId:'',

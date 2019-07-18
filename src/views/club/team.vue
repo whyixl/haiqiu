@@ -56,6 +56,9 @@
         <el-dialog :visible.sync="dialogVisible" title="添加球队">
             <el-form :label-position="'right'" label-width="80px">
                 <el-form :model="teamForm" :rules="teamRule" label-width="160px" ref="teamForm">
+                    <el-form-item label="id" prop="id" style="display:none" >
+                        <el-input  v-model="teamForm.id"></el-input>
+                    </el-form-item>
                     <el-form-item label="球队名称" prop="name" >
                         <el-input  placeholder="请输入球队名称 " v-model="teamForm.name"></el-input>
                     </el-form-item>
@@ -121,7 +124,8 @@
         data() {
             return {
                 teamForm:
-                    { name:'',
+                    { id:'',
+                        name:'',
                         shortname :'',
                         age :'',
                         clubId :'',

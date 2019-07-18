@@ -82,6 +82,9 @@
               <el-tabs>
                   <el-tab-pane label="常规信息">
                       <el-form ref="form" :model="form" label-width="80px">
+                          <el-form-item label="id" prop="id" style="display:none" >
+                              <el-input  v-model="form.id"></el-input>
+                          </el-form-item>
                         <el-form-item label="姓名" prop="form.name">
                           <el-input placeholder="请输入姓名" v-model="form.name"></el-input>
                         </el-form-item>
@@ -209,6 +212,7 @@
                 nameSearch:null,
                 teamSearch:null,
                 form:{
+                   id:'',
                     name:'',
                     surname:'',
                     gender:'',

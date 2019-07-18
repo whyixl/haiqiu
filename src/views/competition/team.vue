@@ -49,6 +49,9 @@
         <el-dialog :visible.sync="dialogVisible" title="添加球队">
             <el-form :label-position="'right'" label-width="80px">
                 <el-form :model="se_teForm" :rules="se_teRule" label-width="160px" ref="seasonForm">
+                    <el-form-item label="id" prop="id" style="display:none" >
+                        <el-input  v-model="se_teForm.id"></el-input>
+                    </el-form-item>
                     <el-form-item label="赛季名称" prop="seasonId" >
                         <el-select  placeholder="请选择相关赛季" v-model="se_teForm.seasonId" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
@@ -91,6 +94,7 @@
                 seasonSearch:null,
                 teamSearch:null,
                 se_teForm:{
+                    id:'',
                     seasonId:null,
                     teamId:null,
                 },
@@ -98,9 +102,13 @@
                 pager: {current: 1, size: 10, total: 0, records: []}
             };
         },
-        mounted() {
-            this.query();
+        created() {
+            this.competitionId = this.$route.query.id;
         },
+        mounted() {
+            this.query(this.competitionId);
+        },
+
         methods: {
             submit(se_teForm) {
                 this.$refs[se_teForm].validate((valid) => {

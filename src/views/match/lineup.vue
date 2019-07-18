@@ -39,6 +39,9 @@
     <el-dialog :visible.sync="dialogVisible" title="添加阵型">
       <el-form :label-position="'right'" label-width="80px">
         <el-form :model="lineupForm" :rules="lineupRule" label-width="160px" ref="seasonForm">
+          <el-form-item label="id" prop="id" style="display:none" >
+            <el-input  v-model="lineupForm.id"></el-input>
+          </el-form-item>
           <el-form-item label="比赛名称" prop="lineupForm.matchId">
             <el-select placeholder="请选择比赛名称" style="width:100%" v-model="lineupForm.matchId">
               <el-option :label="'北体大VS中优'" :value="1"></el-option>
@@ -133,6 +136,7 @@
                 selectedRows: [],
                 lineupRule: null,
                 lineupForm:{
+                    id:'',
                     matchId: '',
                     teamId: '',
                     lineupname: '',

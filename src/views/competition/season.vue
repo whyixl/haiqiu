@@ -43,6 +43,9 @@
         <el-dialog :visible.sync="dialogVisible" title="添加赛季">
             <el-form :label-position="'right'" label-width="80px">
                 <el-form :model="seasonForm" :rules="seasonRule" label-width="160px" ref="seasonForm">
+                    <el-form-item label="id" prop="id" style="display:none" >
+                        <el-input  v-model="seasonForm.id"></el-input>
+                    </el-form-item>
                     <el-form-item label="名称" prop="name" >
                         <!-- name -->
                         <el-input  placeholder="请输入赛季名称" v-model="seasonForm.name"></el-input>
@@ -86,8 +89,9 @@
         data() {
             return {
                 seasonForm:
-                    { name:'',
-                      dateRange :'',
+                    { id:'',
+                        name:'',
+                        dateRange :'',
                         competitionId:''
                     },
                 selectedRows: [],

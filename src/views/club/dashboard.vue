@@ -44,6 +44,9 @@
         <el-dialog :visible.sync="dialogVisible" title="添加俱乐部">
             <el-form :label-position="'right'" label-width="80px">
                 <el-form :model="clubForm" :rules="clubRule" label-width="160px" ref="clubForm">
+                    <el-form-item label="id" prop="id" style="display:none" >
+                        <el-input  v-model="clubForm.id"></el-input>
+                    </el-form-item>
                     <el-form-item label="俱乐部名称" prop="name" >
                         <el-input  placeholder="请输入俱乐部名称 " v-model="clubForm.name"></el-input>
                     </el-form-item>
@@ -80,7 +83,8 @@
         data() {
             return {
                 clubForm:
-                    { name:'',
+                    { id:'',
+                        name:'',
                         shortname :'',
                         countryId :''
                     },
