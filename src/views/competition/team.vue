@@ -4,13 +4,13 @@
             <div slot="header">
                 <el-row :gutter="10">
                     <el-col :span="4">
-                        <el-select v-model="season" placeholder="赛季">
+                        <el-select v-model="seasonSearch" placeholder="赛季">
                             <el-option :label="'中国足球协会甲级联赛2019'" :value="1"></el-option>
                             <el-option :label="'内蒙古中优'" :value="2"></el-option>
                         </el-select>
                     </el-col>
                     <el-col :span="4">
-                        <el-select v-model="team" placeholder="球队">
+                        <el-select v-model="teamSearch" placeholder="球队">
                             <el-option :label="'北京北体大'" :value="1"></el-option>
                             <el-option :label="'内蒙古中优'" :value="2"></el-option>
                         </el-select>
@@ -27,13 +27,13 @@
             <!-- 这一部分是赛事赛季与球队的关系列表 -->
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
-                <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
-                <el-table-column label="赛季名称" align="center" prop="name" width="500"></el-table-column>
-                <el-table-column label="相关球队名称" align="center" prop="competition" width="500"></el-table-column>
-                <el-table-column label="操作" align="center" width="350">
+                <el-table-column align="center" prop="se_teId" type="selection" width="55"></el-table-column>
+                <el-table-column label="赛季名称" align="center" prop="seasonId" width="500"></el-table-column>
+                <el-table-column label="相关球队名称" align="center" prop="teamId" width="500"></el-table-column>
+                <el-table-column align="center" fixed="right" label="操作" width="350">
                     <template slot-scope="scope">
-                        <el-button @click="edit()" size="small" type="text">编辑</el-button>
-                        <el-button @click="remove()" size="small" type="text">删除</el-button>
+                        <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
+                        <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -48,16 +48,16 @@
         <!-- 编辑页面 -->
         <el-dialog :visible.sync="dialogVisible" title="添加球队">
             <el-form :label-position="'right'" label-width="80px">
-                <el-form :model="seasonForm" :rules="seasonRule" label-width="160px" ref="seasonForm">
-                    <el-form-item label="赛季名称" prop="name" >
-                        <el-select  placeholder="请选择相关赛季" v-model="season2" style="width:100%" >
+                <el-form :model="se_teForm" :rules="se_teRule" label-width="160px" ref="seasonForm">
+                    <el-form-item label="赛季名称" prop="seasonId" >
+                        <el-select  placeholder="请选择相关赛季" v-model="se_teForm.seasonId" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
                             <el-option :label="'女性'" :value="2"></el-option>
                             <el-option :label="'混合'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="球队" >
-                        <el-select  placeholder="请选择相关球队" v-model="team4" style="width:100%" >
+                    <el-form-item label="球队" prop="teamId" >
+                        <el-select  placeholder="请选择相关球队" v-model="se_teForm.teamId" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
                             <el-option :label="'女性'" :value="2"></el-option>
                             <el-option :label="'混合'" :value="3"></el-option>
@@ -87,11 +87,13 @@
         data() {
             return {
                 selectedRows: [],
-                seasonRule:null,
-                season:null,
-                season2:null,
-                team:null,
-                team5:null,
+                se_teRule:null,
+                seasonSearch:null,
+                teamSearch:null,
+                se_teForm:{
+                    seasonId:null,
+                    teamId:null,
+                },
                 dialogVisible: false,
                 pager: {current: 1, size: 10, total: 0, records: []}
             };
@@ -104,7 +106,7 @@
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         this.$http.post('http://192.168.0.253:8090/club', {
-                            data: this.seasonForm
+                            data: this.se_teForm
                         })
                     } else {
                         console.log('error submit!!');
@@ -112,34 +114,49 @@
                     }
                 });
             },
-            query() {
-                this.$http.get('http://192.168.0.253:8090/club', {
-                    params: {
-                        id: 1039,
-                        name: "内蒙古中优"
-                    },
-                }).then(res => {
-                    this.pager = res.data;
-                });
-            },
-            edit() {
+            add() {
                 this.dialogVisible = true;
-            },
-            onSelectionChange(rows) {
-                this.selectedRows = rows.map(item => item.userId);
+                this.se_teForm = {}
             },
             remove() {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
+                }).then()
+            },
+            deleteBatch() {
+                this.$http.delete('', {
+                    data: {
+                        coIds: this.selectedRows
+                    }
+                })
+            },
+            edit(competition) {
+                this.dialogVisible = true;
+                this.competitionForm = competition
+            },
+            query() {
+                this.$http.get('http://192.168.0.253:8090/club/co', {
+                    params: this.pager,
+                }).then(res => {
+                    this.pager = res.data
                 });
             },
-            onRemoveFile(file) {
-                this.$http.delete(
-                    `/oss/remove/${this.bucketName}/${file.response}`
-                );
+            // 分页组件点击事件
+            pageChange(val) {
+                this.pager.current = val;
+                this.query()
+            },
+            sizeChange(val) {
+                this.pager.size = val;
+                this.query()
+            },
+
+            onSelectionChange(rows) {
+                this.selectedRows = rows.map(item => item.id);
             }
+
         }
     };
 </script>

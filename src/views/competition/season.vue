@@ -8,24 +8,23 @@
             <!-- 这一部分是赛季列表 -->
               <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                        style="width: 100%" v-loading="$store.state.loading">
-                 <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
+                 <el-table-column align="center" prop="seasonId" type="selection" width="55"></el-table-column>
                  <el-table-column label="赛季名称" align="center" prop="name" width="370"></el-table-column>
-                 <el-table-column label="相关赛事名称" align="center" prop="competition" width="370"></el-table-column>
-                   <el-table-column label="赛季开始日期" align="center" width="200">
+                 <el-table-column label="相关赛事名称" align="center" prop="competitionId" width="370"></el-table-column>
+                   <el-table-column label="赛季开始日期" prop="start" align="center" width="200">
                        <template slot-scope="scope">
                            {{ scope.row.start | moment('YYYY-MM-DD') }}
                        </template>
                    </el-table-column>
-                   <el-table-column label="赛季结束日期" align="center" width="200">
+                   <el-table-column label="赛季结束日期" prop="end" align="center" width="200">
                        <template slot-scope="scope">
                            {{ scope.row.end | moment('YYYY-MM-DD') }}
                        </template>
                    </el-table-column>
-
-                  <el-table-column label="操作" align="center" width="200">
+                  <el-table-column align="center" fixed="right" label="操作" width="200">
                       <template slot-scope="scope">
-                          <el-button @click="edit()" size="small" type="text">编辑</el-button>
-                          <el-button @click="remove()" size="small" type="text">删除</el-button>
+                          <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
+                          <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
                       </template>
                   </el-table-column>
               </el-table>
@@ -46,7 +45,7 @@
                         <el-input  placeholder="请输入赛季名称" v-model="seasonForm.name"></el-input>
                     </el-form-item>
                     <el-form-item label="相关赛事" >
-                        <el-select  placeholder="请选择相关赛事" v-model="competition" style="width:100%" >
+                        <el-select  placeholder="请选择相关赛事" v-model="seasonForm.competitionId" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
                             <el-option :label="'女性'" :value="2"></el-option>
                             <el-option :label="'混合'" :value="3"></el-option>
@@ -85,13 +84,12 @@
             return {
                 seasonForm:
                     { name:'',
-                      dateRange :''
+                      dateRange :'',
+                        competitionId:''
                     },
                 selectedRows: [],
                 seasonRule:null,
-                competition:null,
                 dialogVisible: false,
-                daterange:null,
                 pager: {current: 1, size: 10, total: 0, records: []}
             };
         },
@@ -114,33 +112,49 @@
                     }
                 });
             },
-            query(competitionId) {
-                this.$http.get('http://192.168.0.253:8090/season', {
-                    params: {
-                        competitionId: competitionId,
-                    },
-                }).then(res => {
-                    this.pager = res.data;
-                });
-            },
-            edit() {
+            add() {
                 this.dialogVisible = true;
-            },
-            onSelectionChange(rows) {
-                this.selectedRows = rows.map(item => item.userId);
+                this.seasonForm = {}
             },
             remove() {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
+                }).then()
+            },
+            deleteBatch() {
+                this.$http.delete('', {
+                    data: {
+                        coIds: this.selectedRows
+                    }
+                })
+            },
+            edit(season) {
+                this.dialogVisible = true;
+                this.seasonForm = season
+            },
+            query() {
+                this.$http.get('http://192.168.0.253:8090/club/co', {
+                    params: this.pager,
+                }).then(res => {
+                    this.pager = res.data
                 });
             },
-            onRemoveFile(file) {
-                this.$http.delete(
-                    `/oss/remove/${this.bucketName}/${file.response}`
-                );
+            // 分页组件点击事件
+            pageChange(val) {
+                this.pager.current = val;
+                this.query()
+            },
+            sizeChange(val) {
+                this.pager.size = val;
+                this.query()
+            },
+
+            onSelectionChange(rows) {
+                this.selectedRows = rows.map(item => item.id);
             }
+
         }
     };
 </script>

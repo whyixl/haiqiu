@@ -27,19 +27,21 @@
 
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
-                <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
-                <el-table-column label="比赛名称" align="center" prop="name" width="180"></el-table-column>
-                <el-table-column label="球队" align="center" prop="team" width="180"></el-table-column>
-                <el-table-column label="球员" align="center" prop="personName" width="160"></el-table-column>
-                <el-table-column label="球衣号" align="center" prop="personNum" width="110"></el-table-column>
+                <el-table-column align="center" prop="match_eventId" type="selection" width="55"></el-table-column>
+                <el-table-column label="比赛名称" align="center" prop="matchId" width="180"></el-table-column>
+                <el-table-column label="球队" align="center" prop="teamId" width="180"></el-table-column>
+                <el-table-column label="球员" align="center" prop="personId" width="160"></el-table-column>
+                <el-table-column label="球衣号" align="center" prop="shirtnumber" width="110"></el-table-column>
                 <el-table-column label="分钟" align="center" prop="minute" width="110"></el-table-column>
                 <el-table-column label="事件" align="center" prop="action" width="150"></el-table-column>
                 <el-table-column label="类型" align="center" prop="kind" width="150"></el-table-column>
-                <el-table-column label="相关球员" align="center" prop="addition_person" width="160"></el-table-column>
-                <el-table-column align="center" prop="create" label="创建时间" width="150">
+                <el-table-column label="相关球员" align="center" prop="additional_personId" width="160"></el-table-column>
+                <el-table-column align="center" prop="created" label="创建时间" width="150">
                     <template slot-scope="scope">
-                        {{ scope.row.time | moment('YYYY-MM-DD hh:mm') }}
+                        {{ scope.row.created | moment('YYYY-MM-DD hh:mm') }}
                     </template>
+                </el-table-column>
+                <el-table-column align="center" label="操作" width="120">
                     <template slot-scope="scope">
                         <el-button @click="edit()" size="small" type="text">编辑</el-button>
                         <el-button @click="remove()" size="small" type="text">删除</el-button>
@@ -57,50 +59,50 @@
         <!-- 编辑页面 -->
         <el-dialog :visible.sync="dialogVisible" title="添加比赛统计">
             <el-form :label-position="'right'" label-width="80px">
-                <el-form :model="seasonForm" :rules="seasonRule" label-width="160px" ref="seasonForm">
-                    <el-form-item label="比赛名称" prop="name" >
-                        <el-select  placeholder="请选择比赛名称" v-model="match" style="width:100%" >
+                <el-form :model="match_eventForm" :rules="match_eventRule" label-width="160px" ref="seasonForm">
+                    <el-form-item label="比赛名称" prop="match_eventForm.matchId" >
+                        <el-select  placeholder="请选择比赛名称" v-model="match_eventForm.matchId" style="width:100%" >
                             <el-option :label="'北体大VS中优'" :value="1"></el-option>
                             <el-option :label="'北体大VS上海申鑫'" :value="2"></el-option>
                             <el-option :label="'北体大VS四川FC'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="球队" >
-                        <el-select  placeholder="请选择球队" v-model="team7" style="width:100%" >
+                    <el-form-item label="球队"  prop="match_eventForm.matchId">
+                        <el-select  placeholder="请选择球队" v-model="match_eventForm.teamId" style="width:100%" >
                             <el-option :label="'北体大'" :value="1"></el-option>
                             <el-option :label="'中优'" :value="2"></el-option>
                             <el-option :label="'上海申鑫'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="球员" >
-                        <el-select  placeholder="请选择球员" v-model="personName" style="width:100%" >
+                    <el-form-item label="球员"  prop="match_eventForm.personId">
+                        <el-select  placeholder="请选择球员" v-model="match_eventForm.personId" style="width:100%" >
                             <el-option :label="'王军'" :value="1"></el-option>
                             <el-option :label="'中优'" :value="2"></el-option>
                             <el-option :label="'上海申鑫'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="相关球员" >
-                        <el-select  placeholder="进球加助攻球员/替换加替下球员" v-model="addition_person" style="width:100%" >
+                    <el-form-item label="相关球员"  prop="match_eventForm.additional_personId">
+                        <el-select  placeholder="进球加助攻球员/替换加替下球员" v-model="match_eventForm.additional_personId" style="width:100%" >
                             <el-option :label="'王军'" :value="1"></el-option>
                             <el-option :label="'中优'" :value="2"></el-option>
                             <el-option :label="'上海申鑫'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="分钟">
-                        <el-input placeholder="请输入分钟"></el-input>
+                    <el-form-item label="分钟"  prop="match_eventForm.minute">
+                        <el-input placeholder="请输入分钟" v-model="match_eventForm.minute" ></el-input>
                     </el-form-item>
-                    <el-form-item label="事件及类型" >
-                        <el-select name="" id="" @change="getPosition(actionName)" v-model="actionName" placeholder="请选择事件" style="width:50%;">
+                    <el-form-item label="事件及类型"  prop="match_eventForm.action">
+                        <el-select name="" id="" @change="getPosition(action)" v-model="match_eventForm.action" placeholder="请选择事件" style="width:50%;">
                             <!--<el-option label="">请选择事件</el-option>-->
                             <el-option :label="action.text " v-for="action in actions" :value="action.id">{{action.text}}</el-option>
                         </el-select>
-                        <el-select name="" id="" v-model="kindName" placeholder="请选择类型" style="width:50%;">
+                        <el-select name="" id="" v-model="match_eventForm.kind" placeholder="请选择类型" style="width:50%;">
                            <!-- <el-option value="">请选择类型</el-option>-->
                             <el-option :label="kind.text "  v-for="kind in kinds":value="kind.id">{{kind.text}}</el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="创建时间">
-                        <el-date-picker v-model="create" align="right" type="date" placeholder="选择日期" :picker-options="$store.state.datePickerOptions" style="width: 100%;"></el-date-picker>
+                    <el-form-item label="创建时间"  prop="match_eventForm.created">
+                        <el-date-picker v-model="match_eventForm.created" align="right" type="date" placeholder="选择日期" :picker-options="$store.state.datePickerOptions" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-form>
             </el-form>
@@ -125,18 +127,22 @@
         data() {
             return {
                 selectedRows: [],
-                seasonRule:null,
-                match:null,
-                team7:null,
-                lineup:null,
-                personName:null,
-                addition_person:null,
-                actionName:'',
-                kindName:'',
+                match_eventRule:null,
+                match_eventForm:{
+                    created:'',
+                    matchId:'',
+                    teamId:'',
+                    lineupname:'',
+                    personId:'',
+                    additional_personId:'',
+                    action:'',
+                    kind:'',
+                    minute:''
+
+                },
                 actions:[],
                 kinds:[],
                 areas:null,
-                create:null,
                 dialogVisible: false,
                 pager: {current: 1, size: 10, total: 0, records: []}
             };
@@ -186,7 +192,7 @@
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         this.$http.post('http://192.168.0.253:8090/club', {
-                            data: this.seasonForm
+                            data: this.match_eventForm
                         })
                     } else {
                         console.log('error submit!!');
@@ -194,34 +200,49 @@
                     }
                 });
             },
-            query() {
-                this.$http.get('http://192.168.0.253:8090/club', {
-                    params: {
-                        id: 1039,
-                        name: "内蒙古中优"
-                    },
-                }).then(res => {
-                    this.pager = res.data;
-                });
-            },
-            edit() {
+            add() {
                 this.dialogVisible = true;
-            },
-            onSelectionChange(rows) {
-                this.selectedRows = rows.map(item => item.userId);
+                this.match_eventForm = {}
             },
             remove() {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
+                }).then()
+            },
+            deleteBatch() {
+                this.$http.delete('', {
+                    data: {
+                        coIds: this.selectedRows
+                    }
+                })
+            },
+            edit(match_event) {
+                this.dialogVisible = true;
+                this.match_eventForm = match_event
+            },
+            query() {
+                this.$http.get('http://192.168.0.253:8090/club/co', {
+                    params: this.pager,
+                }).then(res => {
+                    this.pager = res.data
                 });
             },
-            onRemoveFile(file) {
-                this.$http.delete(
-                    `/oss/remove/${this.bucketName}/${file.response}`
-                );
+            // 分页组件点击事件
+            pageChange(val) {
+                this.pager.current = val;
+                this.query()
+            },
+            sizeChange(val) {
+                this.pager.size = val;
+                this.query()
+            },
+
+            onSelectionChange(rows) {
+                this.selectedRows = rows.map(item => item.id);
             }
+
         }
     };
 </script>

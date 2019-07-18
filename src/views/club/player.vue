@@ -30,7 +30,7 @@
 
             <el-table :data="pager.records" style="width: 100%" stripe highlight-current-row v-loading="$store.state.loading" @selection-change="onSelectionChange">
 
-                <el-table-column type="selection" width="55" align="center">
+                <el-table-column type="selection" width="55"  prop="personId" align="center">
                 </el-table-column>
                 <el-table-column align="center" prop="name" label="姓名"></el-table-column>
                 <el-table-column align="center" prop="surname" label="英文名"></el-table-column>
@@ -65,10 +65,10 @@
                         {{ scope.row.end | moment('YYYY-MM-DD') }}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="操作" width="100">
+                <el-table-column align="center" fixed="right" label="操作" width="100">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="edit()">编辑</el-button>
-                        <el-button type="text" size="small" @click="remove()">删除</el-button>
+                        <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
+                        <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -296,36 +296,85 @@
                 })
                 this.positions = positions;
             },
-            /* query() {
-                 this.$http.get('http://192.168.0.250:8090/club', {
-                     params: {
-                         id: 1,
-                         name: '1'
-                     }
-                 }).then(res => {
-                     this.pager = res.data;
-             });
-             },*/
-            query() {
-                this.$http.get("http://183.84.17.229/sap/en/person/pe1098").then(res => {
-                    this.pager = res.data;
+            submit(form) {
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        this.$http.post('http://192.168.0.253:8090/club', {
+                            data: this.form
+                        })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
                 });
             },
-            edit() {
-                this.dialogVisible = true;
+            submit(detail) {
+                this.$refs[detail].validate((valid) => {
+                    if (valid) {
+                        this.$http.post('http://192.168.0.253:8090/club', {
+                            data: this.detail
+                        })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
             },
-            onSelectionChange(rows) {
-                this.selectedRows = rows.map(item => item.userId);
+            submit(distribution) {
+                this.$refs[distribution].validate((valid) => {
+                    if (valid) {
+                        this.$http.post('http://192.168.0.253:8090/club', {
+                            data: this.distribution
+                        })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
+            add() {
+                this.dialogVisible = true;
+                this.form = {};
+                this.detail = {};
+                this.distribution = {}
             },
             remove() {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
+                }).then()
+            },
+            deleteBatch() {
+                this.$http.delete('', {
+                    data: {
+                        coIds: this.selectedRows
+                    }
+                })
+            },
+            edit(player) {
+                this.dialogVisible = true;
+                this.form = player
+            },
+            query() {
+                this.$http.get('http://192.168.0.253:8090/club/co', {
+                    params: this.pager,
+                }).then(res => {
+                    this.pager = res.data
                 });
             },
-            onRemoveFile(file) {
-                this.$http.delete(`/oss/remove/${this.bucketName}/${file.response}`);
+            // 分页组件点击事件
+            pageChange(val) {
+                this.pager.current = val;
+                this.query()
+            },
+            sizeChange(val) {
+                this.pager.size = val;
+                this.query()
+            },
+
+            onSelectionChange(rows) {
+                this.selectedRows = rows.map(item => item.id);
             }
 
         }

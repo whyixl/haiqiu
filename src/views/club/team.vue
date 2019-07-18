@@ -27,7 +27,7 @@
             </div>
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
-                <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
+                <el-table-column align="center" prop="teamId" type="selection" width="55"></el-table-column>
                 <el-table-column label="球队名称" align="center" prop="name" width="280"></el-table-column>
                 <el-table-column label="简称" align="center" prop="shortname" width="200"></el-table-column>
                 <el-table-column label="性别" align="center" prop="gender" width="175"></el-table-column>
