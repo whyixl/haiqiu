@@ -24,6 +24,9 @@
                   <el-table-column align="center" fixed="right" label="操作" width="200">
                       <template slot-scope="scope">
                           <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
+                          <router-link :to="{path: '/competition/team',query: {id: scope.row.name}}">
+                              <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="球队"></el-button>
+                          </router-link>
                           <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
                       </template>
                   </el-table-column>
