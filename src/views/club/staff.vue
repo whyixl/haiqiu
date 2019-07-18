@@ -213,7 +213,7 @@
                 areas:[],
                 selectedRows: [],
                 bucketName: "public",
-                pager: {current: 1, size: 10, total: 0, records: []}
+                pager: {current: 1, size: 5, total: 0, records: []}
             }
         },
         created:function() {

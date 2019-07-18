@@ -1,10 +1,11 @@
 import axios from "axios";
 import { Notification } from "element-ui";
 import store from "../store";
+import {Vue} from "vue";
 
 require("../mock");
 
-// axios.defaults.baseURL = 'http://localhost:8090';
+axios.defaults.baseURL = 'http://172.16.6.6:8090';
 
 const codeMessage = {
   201: "太棒了，保存成功！",

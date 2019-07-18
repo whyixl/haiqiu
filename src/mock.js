@@ -239,6 +239,6 @@ const queryUser = () => ({
     pages: 2
 });
 
-Mock.mock("/passport/signIn", "post", signIn);
-Mock.mock("/user/queryUserAuthority", "get", queryUserAuthority);
-Mock.mock("/user", "get", queryUser);
+Mock.mock("http://192.168.79.1/passport/signIn", "post", signIn);
+Mock.mock("http://192.168.79.1/user/queryUserAuthority", "get", queryUserAuthority);
+Mock.mock("http://192.168.79.1/user", "get", queryUser);
