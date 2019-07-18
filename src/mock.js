@@ -95,7 +95,16 @@ const queryUserAuthority = () => ({
             rgt: 14,
             depth: 2
         },
-
+        {
+            menuId: 12,
+            menuName: "轮次",
+            menuCode: "round",
+            link: "/competition/round",
+            icon: "el-icon-menu",
+            lft: 14,
+            rgt: 15,
+            depth: 2
+        },
         {
             menuId: 12,
             menuName: "比赛信息",

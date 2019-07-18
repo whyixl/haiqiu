@@ -106,29 +106,29 @@
                        <el-form-item label="出生日期" prop="form.birthday">
                          <el-date-picker v-model="form.birthday" align="right" type="date" placeholder="选择日期" :picker-options="$store.state.datePickerOptions" style="width: 100%;"></el-date-picker>
                        </el-form-item>
-                       <el-form-item label="出生国家" prop="form.birth_country">
-                         <el-select placeholder="请输入出生国家" v-model="form.birth_countryId" style="width:100%">
-                           <el-option label="男" value=1></el-option>
-                           <el-option label="女" value=2></el-option>
-                         </el-select>
-                       </el-form-item>
-                       <el-form-item label="出生地" prop="form.birth_place">
-                         <el-input placeholder="请输入出生地" v-model="form.birth_place"></el-input>
-                       </el-form-item>
                        <el-form-item label="国籍" prop="form.country">
                          <el-select placeholder="请输入国籍" v-model="form.countryId" style="width:100%">
                             <el-option label="男" value=1></el-option>
                             <el-option label="女" value=2></el-option>
                          </el-select>
                       </el-form-item>
-                      <el-form-item label="第二国籍" prop="form.nationality2">
-                         <el-input placeholder="请输入第二国籍" v-model="form.nationality2"></el-input>
-                       </el-form-item>
                       </el-form>
                   </el-tab-pane>
 
                   <el-tab-pane label="详细信息">
                       <el-form ref="detail" :model="detail" label-width="80px">
+                          <el-form-item label="出生国家" prop="detail.birth_country">
+                              <el-select placeholder="请输入出生国家" v-model="detail.birth_countryId" style="width:100%">
+                                  <el-option label="男" value=1></el-option>
+                                  <el-option label="女" value=2></el-option>
+                              </el-select>
+                          </el-form-item>
+                          <el-form-item label="出生地" prop="detail.birth_place">
+                              <el-input placeholder="请输入出生地" v-model="detail.birth_place"></el-input>
+                          </el-form-item>
+                          <el-form-item label="第二国籍" prop="form.nationality2">
+                              <el-input placeholder="请输入第二国籍" v-model="detail.nationality2"></el-input>
+                          </el-form-item>
                        <el-form-item label="惯用脚" prop="detail.preferred_side">
                           <el-select v-model="detail.preferred_side" placeholder="请选择惯用脚" style="width:100%">
                             <el-option label=" " value="null_foot"></el-option>
@@ -219,12 +219,12 @@
                     birthday:'',
                     height:'',
                     weight:'',
-                    birth_countryId:'',
-                    birth_place:'',
-                    nationality2:'',
                     countryId:''
                 },
                 detail:{
+                    birth_countryId:'',
+                    birth_place:'',
+                    nationality2:'',
                     preferred_side:'',
                     foot:'',
                     shoesize:'',

@@ -31,8 +31,12 @@ export const asyncRouter = [
                 path: "/competition/team",
                 name: "team",
                 component: () => import("@/views/competition/team.vue")
+            },
+            {
+                path: "/competition/round",
+                name: "round",
+                component: () => import("@/views/competition/round.vue")
             }
-
         ]
     },
     {

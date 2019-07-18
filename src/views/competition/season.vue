@@ -27,6 +27,9 @@
                           <router-link :to="{path: '/competition/team',query: {id: scope.row.name}}">
                               <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="球队"></el-button>
                           </router-link>
+                          <router-link :to="{path: '/competition/round',query: {id: scope.row.id}}">
+                              <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="轮次"></el-button>
+                          </router-link>
                           <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
                       </template>
                   </el-table-column>
@@ -57,7 +60,7 @@
                             <el-option :label="'混合'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="时间" prop="dateRange" >
+                    <el-form-item label="时间" prop="roundForm.dateRange" >
                         <el-col :span="6" >
                             <el-date-picker :picker-options="$store.state.dateRangePickerOptions"
                                             align="right" end-placeholder="赛季开始时间" range-separator="至"

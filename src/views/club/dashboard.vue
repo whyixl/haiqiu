@@ -164,7 +164,13 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    this.$http.delete('/club', id).then()
+                    this.$http.delete('/club', {
+                        params: {
+                            clubId: id
+                        }
+                    }).then(
+                        this.query
+                    )
                 });
             },
             queryCountry() {
