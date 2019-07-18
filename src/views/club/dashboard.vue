@@ -16,25 +16,32 @@
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
         <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
       </div>
-      <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
-                style="width: 100%" v-loading="$store.state.loading">
-        <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
-        <el-table-column align="center" label="俱乐部名称" prop="name" width="370"></el-table-column>
-        <el-table-column align="center" label="简称" prop="name" width="370"></el-table-column>
-        <el-table-column align="center" label="国家/地区" prop="searchCountryId" width="370"></el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="100">
-          <template slot-scope="scope">
-            <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-            <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      
+      <div style="width: 100%">
+        <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
+                  style="width: 100%" v-loading="$store.state.loading">
+          <el-table-column align="center" prop="competitionId" type="selection" ></el-table-column>
+          <el-table-column align="center" label="俱乐部名称" prop="name" ></el-table-column>
+          <el-table-column align="center" label="简称" prop="shortname" ></el-table-column>
+          <el-table-column align="center" label="国家/地区" prop="country" >
+            <template slot-scope="scope">
+              {{ scope.row.country === 'china' ? "中国" : scope.row.country}}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="操作" width="100">
+            <template slot-scope="scope">
+              <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
+              <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
       <!-- 赛季列表结束 -->
       
       <!-- 分页组件 -->
       <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
                      :page-sizes="$store.state.paginationPageSizes"
-                     :pager-count="7" :total="pager.total"
+                     :pager-count="5" :total="pager.total"
                      @current-change="pageChange" @next-click="pageChange" @prev-click="pageChange"
                      @size-change="sizeChange"
                      class="pagination text-right">
@@ -56,9 +63,13 @@
           <el-form-item label="简称" prop="name">
             <el-input placeholder="请输入俱乐部简称 " v-model="clubForm.shortname"></el-input>
           </el-form-item>
-          <el-form-item label="国家" prop="countryId">
+          <el-form-item label="国家" prop="countryId" clearable>
             <el-select placeholder="请选择国家" style="width:100%" v-model="clubForm.countryId">
-              <el-option :label=item.name :value=item.id v-for="item in countryList"></el-option>
+              <el-option :label=item.name :value=item.id v-for="item in countryList">
+                <template slot-scope="scope">
+                
+                </template>
+              </el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -80,7 +91,7 @@
                     id: '',
                     name: '',
                     shortname: '',
-                    countryId: ''
+                    country: ''
                 },
                 countrySearch: null,
                 countryList: [],
@@ -88,7 +99,7 @@
                 clubRule: null,
                 selectedRows: [],
                 dialogVisible: false,
-                pager: {current: 1, size: 5, total: 0, records: []}
+                pager: {current: 1, size: 10, total: 0, records: []}
             };
         },
         mounted() {
@@ -119,10 +130,10 @@
                             this.$http.post('/club',
                                 this.clubForm
                             ).then(res => {
-                                if (res.data.status === 'SUCCESS') {
+                                if (res.data.status == 'SUCCESS') {
                                     this.query();
-                                } else {
-                                    alert("添加失败")
+                                } else if (res.data.status == 'FAILED') {
+                                    alert(res.data.data);
                                 }
                             }).finally(() => {
                                 this.dialogVisible = false;
@@ -158,7 +169,7 @@
             onSelectionChange(rows) {
                 this.selectedRows = rows.map(item => item.userId);
             },
-            remove(id) {
+            remove(id,rowNUm) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
@@ -168,9 +179,11 @@
                         params: {
                             clubId: id
                         }
-                    }).then(
-                        this.query
-                    )
+                    }).then(res=>{
+                        if (res.status === 200 && res.data.status === 'SUCCESS') {
+                            this.pager.records.splice(rowNUm,1)
+                        }
+                    })
                 });
             },
             queryCountry() {
