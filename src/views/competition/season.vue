@@ -91,7 +91,7 @@
                 seasonForm:
                     { id:'',
                         name:'',
-                        dateRange :'',
+                      dateRange :'',
                         competitionId:''
                     },
                 selectedRows: [],

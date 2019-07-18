@@ -138,7 +138,7 @@
             submit(matchForm) {
                 this.$refs[matchForm].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://192.168.0.253:8090/club', {
+                        this.$http.post('http://172.16.6.6:8090/club', {
                             data: this.matchForm
                         })
                     } else {
