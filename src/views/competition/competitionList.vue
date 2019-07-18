@@ -154,7 +154,7 @@
             };
             return {
                 competitionForm: {
-                   id:'',
+                    id: '',
                     name: null,
                     shortname: null,
                     type: null,
@@ -167,7 +167,7 @@
                 genderOptions: [{label: "男性", value: "male"}, {label: "女性", value: "female"}],
                 dialogVisible: false,
                 selectedRows: [],
-                pager: {current: 1, size: 10, total: 0, records: []},
+                pager: {current: 1, size: 5, total: 0, records: []},
                 //表单过滤规则
                 competitionRule: {
                     name: [{
@@ -185,7 +185,7 @@
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://192.168.0.253:8090/club', {
+                        this.$http.post('/club', {
                             data: this.competitionForm
                         })
                     } else {
@@ -198,12 +198,14 @@
                 this.dialogVisible = true;
                 this.competitionForm = {}
             },
-            remove() {
+            remove(id) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
-                }).then()
+                }).then(() => {
+                    this.$http.delete('/club', id).then()
+                })
             },
             deleteBatch() {
                 this.$http.delete('', {
@@ -212,12 +214,12 @@
                     }
                 })
             },
-            edit(competition) {
+            edit(rowEntity) {
                 this.dialogVisible = true;
-                this.competitionForm = competition
+                this.competitionForm = rowEntity
             },
             query() {
-                this.$http.get('http://192.168.0.253:8090/club/co', {
+                this.$http.get('/club', {
                     params: this.pager,
                 }).then(res => {
                     this.pager = res.data

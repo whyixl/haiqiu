@@ -113,7 +113,6 @@
 
         data() {
             return {
-                matchForm: {},
                 selectedRows: [],
                 matchRule:null,
                 seasonSearch:null,
@@ -128,18 +127,18 @@
                    venueId:''
                },
                 dialogVisible: false,
-                pager: {current: 1, size: 10, total: 0, records: []}
+                pager: {current: 1, size: 5, total: 0, records: []}
             };
         },
         mounted() {
             this.query();
         },
         methods: {
-            submit(matchForm) {
-                this.$refs[matchForm].validate((valid) => {
+            submit(form) {
+                this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://192.168.0.253:8090/club', {
-                            data: this.matchForm
+                        this.$http.post('/club', {
+                            data: this.seasonForm
                         })
                     } else {
                         console.log('error submit!!');
@@ -165,12 +164,12 @@
                     }
                 })
             },
-            edit(match) {
+            edit(rowEntity) {
                 this.dialogVisible = true;
-                this.matchForm = match
+                this.matchForm = rowEntity
             },
             query() {
-                this.$http.get('http://192.168.0.253:8090/club/co', {
+                this.$http.get('/club', {
                     params: this.pager,
                 }).then(res => {
                     this.pager = res.data
@@ -189,7 +188,6 @@
             onSelectionChange(rows) {
                 this.selectedRows = rows.map(item => item.id);
             }
-
         }
     };
 </script>

@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     login() {
-      this.$http.post("/passport/signIn", this.user).then(res => {
+      this.$http.post("http://192.168.79.1/passport/signIn", this.user).then(res => {
         if (res.data.token) {
           this.$store.commit("setToken", res.data.token);
           this.$router.push({ path: "/club/dashboard" });

@@ -1,145 +1,186 @@
 <template>
-    <div>
-        <el-card shadow="never" :body-style="{ padding: '0px' }">
-            <div slot="header">
-                <el-row :gutter="10">
-                    <el-col :span="4">
-                        <el-select v-model="countrySearch" placeholder="国家/地区">
-                            <el-option :label="'中华人民共和国'" :value="1"></el-option>
-                            <el-option :label="'中国（台湾）'" :value="2"></el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-button type="primary" icon="el-icon-search">查询</el-button>
-                    </el-col>
-                </el-row>
-                <br>
-                <el-button size="medium" type="primary" icon="el-icon-plus" @click="dialogVisible = true">新增</el-button>
-                <!--<el-button size="medium" icon="el-icon-upload2">导入</el-button>
-                <el-button size="medium" icon="el-icon-download">导出</el-button>-->
-                <el-button size="medium" icon="el-icon-delete" :disabled="selectedRows.length==0">删除</el-button>
-            </div>
-            <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
-                      style="width: 100%" v-loading="$store.state.loading">
-                <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
-                <el-table-column label="俱乐部名称" align="center" prop="name" width="370"></el-table-column>
-                <el-table-column label="简称" align="center" prop="shortname" width="370"></el-table-column>
-                <el-table-column label="国家/地区" align="center" prop="countryId" width="370"></el-table-column>
-                <el-table-column label="操作" align="center" width="240">
-                    <template slot-scope="scope">
-                        <el-button @click="edit()" size="small" type="text">编辑</el-button>
-                        <el-button @click="remove()" size="small" type="text">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <!-- 赛季列表结束 -->
-
-            <!-- 分页组件 -->
-            <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
-                           :page-sizes="$store.state.paginationPageSizes" :total="pager.total"
-                           class="pagination text-right"></el-pagination>
-        </el-card>
-
-        <!-- 编辑页面 -->
-        <el-dialog :visible.sync="dialogVisible" title="添加俱乐部">
-            <el-form :label-position="'right'" label-width="80px">
-                <el-form :model="clubForm" :rules="clubRule" label-width="160px" ref="clubForm">
-                    <el-form-item label="id" prop="id" style="display:none" >
-                        <el-input  v-model="clubForm.id"></el-input>
-                    </el-form-item>
-                    <el-form-item label="俱乐部名称" prop="name" >
-                        <el-input  placeholder="请输入俱乐部名称 " v-model="clubForm.name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="简称" prop="shortname" >
-                        <el-input  placeholder="请输入俱乐部简称 " v-model="clubForm.shortname"></el-input>
-                    </el-form-item>
-                    <el-form-item label="国家" prop="countryId">
-                        <el-select  placeholder="请选择国家" v-model="clubForm.countryId" style="width:100%" >
-                            <el-option :label="'男性'" :value="1"></el-option>
-                            <el-option :label="'女性'" :value="2"></el-option>
-                            <el-option :label="'混合'" :value="3"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-form>
-            </el-form>
-            <div class="dialog-footer" slot="footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button @click="submit('competitionForm')" type="primary">提 交</el-button>
-            </div>
-        </el-dialog>
-    </div>
+  <div>
+    <el-card :body-style="{ padding: '0px' }" shadow="never">
+      <div slot="header">
+        <el-row :gutter="10">
+          <el-col :span="4">
+            <el-select placeholder="国家" style="width:100%" v-model="countrySearch">
+              <el-option :label=item.name :value=item.id v-for="item in countryList"></el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="6">
+            <el-button icon="el-icon-search" type="primary">查询</el-button>
+          </el-col>
+        </el-row>
+        <br>
+        <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
+        <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
+      </div>
+      <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
+                style="width: 100%" v-loading="$store.state.loading">
+        <el-table-column align="center" prop="competitionId" type="selection" width="55"></el-table-column>
+        <el-table-column align="center" label="俱乐部名称" prop="name" width="370"></el-table-column>
+        <el-table-column align="center" label="简称" prop="name" width="370"></el-table-column>
+        <el-table-column align="center" label="国家/地区" prop="searchCountryId" width="370"></el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="100">
+          <template slot-scope="scope">
+            <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
+            <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 赛季列表结束 -->
+      
+      <!-- 分页组件 -->
+      <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
+                     :page-sizes="$store.state.paginationPageSizes"
+                     :pager-count="7" :total="pager.total"
+                     @current-change="pageChange" @next-click="pageChange" @prev-click="pageChange"
+                     @size-change="sizeChange"
+                     class="pagination text-right">
+      </el-pagination>
+    </el-card>
+    
+    <!-- 编辑页面 -->
+    <el-dialog :visible.sync="dialogVisible" title="添加俱乐部">
+      <el-form :label-position="'right'" label-width="80px">
+        <el-form :model="clubForm" :rules="clubRule" label-width="160px" ref="clubForm">
+          
+          <el-form-item style="display: none;" label="id" prop="id">
+            <el-input v-model="clubForm.id"></el-input>
+          </el-form-item>
+          
+          <el-form-item label="俱乐部名称" prop="name">
+            <el-input placeholder="请输入俱乐部名称 " v-model="clubForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="简称" prop="name">
+            <el-input placeholder="请输入俱乐部简称 " v-model="clubForm.shortname"></el-input>
+          </el-form-item>
+          <el-form-item label="国家" prop="countryId">
+            <el-select placeholder="请选择国家" style="width:100%" v-model="clubForm.countryId">
+              <el-option :label=item.name :value=item.id v-for="item in countryList"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </el-form>
+      <div class="dialog-footer" slot="footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="submit('clubForm')" type="primary">提 交</el-button>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
-<style>
-    .input-with-select .el-input-group__prepend {
-        background-color: #fff;
-    }
-</style>
 <script>
-
     export default {
-        name: "season",
-
+        name: "club",
         data() {
             return {
-                clubForm:
-                    { id:'',
-                        name:'',
-                        shortname :'',
-                        countryId :''
-                    },
-                clubSearch:null,
-                countrySearch:null,
-                clubRule:null,
+                clubForm: {
+                    id: '',
+                    name: '',
+                    shortname: '',
+                    countryId: ''
+                },
+                countrySearch: null,
+                countryList: [],
+                genderOptions: [{name: "男性", id: "male"}, {name: "女性", id: "female"}],
+                clubRule: null,
                 selectedRows: [],
                 dialogVisible: false,
-                pager: {current: 1, size: 10, total: 0, records: []}
+                pager: {current: 1, size: 5, total: 0, records: []}
             };
         },
         mounted() {
+            this.queryCountry();
             this.query();
         },
         methods: {
+            add() {
+                this.dialogVisible = true;
+                this.clubForm = {}
+            },
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://192.168.0.253:8090/club', {
-                            data: this.seasonForm
-                        })
+                        if(this.clubForm.id != null) {
+                            this.$http.put('/club',
+                                this.clubForm
+                            ).then(res => {
+                                if (res.data.status === 'SUCCESS') {
+                                    this.query();
+                                } else {
+                                    alert("修改失败")
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        } else {
+                            this.$http.post('/club',
+                                this.clubForm
+                            ).then(res => {
+                                if (res.data.status === 'SUCCESS') {
+                                    this.query();
+                                } else {
+                                    alert("添加失败")
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        }
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
                 });
             },
+            deleteBatch() {
+                this.$http.delete('', {
+                    data: {
+                        coIds: this.selectedRows
+                    }
+                })
+            },
+            edit(rowEntity) {
+                this.dialogVisible = true;
+                this.clubForm = rowEntity
+            },
             query() {
-                this.$http.get('http://192.168.0.253:8090/club', {
-                    params: {
-                        id: 1039,
-                        name: "内蒙古中优"
+                this.$http.get('/club', {
+                    params : {
+                        size: this.pager.size,
+                        current: this.pager.current
                     },
                 }).then(res => {
                     this.pager = res.data;
                 });
             },
-            edit() {
-                this.dialogVisible = true;
-            },
             onSelectionChange(rows) {
                 this.selectedRows = rows.map(item => item.userId);
             },
-            remove() {
+            remove(id) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
+                }).then(() => {
+                    this.$http.delete('/club', id).then()
                 });
             },
-            onRemoveFile(file) {
-                this.$http.delete(
-                    `/oss/remove/${this.bucketName}/${file.response}`
-                );
-            }
+            queryCountry() {
+                this.$http.get("/country",).then(res => {
+                    this.countryList = res.data;
+                })
+            },
+            // 分页组件点击事件
+            pageChange(val) {
+                this.pager.current = val;
+                this.query()
+            },
+            sizeChange(val) {
+                this.pager.size = val;
+                this.query()
+            },
         }
     };
 </script>
