@@ -72,9 +72,10 @@ const queryUserAuthority = () => ({
             link: "/competition",
             icon: "el-icon-menu",
             lft: 11,
-            rgt: 12,
+            rgt: 13,
             depth: 1
         },
+
         {
             menuId: 10,
             menuName: "赛季",
@@ -103,7 +104,7 @@ const queryUserAuthority = () => ({
             icon: "el-icon-menu",
             lft: 14,
             rgt: 15,
-            depth: 2
+            depth: 3
         },
         {
             menuId: 12,
@@ -113,19 +114,10 @@ const queryUserAuthority = () => ({
             icon: "el-icon-menu",
             lft: 18,
             rgt: 25,
-            depth: 3
-        },
-        {
-            menuId: 13,
-            menuName: "赛程信息",
-            menuCode: "match_dashboard",
-            link: "/match/dashboard",
-            icon: "el-icon-menu",
-            lft: 17,
-            rgt: 17,
             depth: 1
         },
-        {
+
+       {
             menuId: 14,
             menuName: "首发阵容",
             menuCode: "lineup",

@@ -30,11 +30,11 @@
                 <el-table-column align="center" prop="match_eventId" type="selection" width="55"></el-table-column>
                 <el-table-column label="比赛名称" align="center" prop="matchId" width="180"></el-table-column>
                 <el-table-column label="球队" align="center" prop="teamId" width="180"></el-table-column>
-                <el-table-column label="球员" align="center" prop="personId" width="160"></el-table-column>
+                <el-table-column label="球员" align="center" prop="personId" width="130"></el-table-column>
                 <el-table-column label="球衣号" align="center" prop="shirtnumber" width="110"></el-table-column>
                 <el-table-column label="分钟" align="center" prop="minute" width="110"></el-table-column>
-                <el-table-column label="事件" align="center" prop="action" width="150"></el-table-column>
-                <el-table-column label="类型" align="center" prop="kind" width="150"></el-table-column>
+                <el-table-column label="事件" align="center" prop="action" width="100"></el-table-column>
+                <el-table-column label="类型" align="center" prop="kind" width="100"></el-table-column>
                 <el-table-column label="相关球员" align="center" prop="additional_personId" width="160"></el-table-column>
                 <el-table-column align="center" prop="created" label="创建时间" width="150">
                     <template slot-scope="scope">
@@ -95,7 +95,7 @@
                         <el-input placeholder="请输入分钟" v-model="match_eventForm.minute" ></el-input>
                     </el-form-item>
                     <el-form-item label="事件及类型"  prop="match_eventForm.action">
-                        <el-select name="" id="" @change="getPosition(action)" v-model="match_eventForm.action" placeholder="请选择事件" style="width:50%;">
+                        <el-select name="" id="" @change="getPosition(match_eventForm.action)" v-model="match_eventForm.action" placeholder="请选择事件" style="width:50%;">
                             <!--<el-option label="">请选择事件</el-option>-->
                             <el-option :label="action.text " v-for="action in actions" :value="action.id">{{action.text}}</el-option>
                         </el-select>

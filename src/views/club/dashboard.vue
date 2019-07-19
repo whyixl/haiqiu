@@ -22,7 +22,7 @@
         <el-table-column align="center" label="俱乐部名称" prop="name" width="370"></el-table-column>
         <el-table-column align="center" label="简称" prop="name" width="370"></el-table-column>
         <el-table-column align="center" label="国家/地区" prop="searchCountryId" width="370"></el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="100">
+        <el-table-column align="center" fixed="right" label="操作" width="140">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
             <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
@@ -30,7 +30,7 @@
         </el-table-column>
       </el-table>
       <!-- 赛季列表结束 -->
-      
+
       <!-- 分页组件 -->
       <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
                      :page-sizes="$store.state.paginationPageSizes"
@@ -104,7 +104,7 @@
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         if(this.clubForm.id != null) {
-                            this.$http.put('/club',
+                            this.$http.put('http://172.16.6.6:8090/club',
                                 this.clubForm
                             ).then(res => {
                                 if (res.data.status === 'SUCCESS') {
@@ -116,7 +116,7 @@
                                 this.dialogVisible = false;
                             })
                         } else {
-                            this.$http.post('/club',
+                            this.$http.post('http://172.16.6.6:8090/club',
                                 this.clubForm
                             ).then(res => {
                                 if (res.data.status === 'SUCCESS') {
@@ -146,7 +146,7 @@
                 this.clubForm = rowEntity
             },
             query() {
-                this.$http.get('/club', {
+                this.$http.get('http://172.16.6.6:8090/club', {
                     params : {
                         size: this.pager.size,
                         current: this.pager.current
@@ -164,7 +164,7 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    this.$http.delete('/club', {
+                    this.$http.delete('http://172.16.6.6:8090/club', {
                         params: {
                             clubId: id
                         }
@@ -174,7 +174,7 @@
                 });
             },
             queryCountry() {
-                this.$http.get("/country",).then(res => {
+                this.$http.get("http://172.16.6.6:8090/country",).then(res => {
                     this.countryList = res.data;
                 })
             },

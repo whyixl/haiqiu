@@ -37,7 +37,7 @@
                 <el-table-column label="主队" align="center" prop="homeId" width="150"></el-table-column>
                 <el-table-column label="客队" align="center" prop="awayId" width="150"></el-table-column>
                 <el-table-column label="比分" align="center" prop="match_result" width="100"></el-table-column>
-                <el-table-column label="地点" align="center" prop="venueId" width="250"></el-table-column>
+                <el-table-column label="地点" align="center" prop="venueId" width="230"></el-table-column>
               <el-table-column align="center" fixed="right" label="操作" width="160">
                 <template slot-scope="scope">
                   <el-button @click="edit(scope.$index)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
