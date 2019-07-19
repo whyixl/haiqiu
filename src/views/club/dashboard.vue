@@ -21,11 +21,15 @@
         <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                   style="width: 100%" v-loading="$store.state.loading">
           <el-table-column align="center" prop="competitionId" type="selection" ></el-table-column>
-          <el-table-column align="center" label="俱乐部名称" prop="name" ></el-table-column>
-          <el-table-column align="center" label="简称" prop="shortname" ></el-table-column>
-          <el-table-column align="center" label="国家/地区" prop="country" >
+          <el-table-column align="center" label="俱乐部名称" prop="name"></el-table-column>
+          <el-table-column align="center" label="简称" prop="shortname">
             <template slot-scope="scope">
-              {{ scope.row.country === 'china' ? "中国" : scope.row.country}}
+              {{ scope.row.shortname == null ? scope.row.name : scope.row.shortname}}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="国家/地区" prop="countryName">
+            <template slot-scope="scope">
+              {{ scope.row.countryName === 'China' ? "中国" : scope.row.countryName}}
             </template>
           </el-table-column>
           <el-table-column align="center" label="操作" width="100">
@@ -91,7 +95,7 @@
                     id: '',
                     name: '',
                     shortname: '',
-                    country: ''
+                    countryName: ''
                 },
                 countrySearch: null,
                 countryList: [],
