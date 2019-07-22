@@ -99,7 +99,6 @@
                 },
                 countrySearch: null,
                 countryList: [],
-                genderOptions: [{name: "男性", id: "male"}, {name: "女性", id: "female"}],
                 clubRule: null,
                 selectedRows: [],
                 dialogVisible: false,
@@ -122,7 +121,7 @@
                             this.$http.put('/club',
                                 this.clubForm
                             ).then(res => {
-                                if (res.data.status === 'SUCCESS') {
+                                if (res.data.status == 'SUCCESS') {
                                     this.query();
                                 } else {
                                     alert("修改失败")

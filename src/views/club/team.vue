@@ -111,13 +111,7 @@
     </div>
 </template>
 
-<style>
-    .input-with-select .el-input-group__prepend {
-        background-color: #fff;
-    }
-</style>
 <script>
-
     export default {
         name: "season",
 
@@ -146,7 +140,8 @@
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://192.168.0.253:8090/club', {
+                        
+                        this.$http.post('/team', {
                             data: this.teamForm
                         })
                     } else {
@@ -178,7 +173,7 @@
                 this.teamForm = team
             },
             query() {
-                this.$http.get('http://192.168.0.253:8090/club/co', {
+                this.$http.get('/team', {
                     params: this.pager,
                 }).then(res => {
                     this.pager = res.data

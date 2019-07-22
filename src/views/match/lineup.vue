@@ -160,7 +160,7 @@
             submit(lineupForm) {
                 this.$refs[lineupForm].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://192.168.0.253:8090/club', {
+                        this.$http.post('/club', {
                             data: this.lineupForm
                         })
                     } else {
@@ -192,7 +192,7 @@
                 this.lineupForm = lineup
             },
             query() {
-                this.$http.get('http://192.168.0.253:8090/club/co', {
+                this.$http.get('/club/co', {
                     params: this.pager,
                 }).then(res => {
                     this.pager = res.data

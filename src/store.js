@@ -88,7 +88,7 @@ const store = new Vuex.Store({
   actions: {
     // 重新从服务器读取用户信息
     reloadUserAuthority(context) {
-      return axios.get("http://192.168.79.1/user/queryUserAuthority").then(response => {
+      return axios.get("http://127.0.0.1/user/queryUserAuthority").then(response => {
         const menus = response.data.menus;
         const rootMenu = _.find(menus, { menuCode: "root" });
         const rootMenuNode = { ...rootMenu, children: [] };

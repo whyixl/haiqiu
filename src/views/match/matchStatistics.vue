@@ -195,7 +195,7 @@
             submit(match_eventForm) {
                 this.$refs[match_eventForm].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://192.168.0.253:8090/club', {
+                        this.$http.post('/club', {
                             data: this.match_eventForm
                         })
                     } else {
@@ -227,7 +227,7 @@
                 this.match_eventForm = match_event
             },
             query() {
-                this.$http.get('http://192.168.0.253:8090/club/co', {
+                this.$http.get('/club/co', {
                     params: this.pager,
                 }).then(res => {
                     this.pager = res.data
