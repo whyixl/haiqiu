@@ -289,7 +289,7 @@
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://192.168.0.253:8090/club', {
+                        this.$http.post('/club', {
                             data: this.form
                         })
                     } else {
@@ -301,7 +301,7 @@
             submit(detail) {
                 this.$refs[detail].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://192.168.0.253:8090/club', {
+                        this.$http.post('/club', {
                             data: this.detail
                         })
                     } else {
@@ -313,7 +313,7 @@
             submit(distribution) {
                 this.$refs[distribution].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://192.168.0.253:8090/club', {
+                        this.$http.post('/club', {
                             data: this.distribution
                         })
                     } else {
@@ -347,7 +347,7 @@
                 this.form = player
             },
             query() {
-                this.$http.get('http://192.168.0.253:8090/club/co', {
+                this.$http.get('/club/co', {
                     params: this.pager,
                 }).then(res => {
                     this.pager = res.data

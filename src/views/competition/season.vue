@@ -145,7 +145,7 @@
                 this.seasonForm = season
             },
             query() {
-                this.$http.get('/club', {
+                this.$http.get('/club/co', {
                     params: this.pager,
                 }).then(res => {
                     this.pager = res.data

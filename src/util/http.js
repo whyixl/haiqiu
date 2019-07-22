@@ -5,9 +5,10 @@ import {Vue} from "vue";
 
 require("../mock");
 
-axios.defaults.baseURL = 'http://172.16.6.6:8090';
+axios.defaults.baseURL = 'http://192.168.0.250:8090';
 
 const codeMessage = {
+  200: "请求成功",
   201: "太棒了，保存成功！",
   202: "您的请求已提交，请耐心等待服务器处理！",
   204: "太棒了，删除成功！",

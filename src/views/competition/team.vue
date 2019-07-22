@@ -113,7 +113,7 @@
             submit(se_teForm) {
                 this.$refs[se_teForm].validate((valid) => {
                     if (valid) {
-                        this.$http.post('http://192.168.0.253:8090/club', {
+                        this.$http.post('/club', {
                             data: this.se_teForm
                         })
                     } else {
@@ -145,7 +145,7 @@
                 this.se_teForm = se_te
             },
             query() {
-                this.$http.get('http://192.168.0.253:8090/club/co', {
+                this.$http.get('/club', {
                     params: this.pager,
                 }).then(res => {
                     this.pager = res.data

@@ -18,15 +18,17 @@
         </el-table-column>
         <el-table-column align="center" label="年龄" prop="ageId" width="120">
           <template slot-scope="scope">
-            {{ scope.row.ageId===1 ? '职业':'U梯队'}}
+            {{ scope.row.ageId == 1 ? '职业':'U梯队'}}
           </template>
         </el-table-column>
         <el-table-column align="center" label="类型" prop="type" width="120">
           <template slot-scope="scope">
-            {{ scope.row.type === "club" ? '俱乐部': '国际' }}
+            {{ scope.row.type == "club" ? '俱乐部': '国际' }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="国家/地区" prop="countryId" width="140"></el-table-column>
+        <el-table-column align="center" label="国家/地区" prop="countryId" width="140">
+          {{countryList[40]}}
+        </el-table-column>
         <el-table-column align="center" label="联盟" prop="federationId" width="120"></el-table-column>
         <el-table-column align="center" label="开始日期" prop="starttime" width="140">
           <template slot-scope="scope">
@@ -100,11 +102,8 @@
             </el-select>
           </el-form-item>
           <el-form-item label="国家" prop="country">
-            <el-select placeholder="请输入国家" style="width:100%" v-model="competitionForm.countryId">
-              <el-option :label="'--'" :value="0"></el-option>
-              <el-option :label="'中国'" :value="40"></el-option>
-              <el-option :label="'韩国'" :value="41"></el-option>
-              <el-option :label="'新加坡'" :value="42"></el-option>
+            <el-select placeholder="请选择国家" style="width:100%" v-model="competitionForm.countryId">
+              <el-option :label=item.name :value=item.id v-for="item in countryList"></el-option>
             </el-select>
           </el-form-item>
           <!-- 地区列表，从后台查出来 -->
@@ -164,6 +163,7 @@
                     federationId: null,
                     starttime: null,
                 },
+                countryList: [],
                 genderOptions: [{label: "男性", value: "male"}, {label: "女性", value: "female"}],
                 dialogVisible: false,
                 selectedRows: [],
@@ -179,13 +179,14 @@
         },
         mounted() {
             this.query();
+            this.queryCountry();
         },
         methods: {
             // 基本增删改查
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('/club', {
+                        this.$http.post('/competition', {
                             data: this.competitionForm
                         })
                     } else {
@@ -204,7 +205,7 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    this.$http.delete('/club', id).then()
+                    this.$http.delete('/competition', id).then()
                 })
             },
             deleteBatch() {
@@ -219,11 +220,16 @@
                 this.competitionForm = rowEntity
             },
             query() {
-                this.$http.get('/club', {
+                this.$http.get('/competition', {
                     params: this.pager,
                 }).then(res => {
                     this.pager = res.data
                 });
+            },
+            queryCountry() {
+                this.$http.get("/country",).then(res => {
+                    this.countryList = res.data;
+                })
             },
             // 分页组件点击事件
             pageChange(val) {

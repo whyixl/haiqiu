@@ -65,7 +65,7 @@ const store = new Vuex.Store({
       ]
     },*/
     // 分页控件的每页显示条目个数
-    paginationPageSizes: [1,2,5, 10, 20, 40],
+    paginationPageSizes: [5, 10, 20, 40],
     // paginationPageSizes: [1, 2, 3, 4],
     // 分页控件组件布局，子组件名用逗号分隔
     paginationLayout: "total, sizes, prev, pager, next, jumper"
@@ -88,7 +88,7 @@ const store = new Vuex.Store({
   actions: {
     // 重新从服务器读取用户信息
     reloadUserAuthority(context) {
-      return axios.get("http://192.168.79.1/user/queryUserAuthority").then(response => {
+      return axios.get("http://127.0.0.1/user/queryUserAuthority").then(response => {
         const menus = response.data.menus;
         const rootMenu = _.find(menus, { menuCode: "root" });
         const rootMenuNode = { ...rootMenu, children: [] };
