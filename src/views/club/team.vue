@@ -186,7 +186,7 @@
             },
             add() {
                 this.dialogVisible = true;
-                this.teamForm = {}
+                this.$refs['teamForm'].resetFields()
             },
             remove(id,rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -206,6 +206,7 @@
                     })
                 });
             },
+            // TODO 批量删除
             deleteBatch() {
                 this.$http.delete('/delete/team', {
                     params: {

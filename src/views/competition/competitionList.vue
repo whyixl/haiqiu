@@ -3,7 +3,8 @@
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-        <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
+        <el-button :disabled="selectedRows.length===0" @click="deleteBatch" icon="el-icon-delete" size="medium">删除
+        </el-button>
       </div>
       <!-- 这一部分是赛事列表 -->
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
@@ -26,19 +27,19 @@
             {{ scope.row.type == "club" ? '俱乐部': '国际' }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="国家/地区" prop="countryId" width="140">
-          {{countryList[40]}}
-        </el-table-column>
-        <el-table-column align="center" label="联盟" prop="federationId" width="120"></el-table-column>
         <el-table-column align="center" label="开始日期" prop="starttime" width="140">
           <template slot-scope="scope">
             {{ scope.row.starttime | moment('YYYY-MM-DD') }}
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="180">
+        <el-table-column align="center" label="国家/地区" prop="countryId" width="140">
+          {{countryList[40]}}
+        </el-table-column>
+        <el-table-column align="center" label="联盟" prop="federationId" width="120"></el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-            <router-link :to="{path: '/competition/season',query: {id: scope.row.id}}">
+            <router-link :to="{path: '/competition/season',query: {coId: scope.row.id}}">
               <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="赛季"></el-button>
             </router-link>
             <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
@@ -61,8 +62,8 @@
     <el-dialog :visible.sync="dialogVisible" title="添加赛事">
       <el-form :label-position="'right'" label-width="80px">
         <el-form :model="competitionForm" :rules="competitionRule" label-width="80px" ref="competitionForm">
-          <el-form-item label="id" prop="id" style="display:none" >
-            <el-input  v-model="competitionForm.id"></el-input>
+          <el-form-item label="id" prop="id" style="display:none">
+            <el-input v-model="competitionForm.id"></el-input>
           </el-form-item>
           <el-form-item label="描述">
             <!-- name -->
@@ -186,9 +187,31 @@
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('/competition', {
-                            data: this.competitionForm
-                        })
+                        if (!this.competitionForm.id) {
+                            this.$http.post('/competition',
+                                this.competitionForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else if (res.data.status == 'FAILED') {
+                                    alert(res.data.data);
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        } else {
+                            this.$http.put('/competition',
+                                this.competitionForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else {
+                                    alert("修改失败")
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        }
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -221,7 +244,10 @@
             },
             query() {
                 this.$http.get('/competition', {
-                    params: this.pager,
+                    params: {
+                        size: this.pager.size,
+                        current: this.pager.current
+                    },
                 }).then(res => {
                     this.pager = res.data
                 });

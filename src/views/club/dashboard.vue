@@ -179,11 +179,12 @@
                 }).then(() => {
                     this.$http.delete('/club', {
                         params: {
-                            clubId: id
+                            id: id
                         }
                     }).then(res=>{
                         if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.records.splice(rowNum,1)
+                            this.pager.records.splice(rowNum,1);
+                            this.pager.total--;
                         }
                     })
                 });
