@@ -20,7 +20,7 @@
       <div style="width: 100%">
         <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                   style="width: 100%" v-loading="$store.state.loading">
-          <el-table-column align="center" prop="competitionId" type="selection" ></el-table-column>
+          <el-table-column align="center" prop="clubId" type="selection"></el-table-column>
           <el-table-column align="center" label="俱乐部名称" prop="name"></el-table-column>
           <el-table-column align="center" label="简称" prop="shortname">
             <template slot-scope="scope">
@@ -69,11 +69,7 @@
           </el-form-item>
           <el-form-item label="国家" prop="countryId" clearable>
             <el-select placeholder="请选择国家" style="width:100%" v-model="clubForm.countryId">
-              <el-option :label=item.name :value=item.id v-for="item in countryList">
-                <template slot-scope="scope">
-                
-                </template>
-              </el-option>
+              <el-option :label=item.name :value=item.id v-for="item in countryList"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -116,20 +112,10 @@
             },
             submit(form) {
                 this.$refs[form].validate((valid) => {
+                    alert(this.clubForm.id);
                     if (valid) {
-                        if(this.clubForm.id != null) {
-                            this.$http.put('/club',
-                                this.clubForm
-                            ).then(res => {
-                                if (res.data.status == 'SUCCESS') {
-                                    this.query();
-                                } else {
-                                    alert("修改失败")
-                                }
-                            }).finally(() => {
-                                this.dialogVisible = false;
-                            })
-                        } else {
+                        if(!this.clubForm.id) {
+                            // 新增
                             this.$http.post('/club',
                                 this.clubForm
                             ).then(res => {
@@ -137,6 +123,19 @@
                                     this.query();
                                 } else if (res.data.status == 'FAILED') {
                                     alert(res.data.data);
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        } else {
+                            // 修改
+                            this.$http.put('/club',
+                                this.clubForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else {
+                                    alert("修改失败")
                                 }
                             }).finally(() => {
                                 this.dialogVisible = false;
@@ -170,9 +169,9 @@
                 });
             },
             onSelectionChange(rows) {
-                this.selectedRows = rows.map(item => item.userId);
+                this.selectedRows = rows.map(item => item.id);
             },
-            remove(id,rowNUm) {
+            remove(id,rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
@@ -184,7 +183,7 @@
                         }
                     }).then(res=>{
                         if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.records.splice(rowNUm,1)
+                            this.pager.records.splice(rowNum,1)
                         }
                     })
                 });
