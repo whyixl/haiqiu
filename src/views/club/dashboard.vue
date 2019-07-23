@@ -5,7 +5,7 @@
         <el-row :gutter="10">
           <el-col :span="4">
             <el-select placeholder="国家" style="width:100%" v-model="countrySearch">
-              <el-option :label=item.name :value=item.id v-for="item in countryList"></el-option>
+              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
             </el-select>
           </el-col>
           <el-col :span="6">
@@ -69,7 +69,7 @@
           </el-form-item>
           <el-form-item label="国家" prop="countryId" clearable>
             <el-select placeholder="请选择国家" style="width:100%" v-model="clubForm.countryId">
-              <el-option :label=item.name :value=item.id v-for="item in countryList"></el-option>
+              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList" ></el-option>
             </el-select>
           </el-form-item>
         </el-form>

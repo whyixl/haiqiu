@@ -33,7 +33,9 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="国家/地区" prop="countryId" width="140">
-          {{countryList[40]}}
+          <template slot-scope="scope">
+            {{scope.row.countryId | idFormatter(countryList)}}
+          </template>
         </el-table-column>
         <el-table-column align="center" label="联盟" prop="federationId" width="120"></el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="120">
@@ -75,7 +77,7 @@
           </el-form-item>
           <el-form-item label="性别">
             <el-select placeholder="请选择性别" style="width:100%" v-model="competitionForm.gender">
-              <el-option :label=item.label :value=item.value v-for="item in genderOptions"></el-option>
+              <el-option v-bind:label=item.label v-bind:value=item.value v-for="item in genderOptions"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="年龄">
@@ -104,7 +106,7 @@
           </el-form-item>
           <el-form-item label="国家" prop="country">
             <el-select placeholder="请选择国家" style="width:100%" v-model="competitionForm.countryId">
-              <el-option :label=item.name :value=item.id v-for="item in countryList"></el-option>
+              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
             </el-select>
           </el-form-item>
           <!-- 地区列表，从后台查出来 -->

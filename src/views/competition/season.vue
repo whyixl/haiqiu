@@ -60,7 +60,7 @@
           </el-form-item>
           <el-form-item label="相关赛事">
             <el-select placeholder="请选择相关赛事" style="width:100%" v-model="seasonForm.competitionId">
-              <el-option :label="'男性'" :value="1" v-for="item in competitionList"></el-option>
+              <el-option :label="item.name" :value="item.id" v-for="item in competitionList"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="时间" prop="roundForm.dateRange">
