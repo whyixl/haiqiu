@@ -76,12 +76,12 @@
             <el-input placeholder="请输入赛事简称" v-model="competitionForm.shortname"></el-input>
           </el-form-item>
           <el-form-item label="性别">
-            <el-select placeholder="请选择性别" style="width:100%" v-model="competitionForm.gender">
+            <el-select filterable placeholder="请选择性别" style="width:100%" v-model="competitionForm.gender">
               <el-option v-bind:label=item.label v-bind:value=item.value v-for="item in genderOptions"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="年龄">
-            <el-select placeholder="请选择年龄段" style="width:100%" v-model="competitionForm.ageId">
+            <el-select filterable placeholder="请选择年龄段" style="width:100%" v-model="competitionForm.ageId">
               <el-option :label="'--'" :value="0"></el-option>
               <el-option :label="'职业'" :value="1"></el-option>
               <el-option :label="'U23'" :value="2"></el-option>
@@ -99,19 +99,19 @@
             </el-select>
           </el-form-item>
           <el-form-item label="类型" prop="type">
-            <el-select placeholder="请输入类型" style="width:100%" v-model="competitionForm.type">
+            <el-select filterable placeholder="请输入类型" style="width:100%" v-model="competitionForm.type">
               <el-option :label="'俱乐部'" :value="'club'"></el-option>
               <el-option :label="'国内'" :value="'national'"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="国家" prop="country">
-            <el-select placeholder="请选择国家" style="width:100%" v-model="competitionForm.countryId">
+            <el-select filterable placeholder="请选择国家" style="width:100%" v-model="competitionForm.countryId">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
             </el-select>
           </el-form-item>
           <!-- 地区列表，从后台查出来 -->
           <el-form-item label="联盟" prop="federation">
-            <el-select placeholder="请输选择联盟" style="width:100%" v-model="competitionForm.federationId">
+            <el-select filterable placeholder="请输选择联盟" style="width:100%" v-model="competitionForm.federationId">
               <el-option :label="'--'" :value="1"></el-option>
               <el-option :label="'世界'" :value="2"></el-option>
               <el-option :label="'欧洲'" :value="3"></el-option>

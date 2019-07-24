@@ -4,7 +4,7 @@
             <div slot="header">
                 <el-row :gutter="10">
                     <el-col :span="4">
-                        <el-select v-model="seasonSearch" placeholder="赛季">
+                        <el-select filterable v-model="seasonSearch" placeholder="赛季">
                             <el-option :label="'中国足球协会甲级联赛2019'" :value="1"></el-option>
                             <el-option :label="'内蒙古中优'" :value="2"></el-option>
                         </el-select>
@@ -58,7 +58,7 @@
                         <el-input  v-model="roundForm.id"></el-input>
                     </el-form-item>
                     <el-form-item label="赛季名称" prop="roundForm.seasonId" >
-                        <el-select  placeholder="请选择相关赛季" v-model="roundForm.seasonId" style="width:100%" >
+                        <el-select filterable  placeholder="请选择相关赛季" v-model="roundForm.seasonId" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
                             <el-option :label="'女性'" :value="2"></el-option>
                             <el-option :label="'混合'" :value="3"></el-option>

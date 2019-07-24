@@ -53,11 +53,10 @@ axios.interceptors.response.use(
             });
         }
         return response;
-    },/*
+    },
     error => {
-        console.log(error.response);
         let message = codeMessage[error.response];
-        if (error.response.data && error.response.data.message) {
+        if (error.response && error.response.data.message) {
             message = error.response.data.message;
         }
         Notification.error({
@@ -67,7 +66,7 @@ axios.interceptors.response.use(
             duration: 3000
         });
         return Promise.reject(error);
-    }*/
+    }
 );
 
 export default axios;

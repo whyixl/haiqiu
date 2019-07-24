@@ -4,12 +4,12 @@
       <div slot="header">
         <el-row :gutter="10">
           <el-col :span="4">
-            <el-select placeholder="国家/地区" v-model="countrySearch">
+            <el-select filterable placeholder="国家/地区" v-model="countrySearch">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
             </el-select>
           </el-col>
           <el-col :span="4">
-            <el-select placeholder="俱乐部名称" v-model="clubSearch">
+            <el-select filterable placeholder="俱乐部名称" v-model="clubSearch">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in clubList"></el-option>
             </el-select>
           </el-col>
@@ -68,7 +68,7 @@
     </el-card>
     
     <!-- 编辑页面 -->
-    <el-dialog :visible.sync="dialogVisible" title="添加球队">
+    <el-dialog :visible.sync="dialogVisible" id="dialog" title="添加球队">
       <el-form :label-position="'right'" label-width="80px">
         <el-form :model="teamForm" :rules="teamRule" label-width="160px" ref="teamForm">
           <el-form-item label="id" prop="id" style="display:none">
@@ -81,14 +81,14 @@
             <el-input placeholder="请输入球队简称 " v-model="teamForm.shortname"></el-input>
           </el-form-item>
           <el-form-item label="性别" prop="gender">
-            <el-select placeholder="请选择性别" style="width:100%" v-model="teamForm.gender">
+            <el-select filterable placeholder="请选择性别" style="width:100%" v-model="teamForm.gender">
               <el-option :label="'男性'" :value="'male'"></el-option>
               <el-option :label="'女性'" :value="'female'"></el-option>
               <el-option :label="'混合'" :value="'mix'"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="年龄" prop="age">
-            <el-select placeholder="请选择年龄段" style="width:100%" v-model="teamForm.ageId">
+            <el-select filterable placeholder="请选择年龄段" style="width:100%" v-model="teamForm.ageId">
               <el-option :label="'--'" :value="0"></el-option>
               <el-option :label="'职业'" :value="1"></el-option>
               <el-option :label="'U23'" :value="2"></el-option>
@@ -110,7 +110,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="俱乐部名称" prop="clubId">
-            <el-select placeholder="请选择俱乐部" style="width:100%" v-model="teamForm.clubId">
+            <el-select filterable placeholder="请选择俱乐部" style="width:100%" v-model="teamForm.clubId">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in clubList"></el-option>
             </el-select>
           </el-form-item>
@@ -191,8 +191,16 @@
                 });
             },
             add() {
+                document.getElementById('dialog').getElementsByClassName("el-dialog__title")[0].innerText = "添加球队";
                 this.dialogVisible = true;
-                this.$refs['teamForm'].resetFields()
+                this.teamForm = {
+                    id: '',
+                    name: '',
+                    shortname: '',
+                    ageId: '',
+                    clubId: '',
+                    gender: ''
+                };
             },
             remove(id, rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -225,7 +233,8 @@
             },
             edit(team) {
                 this.dialogVisible = true;
-                this.teamForm = team
+                this.teamForm = team;
+                document.getElementById('dialog').getElementsByClassName("el-dialog__title")[0].innerText = "修改球队";
             },
             query() {
                 this.$http.get('/team', {
@@ -238,7 +247,7 @@
                 });
             },
             queryClub() {
-                this.$http.get("/club", {params: {current: 1, size: 10000}}).then(res => {
+                this.$http.get("/club", {params: {current: 1, size: 100}}).then(res => {
                     this.clubList = res.data.records;
                 })
             },

@@ -4,7 +4,7 @@
       <div slot="header">
         <el-row :gutter="10">
           <el-col :span="4">
-            <el-select placeholder="国家" style="width:100%" v-model="countrySearch">
+            <el-select filterable placeholder="国家" style="width:100%" v-model="countrySearch">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
             </el-select>
           </el-col>
@@ -27,9 +27,9 @@
               {{ scope.row.shortname == null ? scope.row.name : scope.row.shortname}}
             </template>
           </el-table-column>
-          <el-table-column align="center" label="国家/地区" prop="countryName">
+          <el-table-column align="center" label="国家/地区" prop="countryId">
             <template slot-scope="scope">
-              {{ scope.row.countryName === 'China' ? "中国" : scope.row.countryName}}
+              {{ scope.row.countryId | idFormatter(countryList)}}
             </template>
           </el-table-column>
           <el-table-column align="center" label="操作" width="100">
@@ -53,14 +53,12 @@
     </el-card>
     
     <!-- 编辑页面 -->
-    <el-dialog :visible.sync="dialogVisible" title="添加俱乐部">
+    <el-dialog :visible.sync="dialogVisible" title="编辑页面">
       <el-form :label-position="'right'" label-width="80px">
         <el-form :model="clubForm" :rules="clubRule" label-width="160px" ref="clubForm">
-          
           <el-form-item style="display: none;" label="id" prop="id">
             <el-input v-model="clubForm.id"></el-input>
           </el-form-item>
-          
           <el-form-item label="俱乐部名称" prop="name">
             <el-input placeholder="请输入俱乐部名称 " v-model="clubForm.name"></el-input>
           </el-form-item>
@@ -68,8 +66,8 @@
             <el-input placeholder="请输入俱乐部简称 " v-model="clubForm.shortname"></el-input>
           </el-form-item>
           <el-form-item label="国家" prop="countryId" clearable>
-            <el-select placeholder="请选择国家" style="width:100%" v-model="clubForm.countryId">
-              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList" ></el-option>
+            <el-select filterable placeholder="请选择国家" style="width:100%" v-model="clubForm.countryId">
+              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -91,7 +89,8 @@
                     id: '',
                     name: '',
                     shortname: '',
-                    countryName: ''
+                    countryName: '',
+                    countryId: ''
                 },
                 countrySearch: null,
                 countryList: [],
@@ -108,11 +107,11 @@
         methods: {
             add() {
                 this.dialogVisible = true;
-                this.clubForm = {}
+                this.clubForm = {};
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "添加俱乐部";
             },
             submit(form) {
                 this.$refs[form].validate((valid) => {
-                    alert(this.clubForm.id);
                     if (valid) {
                         if(!this.clubForm.id) {
                             // 新增
@@ -121,7 +120,7 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
-                                } else if (res.data.status == 'FAILED') {
+                                } else if (res.data.status == 'FAILED' && !res.data.data) {
                                     alert(res.data.data);
                                 }
                             }).finally(() => {
@@ -156,7 +155,8 @@
             },
             edit(rowEntity) {
                 this.dialogVisible = true;
-                this.clubForm = rowEntity
+                this.clubForm = rowEntity;
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "修改俱乐部";
             },
             query() {
                 this.$http.get('/club', {

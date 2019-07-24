@@ -4,7 +4,7 @@
       <div slot="header">
         <el-row :gutter="10">
           <el-col :span="3">
-            <el-select placeholder="球队" v-model="teamSearch">
+            <el-select filterable placeholder="球队" v-model="teamSearch">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in teamList"></el-option>
             </el-select>
           </el-col>
@@ -110,7 +110,7 @@
                 <el-input placeholder="请输入英文名" v-model="form.surname"></el-input>
               </el-form-item>
               <el-form-item label="性别" prop="form.gender">
-                <el-select placeholder="请选择性别" style="width:100%" v-model="form.gender">
+                <el-select filterable placeholder="请选择性别" style="width:100%" v-model="form.gender">
                   <el-option label="男" value="male"></el-option>
                   <el-option label="女" value="female"></el-option>
                 </el-select>
@@ -127,7 +127,7 @@
                                 type="date" v-model="form.birthday"></el-date-picker>
               </el-form-item>
               <el-form-item label="国籍" prop="form.country">
-                <el-select placeholder="请输入国籍" style="width:100%" v-model="form.countryId">
+                <el-select filterable placeholder="请输入国籍" style="width:100%" v-model="form.countryId">
                   <el-option :label="item.name" :value="item.id" v-for="item in countryList"></el-option>
                 </el-select>
               </el-form-item>
@@ -137,7 +137,7 @@
           <el-tab-pane label="详细信息">
             <el-form :model="detail" label-width="80px" ref="detail">
               <el-form-item label="出生国家" prop="detail.birth_country">
-                <el-select placeholder="请输入出生国家" style="width:100%" v-model="detail.birth_countryId">
+                <el-select filterable placeholder="请输入出生国家" style="width:100%" v-model="detail.birth_countryId">
                   <el-option :label="item.name" :value="item.id" v-for="item in countryList"></el-option>
                 </el-select>
               </el-form-item>
@@ -148,7 +148,7 @@
                 <el-input placeholder="请输入第二国籍" v-model="detail.nationality2"></el-input>
               </el-form-item>
               <el-form-item label="惯用脚" prop="detail.preferred_side">
-                <el-select placeholder="请选择惯用脚" style="width:100%" v-model="detail.preferred_side">
+                <el-select filterable placeholder="请选择惯用脚" style="width:100%" v-model="detail.preferred_side">
                   <el-option label="--" value="null_foot"></el-option>
                   <el-option label="左脚" value="left_foot"></el-option>
                   <el-option label="右脚" value="right_foot"></el-option>
@@ -156,7 +156,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="站立脚" prop="detail.foot">
-                <el-select placeholder="请选择站立脚" style="width:100%" v-model="detail.foot">
+                <el-select filterable placeholder="请选择站立脚" style="width:100%" v-model="detail.foot">
                   <el-option label="--" value="null_foot"></el-option>
                   <el-option label="左" value="left_foot"></el-option>
                   <el-option label="右" value="right_foot"></el-option>
@@ -178,7 +178,7 @@
           <el-tab-pane label="分配信息">
             <el-form :model="distribution" label-width="80px" ref="distribution">
               <el-form-item label="所属球队" prop="distribution.teamId">
-                <el-select placeholder="请选择球队" style="width:100%" v-model="distribution.teamId">
+                <el-select filterable placeholder="请选择球队" style="width:100%" v-model="distribution.teamId">
                   <el-option :label="item.name" :value="item.id" v-for="item in teamList"></el-option>
                 </el-select>
               </el-form-item>
@@ -186,11 +186,11 @@
                 <el-input placeholder="请输入球衣号" v-model="distribution.shirtnumber"></el-input>
               </el-form-item>
               <el-form-item label="位置" prop="distribution.roleId">
-                <el-select @change="getPosition(distribution.roleId)" id="" name="" placeholder="请选择位置组"
+                <el-select filterable @change="getPosition(distribution.roleId)" id="" name="" placeholder="请选择位置组"
                            style="width:50%;" v-model="distribution.roleId">
                   <el-option :label="role.text " :value="role.id" v-for="role in roles">{{role.text}}</el-option>
                 </el-select>
-                <el-select id="" name="" placeholder="请选择具体位置" style="width:50%;" v-model="distribution.position1">
+                <el-select filterable id="" name="" placeholder="请选择具体位置" style="width:50%;" v-model="distribution.position1">
                   <el-option :label="position.text " :value="position.id" v-for="position in positions">
                     {{position.text}}
                   </el-option>
@@ -212,7 +212,7 @@
       </el-form>
       <div class="dialog-footer" slot="footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button @click="submit('form')" type="primary">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -324,9 +324,33 @@
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('/club', {
-                            data: this.form
-                        })
+                        if(!this.form.id) {
+                            // 新增
+                            this.$http.post('/person',
+                                this.form
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else if (res.data.status == 'FAILED' && !res.data.data) {
+                                    alert(res.data.data);
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        } else {
+                            // 修改
+                            this.$http.put('/person',
+                                this.form
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else {
+                                    alert("修改失败")
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        }
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -379,7 +403,7 @@
                 });
             },
             queryTeam() {
-                this.$http.get("/team", {params: {current: 1, size: 10000}}).then(res => {
+                this.$http.get("/team", {params: {current: 1, size: 100}}).then(res => {
                     this.teamList = res.data.records;
                 })
             },

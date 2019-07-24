@@ -4,13 +4,13 @@
       <div slot="header">
         <el-row :gutter="10">
           <el-col :span="4">
-            <el-select placeholder="赛季" v-model="seasonSearch">
+            <el-select filterable placeholder="赛季" v-model="seasonSearch">
               <el-option :label="'中国足球协会甲级联赛2019'" :value="1"></el-option>
               <el-option :label="'内蒙古中优'" :value="2"></el-option>
             </el-select>
           </el-col>
           <el-col :span="4">
-            <el-select placeholder="球队" v-model="teamSearch">
+            <el-select filterable placeholder="球队" v-model="teamSearch">
               <el-option :label="'北京北体大'" :value="1"></el-option>
               <el-option :label="'内蒙古中优'" :value="2"></el-option>
             </el-select>
@@ -28,15 +28,27 @@
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="matchId" type="selection" width="55"></el-table-column>
         <el-table-column align="center" label="轮次" prop="roundId" width="55"></el-table-column>
-        <el-table-column align="center" label="日期" prop="matchDate" width="100">
+        <el-table-column align="center" label="日期" prop="matchDate" width="120">
           <template slot-scope="scope">
             {{ scope.row.matchDate | moment('YYYY-MM-DD') }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="时间" prop="matchTime" width="60"></el-table-column>
-        <el-table-column align="center" label="主队" prop="homeId" width="150"></el-table-column>
-        <el-table-column align="center" label="客队" prop="awayId" width="150"></el-table-column>
-        <el-table-column align="center" label="比分" prop="matchResult" width="100"></el-table-column>
+        <el-table-column align="center" label="时间" prop="matchTime" width="80">
+          <template slot-scope="scope">
+            {{ scope.row.matchTime | timeFormatter(+8,":") }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="主队" prop="homeId" width="150">
+          <template slot-scope="scope">
+            {{ scope.row.homeId | idFormatter(teamList) }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="客队" prop="awayId" width="150">
+          <template slot-scope="scope">
+            {{ scope.row.awayId | idFormatter(teamList) }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="比分" prop="matchResult" width="60"></el-table-column>
         <el-table-column align="center" label="地点" prop="venueId" width="150"></el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="160">
           <template slot-scope="scope">
@@ -71,7 +83,7 @@
             <el-input v-model="matchForm.id"></el-input>
           </el-form-item>
           <el-form-item label="赛季名称" prop="matchForm.seasonId">
-            <el-select placeholder="请选择赛事赛季" style="width:100%" v-model="matchForm.seasonId">
+            <el-select filterable placeholder="请选择赛事赛季" style="width:100%" v-model="matchForm.seasonId">
               <el-option :label="'男性'" :value="1"></el-option>
               <el-option :label="'女性'" :value="2"></el-option>
               <el-option :label="'混合'" :value="3"></el-option>
@@ -82,14 +94,14 @@
                             type="date" v-model="matchForm.datatime"></el-date-picker>
           </el-form-item>
           <el-form-item label="主队" prop="matchForm.homeId">
-            <el-select placeholder="请选择主场球队" style="width:100%" v-model="matchForm.homeId">
+            <el-select filterable placeholder="请选择主场球队" style="width:100%" v-model="matchForm.homeId">
               <el-option :label="'男性'" :value="1"></el-option>
               <el-option :label="'女性'" :value="2"></el-option>
               <el-option :label="'混合'" :value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="客队" prop="matchForm.awayId">
-            <el-select placeholder="请选择客场球队" style="width:100%" v-model="matchForm.awayId">
+            <el-select filterable placeholder="请选择客场球队" style="width:100%" v-model="matchForm.awayId">
               <el-option :label="'男性'" :value="1"></el-option>
               <el-option :label="'女性'" :value="2"></el-option>
               <el-option :label="'混合'" :value="3"></el-option>
@@ -113,13 +125,13 @@
 </template>
 
 <script>
-
     export default {
         name: "season",
-
         data() {
             return {
                 selectedRows: [],
+                teamList: [],
+                competitionList: [],
                 matchRule: null,
                 seasonSearch: null,
                 teamSearch: null,
@@ -129,6 +141,7 @@
                     dateTime: '',
                     roundId: '',
                     matchDate: '',
+                    matchTime: '',
                     homeId: '',
                     awayId: '',
                     matchResult: '',
@@ -140,6 +153,7 @@
         },
         mounted() {
             this.query();
+            this.queryTeam();
         },
         methods: {
             submit(form) {
@@ -186,6 +200,21 @@
                     this.pager = res.data
                 });
             },
+            queryCompetition() {
+                this.$http.get('/competition', {
+                    params: {size: 100, current: 1},
+                }).then(res => {
+                    this.competitionList = res.data.records;
+                });
+            },
+            queryTeam() {
+                this.$http.get('/team', {
+                    params: {size: 100, current: 1},
+                }).then(res => {
+                    this.teamList = res.data.records;
+                });
+            },
+            
             // 分页组件点击事件
             pageChange(val) {
                 this.pager.current = val;
