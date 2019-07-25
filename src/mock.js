@@ -146,7 +146,7 @@ const queryUserAuthority = () => ({
             depth: 3
         }
     ],
-    authorities: [
+    /*authorities: [
         {
             authority_id: 1,
             authority_code: "AddUser",
@@ -172,7 +172,7 @@ const queryUserAuthority = () => ({
             authority_code: "QueryReport",
             authority_name: "查询报告"
         }
-    ]
+    ]*/
 });
 
 Mock.mock("http://127.0.0.1/passport/signIn", "post", signIn);

@@ -6,7 +6,7 @@ Vue.use(Vuex);
  *  id转name
  * @param id id
  * @param entityList 实体列表
- * @returns {any}
+ * @returns {string}
  */
 let idFormatter = (id,entityList) => {
     id = parseInt(id);

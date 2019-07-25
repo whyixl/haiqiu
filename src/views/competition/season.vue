@@ -70,8 +70,8 @@
           <el-form-item label="时间" prop="roundForm.dateRange">
             <el-col :span="6">
               <el-date-picker :picker-options="$store.state.dateRangePickerOptions"
-                              align="right" end-placeholder="赛季开始时间" range-separator="至"
-                              start-placeholder="赛季结束时间" style="width: 400%"
+                              align="right" start-placeholder="赛季开始时间" range-separator="至"
+                              end-placeholder="赛季结束时间" style="width: 400%"
                               type="daterange"
                               unlink-panels v-model="dateRange">
               </el-date-picker>
