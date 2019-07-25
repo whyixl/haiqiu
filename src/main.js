@@ -7,18 +7,22 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
+import filters from "./util/filters"
+
+Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
+
 const moment = require("moment");
 require("moment/locale/zh-cn");
-
 Vue.config.productionTip = false;
-Vue.use(require("vue-moment"), { moment });
+
+Vue.use(require("vue-moment"), {moment});
 Vue.use(ElementUI);
 
 Vue.prototype.$http = axios;
 Vue.prototype._ = _;
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount("#app");

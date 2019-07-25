@@ -146,7 +146,7 @@ const queryUserAuthority = () => ({
             depth: 3
         }
     ],
-    authorities: [
+    /*authorities: [
         {
             authority_id: 1,
             authority_code: "AddUser",
@@ -172,82 +172,8 @@ const queryUserAuthority = () => ({
             authority_code: "QueryReport",
             authority_name: "查询报告"
         }
-    ]
-});
-
-const queryUser = () => ({
-    total: 10,
-    size: 4,
-    current: 1,
-    records: [
-        {
-            userId: 1,
-            userName: "guest",
-            password: "$2a$10$llOd5/mvInD.OTVkPr/hqeFaa6wX4DCbtKIJwRq5vhKLd3mJNtLqi",
-            nation: 86,
-            phone: 15985859933,
-            avatar: null,
-            email: "test@test.com",
-            gender: null,
-            birthday: "2018-07-16T00:50:31.000+0000",
-            enabled: false,
-            type: 1,
-            createDate: "2018-07-16T00:50:31.000+0000",
-            lastDate: "2018-07-16T00:50:31.000+0000",
-            signInDate: "2018-07-16T00:50:31.000+0000"
-        },
-        {
-            userId: 2,
-            userName: "user",
-            password: "$2a$10$llOd5/mvInD.OTVkPr/hqeFaa6wX4DCbtKIJwRq5vhKLd3mJNtLqi",
-            nation: 86,
-            phone: 15985859933,
-            avatar: null,
-            email: "test@test.com",
-            gender: null,
-            birthday: "2018-07-16T00:50:31.000+0000",
-            enabled: true,
-            type: 1,
-            createDate: "2018-07-16T00:50:31.000+0000",
-            lastDate: "2018-07-16T00:50:31.000+0000",
-            signInDate: "2018-07-16T00:50:31.000+0000"
-        },
-        {
-            userId: 3,
-            userName: "user",
-            password: "$2a$10$llOd5/mvInD.OTVkPr/hqeFaa6wX4DCbtKIJwRq5vhKLd3mJNtLqi",
-            nation: 86,
-            phone: 15985859933,
-            avatar: null,
-            email: "test@test.com",
-            gender: null,
-            birthday: "2018-07-16T00:50:31.000+0000",
-            enabled: true,
-            type: 1,
-            createDate: "2018-07-16T00:50:31.000+0000",
-            lastDate: "2018-07-16T00:50:31.000+0000",
-            signInDate: "2018-07-16T00:50:31.000+0000"
-        },
-        {
-            userId: 4,
-            userName: "user",
-            password: "$2a$10$llOd5/mvInD.OTVkPr/hqeFaa6wX4DCbtKIJwRq5vhKLd3mJNtLqi",
-            nation: 86,
-            phone: 15985859933,
-            avatar: null,
-            email: "test@test.com",
-            gender: null,
-            birthday: "2018-07-16T00:50:31.000+0000",
-            enabled: true,
-            type: 1,
-            createDate: "2018-07-16T00:50:31.000+0000",
-            lastDate: "2018-07-16T00:50:31.000+0000",
-            signInDate: "2018-07-16T00:50:31.000+0000"
-        }
-    ],
-    pages: 2
+    ]*/
 });
 
 Mock.mock("http://127.0.0.1/passport/signIn", "post", signIn);
 Mock.mock("http://127.0.0.1/user/queryUserAuthority", "get", queryUserAuthority);
-Mock.mock("http://127.0.0.1/user", "get", queryUser);
