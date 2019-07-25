@@ -80,15 +80,17 @@ const store = new Vuex.Store({
     },
     setMenuTree(state, menuTree) {
       state.menuTree = menuTree;
-    },
+    }/*,
     setAuthorities(state, authorities) {
       state.authorities = authorities;
-    }
+    }*/
   },
   actions: {
     // 重新从服务器读取用户信息
     reloadUserAuthority(context) {
-      return axios.get("http://127.0.0.1/user/queryUserAuthority").then(response => {
+      return axios.get("/user/queryUserAuthority",{
+          params: {token:localStorage["token"]}
+      }).then(response => {
         const menus = response.data.menus;
         const rootMenu = _.find(menus, { menuCode: "root" });
         const rootMenuNode = { ...rootMenu, children: [] };
@@ -96,15 +98,14 @@ const store = new Vuex.Store({
         subTree(rootMenuNode, menus);
         context.commit("setMenus", menus);
         context.commit("setMenuTree", rootMenuNode.children);
-        context.commit("setAuthorities", response.data.authorities);
-
+        // context.commit("setAuthorities", response.data.authorities);
       });
     },
     signOut(context) {
       localStorage.removeItem("token");
       context.commit("setToken", null);
       context.commit("setMenus", []);
-      context.commit("setAuthorities", []);
+      // context.commit("setAuthorities", []);
     }
   }
 });

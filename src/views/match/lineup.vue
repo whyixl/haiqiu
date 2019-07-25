@@ -43,21 +43,21 @@
             <el-input  v-model="lineupForm.id"></el-input>
           </el-form-item>
           <el-form-item label="比赛名称" prop="lineupForm.matchId">
-            <el-select placeholder="请选择比赛名称" style="width:100%" v-model="lineupForm.matchId">
+            <el-select filterable placeholder="请选择比赛名称" style="width:100%" v-model="lineupForm.matchId">
               <el-option :label="'北体大VS中优'" :value="1"></el-option>
               <el-option :label="'北体大VS上海申鑫'" :value="2"></el-option>
               <el-option :label="'北体大VS四川FC'" :value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="球队" prop="lineupForm.teamId">
-            <el-select placeholder="请选择球队" style="width:100%" v-model="lineupForm.teamId">
+            <el-select filterable placeholder="请选择球队" style="width:100%" v-model="lineupForm.teamId">
               <el-option :label="'北体大'" :value="1"></el-option>
               <el-option :label="'中优'" :value="2"></el-option>
               <el-option :label="'上海申鑫'" :value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="阵型名" prop="lineupForm.lineupname">
-            <el-select placeholder="请选择阵型名" style="width:100%" v-model="lineupForm.lineupname">
+            <el-select filterable placeholder="请选择阵型名" style="width:100%" v-model="lineupForm.lineupname">
               <el-option :label="'3-1-2-1-3'" :value="1"></el-option>
               <el-option :label="'3-1-4-2'" :value="2"></el-option>
               <el-option :label="'3-2-4-1'" :value="3"></el-option>
@@ -84,14 +84,14 @@
             </el-select>
           </el-form-item>
           <el-form-item label="球员" prop="lineupForm.playerId">
-            <el-select placeholder="请选择球员" style="width:100%" v-model="lineupForm.playerId">
+            <el-select filterable placeholder="请选择球员" style="width:100%" v-model="lineupForm.playerId">
               <el-option :label="'王军'" :value="1"></el-option>
               <el-option :label="'中优'" :value="2"></el-option>
               <el-option :label="'上海申鑫'" :value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="球员类型" prop="lineupForm.playerType">
-            <el-select placeholder="请选择球员类型" style="width:100%" v-model="lineupForm.playerType">
+            <el-select filterable placeholder="请选择球员类型" style="width:100%" v-model="lineupForm.playerType">
               <el-option :label="'首发'" :value="1"></el-option>
               <el-option :label="'替补'" :value="2"></el-option>
             </el-select>

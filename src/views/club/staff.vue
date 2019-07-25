@@ -4,7 +4,7 @@
             <div slot="header">
                 <el-row :gutter="10">
                     <el-col :span="3">
-                        <el-select v-model="teamSearch" placeholder="球队">
+                        <el-select filterable v-model="teamSearch" placeholder="球队">
                             <el-option :label="'北京北体大'" :value="1"></el-option>
                             <el-option :label="'内蒙古中优'" :value="2"></el-option>
                         </el-select>
@@ -86,7 +86,7 @@
                                 <el-input placeholder="请输入英文名" v-model="form.surname"></el-input>
                             </el-form-item>
                             <el-form-item label="性别" prop="form.gender">
-                                <el-select v-model="form.gender" placeholder="请选择性别" style="width:100%">
+                                <el-select filterable v-model="form.gender" placeholder="请选择性别" style="width:100%">
                                     <el-option label="男" value="true"></el-option>
                                     <el-option label="女" value="false"></el-option>
                                 </el-select>
@@ -95,7 +95,7 @@
                                 <el-date-picker v-model="form.birthday" align="right" type="date" placeholder="选择日期" :picker-options="$store.state.datePickerOptions" style="width: 100%;"></el-date-picker>
                             </el-form-item>
                             <el-form-item label="国籍" prop="form.countryId">
-                                <el-select placeholder="请输入国籍" v-model="form.countryId" style="width:100%">
+                                <el-select filterable placeholder="请输入国籍" v-model="form.countryId" style="width:100%">
                                     <el-option label="男" value=1></el-option>
                                     <el-option label="女" value=2></el-option>
                                 </el-select>
@@ -106,7 +106,7 @@
                     <el-tab-pane label="详细信息">
                         <el-form ref="detail" :model="detail" label-width="80px">
                             <el-form-item label="出生国家" prop="detail.birth_countryId">
-                                <el-select placeholder="请输入出生国家" v-model="detail.birth_countryId" style="width:100%">
+                                <el-select filterable placeholder="请输入出生国家" v-model="detail.birth_countryId" style="width:100%">
                                     <el-option label="男" value=1></el-option>
                                     <el-option label="女" value=2></el-option>
                                 </el-select>
@@ -132,17 +132,17 @@
                     <el-tab-pane label="分配信息">
                         <el-form ref="distribution" :model="distribution" label-width="80px">
                             <el-form-item label="所属球队" prop="distribution.teamId">
-                                <el-select  placeholder="请选择球队" v-model="distribution.teamId" style="width:100%" >
+                                <el-select filterable  placeholder="请选择球队" v-model="distribution.teamId" style="width:100%" >
                                     <el-option :label="'男性'" :value="1"></el-option>
                                     <el-option :label="'女性'" :value="2"></el-option>
                                     <el-option :label="'混合'" :value="3"></el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="领域"  prop="distribution.role">
-                                <el-select name="" id="" @change="getPosition(distribution.roleId)" v-model="distribution.roleId" placeholder="请选择领域" style="width:50%;">
+                                <el-select filterable name="" id="" @change="getPosition(distribution.roleId)" v-model="distribution.roleId" placeholder="请选择领域" style="width:50%;">
                                     <el-option :label="role.text " v-for="role in roles" :value="role.id">{{role.text}}</el-option>
                                 </el-select>
-                                <el-select name="" id="" v-model="distribution.position1" placeholder="请选择角色" style="width:50%;">
+                                <el-select filterable name="" id="" v-model="distribution.position1" placeholder="请选择角色" style="width:50%;">
                                     <el-option :label="position.text "  v-for="position in positions":value="position.id">{{position.text}}</el-option>
                                 </el-select>
                             </el-form-item>

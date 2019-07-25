@@ -7,7 +7,7 @@
             <h1 class="title">欢迎使用Hiqiu Admin</h1>
             <p class="login-box-msg">专注数据服务，让价值共享!</p>
             <el-form-item>
-              <el-input type="text" v-model="user.userName" auto-complete="off" placeholder="请输入用户名..." suffix-icon="el-icon-bell"></el-input>
+              <el-input type="text" v-model="user.name" auto-complete="off" placeholder="请输入用户名..." suffix-icon="el-icon-bell"></el-input>
             </el-form-item>
             <el-form-item>
               <el-input type="password" v-model="user.password" auto-complete="off" placeholder="请输入密码..." suffix-icon="el-icon-edit"></el-input>
@@ -51,16 +51,16 @@ export default {
   data() {
     return {
       user: {
-        userName: "",
+        name: "",
         password: ""
       }
     };
   },
   methods: {
     login() {
-      this.$http.post("http://127.0.0.1/passport/signIn", this.user).then(res => {
-        if (res.data.token) {
-          this.$store.commit("setToken", res.data.token);
+      this.$http.post("/user/login", this.user).then(res => {
+        if (res.data.data) {
+          this.$store.commit("setToken", res.data.data);
           this.$router.push({ path: "/club/dashboard" });
         }
       });

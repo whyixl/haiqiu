@@ -30,11 +30,11 @@
                 <el-table-column align="center" prop="match_eventId" type="selection" width="55"></el-table-column>
                 <el-table-column label="比赛名称" align="center" prop="matchId" width="180"></el-table-column>
                 <el-table-column label="球队" align="center" prop="teamId" width="180"></el-table-column>
-                <el-table-column label="球员" align="center" prop="personId" width="130"></el-table-column>
+                <el-table-column label="球员" align="center" prop="personId" width="160"></el-table-column>
                 <el-table-column label="球衣号" align="center" prop="shirtnumber" width="110"></el-table-column>
                 <el-table-column label="分钟" align="center" prop="minute" width="110"></el-table-column>
-                <el-table-column label="事件" align="center" prop="action" width="100"></el-table-column>
-                <el-table-column label="类型" align="center" prop="kind" width="100"></el-table-column>
+                <el-table-column label="事件" align="center" prop="action" width="150"></el-table-column>
+                <el-table-column label="类型" align="center" prop="kind" width="150"></el-table-column>
                 <el-table-column label="相关球员" align="center" prop="additional_personId" width="160"></el-table-column>
                 <el-table-column align="center" prop="created" label="创建时间" width="150">
                     <template slot-scope="scope">
@@ -64,28 +64,28 @@
                         <el-input  v-model="match_eventForm.id"></el-input>
                     </el-form-item>
                     <el-form-item label="比赛名称" prop="match_eventForm.matchId" >
-                        <el-select  placeholder="请选择比赛名称" v-model="match_eventForm.matchId" style="width:100%" >
+                        <el-select filterable  placeholder="请选择比赛名称" v-model="match_eventForm.matchId" style="width:100%" >
                             <el-option :label="'北体大VS中优'" :value="1"></el-option>
                             <el-option :label="'北体大VS上海申鑫'" :value="2"></el-option>
                             <el-option :label="'北体大VS四川FC'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="球队"  prop="match_eventForm.matchId">
-                        <el-select  placeholder="请选择球队" v-model="match_eventForm.teamId" style="width:100%" >
+                        <el-select filterable  placeholder="请选择球队" v-model="match_eventForm.teamId" style="width:100%" >
                             <el-option :label="'北体大'" :value="1"></el-option>
                             <el-option :label="'中优'" :value="2"></el-option>
                             <el-option :label="'上海申鑫'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="球员"  prop="match_eventForm.personId">
-                        <el-select  placeholder="请选择球员" v-model="match_eventForm.personId" style="width:100%" >
+                        <el-select filterable  placeholder="请选择球员" v-model="match_eventForm.personId" style="width:100%" >
                             <el-option :label="'王军'" :value="1"></el-option>
                             <el-option :label="'中优'" :value="2"></el-option>
                             <el-option :label="'上海申鑫'" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="相关球员"  prop="match_eventForm.additional_personId">
-                        <el-select  placeholder="进球加助攻球员/替换加替下球员" v-model="match_eventForm.additional_personId" style="width:100%" >
+                        <el-select filterable  placeholder="进球加助攻球员/替换加替下球员" v-model="match_eventForm.additional_personId" style="width:100%" >
                             <el-option :label="'王军'" :value="1"></el-option>
                             <el-option :label="'中优'" :value="2"></el-option>
                             <el-option :label="'上海申鑫'" :value="3"></el-option>
@@ -95,11 +95,11 @@
                         <el-input placeholder="请输入分钟" v-model="match_eventForm.minute" ></el-input>
                     </el-form-item>
                     <el-form-item label="事件及类型"  prop="match_eventForm.action">
-                        <el-select name="" id="" @change="getPosition(match_eventForm.action)" v-model="match_eventForm.action" placeholder="请选择事件" style="width:50%;">
+                        <el-select filterable name="" id="" @change="getPosition(action)" v-model="match_eventForm.action" placeholder="请选择事件" style="width:50%;">
                             <!--<el-option label="">请选择事件</el-option>-->
                             <el-option :label="action.text " v-for="action in actions" :value="action.id">{{action.text}}</el-option>
                         </el-select>
-                        <el-select name="" id="" v-model="match_eventForm.kind" placeholder="请选择类型" style="width:50%;">
+                        <el-select filterable name="" id="" v-model="match_eventForm.kind" placeholder="请选择类型" style="width:50%;">
                            <!-- <el-option value="">请选择类型</el-option>-->
                             <el-option :label="kind.text "  v-for="kind in kinds":value="kind.id">{{kind.text}}</el-option>
                         </el-select>
