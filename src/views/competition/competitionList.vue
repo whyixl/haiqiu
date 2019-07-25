@@ -3,7 +3,8 @@
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-        <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
+        <el-button :disabled="selectedRows.length===0" @click="deleteBatch" icon="el-icon-delete" size="medium">删除
+        </el-button>
       </div>
       <!-- 这一部分是赛事列表 -->
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
@@ -26,19 +27,21 @@
             {{ scope.row.type == "club" ? '俱乐部': '国际' }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="国家/地区" prop="countryId" width="140">
-          {{countryList[40]}}
-        </el-table-column>
-        <el-table-column align="center" label="联盟" prop="federationId" width="120"></el-table-column>
         <el-table-column align="center" label="开始日期" prop="starttime" width="140">
           <template slot-scope="scope">
             {{ scope.row.starttime | moment('YYYY-MM-DD') }}
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="180">
+        <el-table-column align="center" label="国家/地区" prop="countryId" width="140">
+          <template slot-scope="scope">
+            {{scope.row.countryId | idFormatter(countryList)}}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="联盟" prop="federationId" width="120"></el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-            <router-link :to="{path: '/competition/season',query: {id: scope.row.id}}">
+            <router-link :to="{path: '/competition/season',query: {coId: scope.row.id}}">
               <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="赛季"></el-button>
             </router-link>
             <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
@@ -61,8 +64,8 @@
     <el-dialog :visible.sync="dialogVisible" title="添加赛事">
       <el-form :label-position="'right'" label-width="80px">
         <el-form :model="competitionForm" :rules="competitionRule" label-width="80px" ref="competitionForm">
-          <el-form-item label="id" prop="id" style="display:none" >
-            <el-input  v-model="competitionForm.id"></el-input>
+          <el-form-item label="id" prop="id" style="display:none">
+            <el-input v-model="competitionForm.id"></el-input>
           </el-form-item>
           <el-form-item label="描述">
             <!-- name -->
@@ -73,12 +76,12 @@
             <el-input placeholder="请输入赛事简称" v-model="competitionForm.shortname"></el-input>
           </el-form-item>
           <el-form-item label="性别">
-            <el-select placeholder="请选择性别" style="width:100%" v-model="competitionForm.gender">
-              <el-option :label=item.label :value=item.value v-for="item in genderOptions"></el-option>
+            <el-select filterable placeholder="请选择性别" style="width:100%" v-model="competitionForm.gender">
+              <el-option v-bind:label=item.label v-bind:value=item.value v-for="item in genderOptions"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="年龄">
-            <el-select placeholder="请选择年龄段" style="width:100%" v-model="competitionForm.ageId">
+            <el-select filterable placeholder="请选择年龄段" style="width:100%" v-model="competitionForm.ageId">
               <el-option :label="'--'" :value="0"></el-option>
               <el-option :label="'职业'" :value="1"></el-option>
               <el-option :label="'U23'" :value="2"></el-option>
@@ -96,19 +99,19 @@
             </el-select>
           </el-form-item>
           <el-form-item label="类型" prop="type">
-            <el-select placeholder="请输入类型" style="width:100%" v-model="competitionForm.type">
+            <el-select filterable placeholder="请输入类型" style="width:100%" v-model="competitionForm.type">
               <el-option :label="'俱乐部'" :value="'club'"></el-option>
               <el-option :label="'国内'" :value="'national'"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="国家" prop="country">
-            <el-select placeholder="请选择国家" style="width:100%" v-model="competitionForm.countryId">
-              <el-option :label=item.name :value=item.id v-for="item in countryList"></el-option>
+            <el-select filterable placeholder="请选择国家" style="width:100%" v-model="competitionForm.countryId">
+              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
             </el-select>
           </el-form-item>
           <!-- 地区列表，从后台查出来 -->
           <el-form-item label="联盟" prop="federation">
-            <el-select placeholder="请输选择联盟" style="width:100%" v-model="competitionForm.federationId">
+            <el-select filterable placeholder="请输选择联盟" style="width:100%" v-model="competitionForm.federationId">
               <el-option :label="'--'" :value="1"></el-option>
               <el-option :label="'世界'" :value="2"></el-option>
               <el-option :label="'欧洲'" :value="3"></el-option>
@@ -186,9 +189,31 @@
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('/competition', {
-                            data: this.competitionForm
-                        })
+                        if (!this.competitionForm.id) {
+                            this.$http.post('/competition',
+                                this.competitionForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else if (res.data.status == 'FAILED') {
+                                    alert(res.data.data);
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        } else {
+                            this.$http.put('/competition',
+                                this.competitionForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else {
+                                    alert("修改失败")
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        }
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -221,7 +246,10 @@
             },
             query() {
                 this.$http.get('/competition', {
-                    params: this.pager,
+                    params: {
+                        size: this.pager.size,
+                        current: this.pager.current
+                    },
                 }).then(res => {
                     this.pager = res.data
                 });
