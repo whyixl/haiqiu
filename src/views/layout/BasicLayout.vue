@@ -31,7 +31,7 @@
                 <i @click="isCollapse=!isCollapse" class="el-icon-menu sidebarToggle"></i>
                 <div class="float-right">
                     <el-dropdown @command="handleCommand" class="header-action" trigger="click">
-                        <span>Admin<i class="el-icon-arrow-down el-icon--right"></i></span>
+                        <span>{{name}}<i class="el-icon-arrow-down el-icon--right"></i></span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item command="Competition"><i class="el-icon-setting"></i> 个人设定
                             </el-dropdown-item>
@@ -57,7 +57,8 @@
         name: "App",
         data() {
             return {
-                isCollapse: false
+                isCollapse: false,
+                name: this.GLOBAL.userName
             };
         },
         methods: {
