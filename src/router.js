@@ -18,12 +18,12 @@ export const asyncRouter = [
         component: BasicLayout,
         children: [
             {
-                path: "/competition",
+                path: "/competition/dashboard",
                 name: "competition",
-                component: () => import("@/views/competition/competitionList.vue")
+                component: () => import("@/views/competition/dashboard.vue")
             },
             {
-                path: "/competition/season",
+                path: "/competition/dashboard/season",
                 name: "season",
                 component: () => import("@/views/competition/season.vue")
             },
@@ -72,15 +72,27 @@ export const asyncRouter = [
             {
                 path: "/match/dashboard",
                 name: "match_dashboard",
-                component: () => import("@/views/match/dashboard.vue")
+                component: () => import("@/views/match/dashboard.vue"),
+                /*children: [
+                    {
+                        path: "/match/dashboard/lineup",
+                        name: "lineup",
+                        component: () => import("@/views/match/lineup.vue")
+                    },
+                    {
+                        path: "/match/dashboard/matchStatistics",
+                        name: "matchStatistics",
+                        component: () => import("@/views/match/matchStatistics.vue")
+                    }
+                ]*/
             },
             {
-                path: "/match/lineup",
+                path: "/match/dashboard/lineup",
                 name: "lineup",
                 component: () => import("@/views/match/lineup.vue")
             },
             {
-                path: "/match/matchStatistics",
+                path: "/match/dashboard/matchStatistics",
                 name: "matchStatistics",
                 component: () => import("@/views/match/matchStatistics.vue")
             }
@@ -88,7 +100,7 @@ export const asyncRouter = [
     }
 ];
 
-const router = new Router({routes: constantRouter});
+const router = new Router({mode:'history', routes: constantRouter});
 
 // 是否有权限访问某个路径
 const hasPermission = toPath => {

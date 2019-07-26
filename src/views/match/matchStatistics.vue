@@ -2,24 +2,6 @@
     <div>
         <el-card :body-style="{ padding: '0px' }" shadow="never">
             <div slot="header">
-                <!--<el-row :gutter="10">
-                    <el-col :span="4">
-                        <el-select v-model="season" placeholder="赛季">
-                            <el-option :label="'中国足球协会甲级联赛2019'" :value="1"></el-option>
-                            <el-option :label="'内蒙古中优'" :value="2"></el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="4">
-                        <el-select v-model="team" placeholder="球队">
-                            <el-option :label="'北京北体大'" :value="1"></el-option>
-                            <el-option :label="'内蒙古中优'" :value="2"></el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-button type="primary" icon="el-icon-search">查询</el-button>
-                    </el-col>
-                </el-row>
-                <br>-->
                 <el-button size="medium" type="primary" icon="el-icon-plus" @click="dialogVisible = true">新增</el-button>
                 <el-button size="medium" icon="el-icon-delete" :disabled="selectedRows.length==0">删除</el-button>
             </div>

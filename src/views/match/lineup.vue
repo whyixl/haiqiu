@@ -22,23 +22,26 @@
         <el-table-column align="center" label="数据来源" prop="dataSource" width="100"></el-table-column>
         <el-table-column align="center" label="操作" width="120">
           <template slot-scope="scope">
-            <el-button @click="edit()" size="small" type="text">编辑</el-button>
-            <el-button @click="remove()" size="small" type="text">删除</el-button>
+            <el-button @click="edit(scope.row)" size="small" type="text">编辑</el-button>
+            <el-button @click="remove(scope.row.id,scope.$index)" size="small" type="text">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       
-      
       <!-- 分页组件 -->
       <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
-                     :page-sizes="$store.state.paginationPageSizes" :total="pager.total"
-                     class="pagination text-right"></el-pagination>
+                     :page-sizes="$store.state.paginationPageSizes"
+                     :pager-count="5" :total="pager.total"
+                     @current-change="pageChange" @next-click="pageChange" @prev-click="pageChange"
+                     @size-change="sizeChange"
+                     class="pagination text-right">
+      </el-pagination>
     </el-card>
     
     <!-- 编辑页面 -->
     <el-dialog :visible.sync="dialogVisible" title="添加阵型">
       <el-form :label-position="'right'" label-width="80px">
-        <el-form :model="lineupForm" :rules="lineupRule" label-width="160px" ref="seasonForm">
+        <el-form :model="lineupForm" :rules="lineupRule" label-width="160px" ref="lineupForm">
           <el-form-item label="id" prop="id" style="display:none" >
             <el-input  v-model="lineupForm.id"></el-input>
           </el-form-item>
@@ -157,28 +160,64 @@
             this.query();
         },
         methods: {
-            submit(lineupForm) {
-                this.$refs[lineupForm].validate((valid) => {
+            add() {
+                this.dialogVisible = true;
+                this.clubForm = {};
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "添加阵型";
+            },
+            submit(form) {
+                this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('/club', {
-                            data: this.lineupForm
-                        })
+                        if(!this.lineupForm.id) {
+                            // 新增
+                            this.$http.post('/lineup',
+                                this.lineupForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else if (res.data.status == 'FAILED' && !res.data.data) {
+                                    alert(res.data.data);
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        } else {
+                            // 修改
+                            this.$http.put('/lineup',
+                                this.lineupForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else {
+                                    alert("修改失败")
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        }
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
                 });
             },
-            add() {
-                this.dialogVisible = true;
-                this.lineupForm = {}
-            },
-            remove() {
+            remove(id,rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
-                }).then()
+                }).then(() => {
+                    this.$http.delete('/lineup', {
+                        params: {
+                            id: id
+                        }
+                    }).then(res=>{
+                        if (res.status === 200 && res.data.status === 'SUCCESS') {
+                            this.pager.records.splice(rowNum,1);
+                            this.pager.total--;
+                        }
+                    })
+                });
             },
             deleteBatch() {
                 this.$http.delete('', {
@@ -187,15 +226,19 @@
                     }
                 })
             },
-            edit(lineup) {
+            edit(rowEntity) {
                 this.dialogVisible = true;
-                this.lineupForm = lineup
+                this.clubForm = rowEntity;
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "修改阵型";
             },
             query() {
-                this.$http.get('/club/co', {
-                    params: this.pager,
+                this.$http.get('/lineup', {
+                    params : {
+                        size: this.pager.size,
+                        current: this.pager.current
+                    },
                 }).then(res => {
-                    this.pager = res.data
+                    this.pager = res.data;
                 });
             },
             // 分页组件点击事件

@@ -41,7 +41,7 @@
         <el-table-column align="center" fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-            <router-link :to="{path: '/competition/season',query: {coId: scope.row.id}}">
+            <router-link :to="{path: '/competition/dashboard/season',query: {coId: scope.row.id}}">
               <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="赛季"></el-button>
             </router-link>
             <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
@@ -222,7 +222,16 @@
             },
             add() {
                 this.dialogVisible = true;
-                this.competitionForm = {}
+                this.competitionForm = {
+                    id: '',
+                    name: null,
+                    shortname: null,
+                    type: null,
+                    gender: null,
+                    ageId: null,
+                    countryId: null,
+                    federationId: null,
+                    starttime: null,}
             },
             remove(id) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {

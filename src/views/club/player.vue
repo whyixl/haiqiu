@@ -358,10 +358,9 @@
                 });
             },
             add() {
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "添加球员";
                 this.dialogVisible = true;
                 this.form = {};
-                this.detail = {};
-                this.distribution = {}
             },
             remove(id, rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -389,6 +388,7 @@
                 })
             },
             edit(player) {
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑球员";
                 this.dialogVisible = true;
                 this.form = player
             },

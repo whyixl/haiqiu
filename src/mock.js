@@ -65,46 +65,59 @@ const queryUserAuthority = () => ({
             rgt: 8,
             depth: 2
         },
+
         {
-            menuId: 9,
+            menuId: 9, /* 7 */
             menuName: "赛事赛季",
             menuCode: "competition",
             link: "/competition",
             icon: "el-icon-menu",
             lft: 11,
-            rgt: 12,
+            rgt: 17,
+            depth: 3
+        },
+        {
+            menuId: 9,  /* 16 */
+            menuName: "赛季列表",
+            menuCode: "competition",
+            link: "/competition/dashboard",
+            icon: "el-icon-menu",
+            lft: 9,
+            rgt: 9,
             depth: 1
         },
         {
-            menuId: 10,
+            menuId: 10, /* 8 */
             menuName: "赛季",
             menuCode: "season",
             link: "/competition/season",
             icon: "el-icon-menu",
-            lft: 12,
-            rgt: 13,
-            depth: 2
+            lft: 11,
+            rgt: 12,
+            depth: 3
         },
         {
-            menuId: 11,
+            menuId: 11,  /* 9 */
             menuName: "球队",
             menuCode: "team",
             link: "/competition/team",
             icon: "el-icon-menu",
             lft: 13,
             rgt: 14,
-            depth: 2
+            depth: 3
         },
         {
-            menuId: 12,
+            menuId: 12, /* 10 */
             menuName: "轮次",
             menuCode: "round",
             link: "/competition/round",
             icon: "el-icon-menu",
-            lft: 14,
-            rgt: 15,
-            depth: 2
+            lft: 15,
+            rgt: 16,
+            depth: 3
         },
+
+
         {
             menuId: 12,
             menuName: "比赛信息",

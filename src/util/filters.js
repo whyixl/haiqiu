@@ -37,6 +37,9 @@ let idFormatter = (id,entityList) => {
  * @returns {Date}
  */
 let timeFormatter = (U0Time, timeZone, timeSeparator) => {
+    if (!U0Time) {
+        return U0Time;
+    }
     const subTime =  U0Time.toString().split(timeSeparator);
     return parseInt(subTime[0]) + timeZone + ":" + subTime[1]
 };
