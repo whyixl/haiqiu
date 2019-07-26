@@ -2,16 +2,16 @@
     <div>
         <el-card :body-style="{ padding: '0px' }" shadow="never">
             <div slot="header">
-                <!--<el-row :gutter="10">-->
-                    <!--<el-col :span="4">-->
-                        <!--<el-select placeholder="菜单层级" style="width:100%" v-model="menuDepthSearch">-->
-                            <!--<el-option :label=item.name :value=item.id v-for="item in depthList"></el-option>-->
-                        <!--</el-select>-->
-                    <!--</el-col>-->
-                    <!--<el-col :span="6">-->
-                        <!--<el-button icon="el-icon-search" type="primary">查询</el-button>-->
-                    <!--</el-col>-->
-                <!--</el-row>-->
+                <el-row :gutter="10">
+                    <el-col :span="4">
+                        <el-select  filterable placeholder="父级菜单" v-model="menusByLink">
+                            <el-option :label=item :value=item v-for="item in linkList"></el-option>
+                        </el-select>
+                    </el-col>
+                <el-col :span="6">
+                <el-button @click="queryByLink" icon="el-icon-search" type="primary">查询</el-button>
+                </el-col>
+                </el-row>
                 <br>
                 <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
                 <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">
@@ -25,6 +25,7 @@
                     <el-table-column align="center" prop="menuId" type="selection"></el-table-column>
                     <el-table-column align="center" label="menuName" prop="menuName"></el-table-column>
                     <el-table-column align="center" label="menuCode" prop="menuCode"></el-table-column>
+                    <el-table-column align="center" label="parentLink" prop="parentLink"></el-table-column>
                     <el-table-column align="center" label="link" prop="link"></el-table-column>
                     <el-table-column align="center" label="icon" prop="icon"></el-table-column>
                     <el-table-column align="center" label="lft" prop="lft"></el-table-column>
@@ -53,7 +54,7 @@
         </el-card>
 
         <!-- 编辑页面 -->
-        <el-dialog :visible.sync="dialogVisible" title="添加菜单">
+        <el-dialog id="dialog" :visible.sync="dialogVisible" title="添加菜单">
             <el-form :label-position="'right'" label-width="80px">
                 <el-form :model="menusForm" :rules="menusRule" label-width="160px" ref="menusForm">
                     <el-form-item style="display: none;" label="menuId" prop="menuId">
@@ -64,6 +65,9 @@
                     </el-form-item>
                     <el-form-item label="menuCode" prop="menuCode">
                         <el-input placeholder="请输入menuCode " v-model="menusForm.menuCode"></el-input>
+                    </el-form-item>
+                    <el-form-item label="parentLink" prop="parentLink">
+                        <el-input placeholder="请输入parentLink " v-model="menusForm.parentLink"></el-input>
                     </el-form-item>
                     <el-form-item label="link" prop="link">
                         <el-input placeholder="请输入link " v-model="menusForm.link"></el-input>
@@ -99,14 +103,15 @@
                     menuId: '',
                     menuName: '',
                     menuCode: '',
+                    parentLink:'',
                     link: '',
                     icon: '',
                     lft: '',
                     rgt: '',
                     depth: ''
                 },
-                menuDepthSearch: null,
-                depthList: [],
+                menusByLink:null,
+                linkList: [],
                 menusRule: null,
                 selectedRows: [],
                 dialogVisible: false,
@@ -115,28 +120,18 @@
         },
         mounted() {
             this.query();
+            this.selectMenusByLink();
         },
         methods: {
             add() {
+                document.getElementById('dialog').getElementsByClassName("el-dialog__title")[0].innerText = "新增菜单";
                 this.dialogVisible = true;
                 this.menusForm = {}
             },
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        if (this.menusForm.menuId != null) {
-                            this.$http.put('/menus',
-                                this.menusForm
-                            ).then(res => {
-                                if (res.data.status == 'SUCCESS') {
-                                    this.query();
-                                } else {
-                                    alert("修改失败")
-                                }
-                            }).finally(() => {
-                                this.dialogVisible = false;
-                            })
-                        } else {
+                        if (this.menusForm.menuId) {
                             this.$http.post('/menus',
                                 this.menusForm
                             ).then(res => {
@@ -144,6 +139,18 @@
                                     this.query();
                                 } else if (res.data.status == 'FAILED') {
                                     alert(res.data.data);
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        } else {
+                            this.$http.put('/menus',
+                                this.menusForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else {
+                                    alert("修改失败")
                                 }
                             }).finally(() => {
                                 this.dialogVisible = false;
@@ -163,6 +170,7 @@
                 })
             },
             edit(rowEntity) {
+                document.getElementById('dialog').getElementsByClassName("el-dialog__title")[0].innerText = "编辑菜单";
                 this.dialogVisible = true;
                 this.menusForm = rowEntity
             },
@@ -171,6 +179,17 @@
                     params: {
                         size: this.pager.size,
                         current: this.pager.current
+                    },
+                }).then(res => {
+                    this.pager = res.data;
+                });
+            },
+            queryByLink() {
+                this.$http.get('/menus/parentLinks', {
+                    params: {
+                        size: this.pager.size,
+                        current: this.pager.current,
+                        parentLink:this.menusByLink
                     },
                 }).then(res => {
                     this.pager = res.data;
@@ -204,6 +223,11 @@
             sizeChange(val) {
                 this.pager.size = val;
                 this.query()
+            },
+            selectMenusByLink() {
+                this.$http.get("/menus/link", {params: {current: 1, size: 100}}).then(res => {
+                    this.linkList = res.data.records;
+                })
             },
         }
     };
