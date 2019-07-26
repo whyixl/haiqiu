@@ -89,6 +89,22 @@ export const asyncRouter = [
                 component: () => import("@/views/match/matchStatistics.vue")
             }
         ]
+    },
+    {
+        path: "/auth",
+        component: BasicLayout,
+        children: [
+            {
+                path: "/auth/menus",
+                name: "menus",
+                component: () => import("@/views/auth/Menus.vue")
+            },
+            {
+                path: "/auth/user",
+                name: "user",
+                component: () => import("@/views/auth/User.vue")
+            }
+        ]
     }
 ];
 
