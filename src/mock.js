@@ -65,59 +65,47 @@ const queryUserAuthority = () => ({
             rgt: 8,
             depth: 2
         },
-
         {
-            menuId: 9, /* 7 */
+            menuId: 9,
             menuName: "赛事赛季",
             menuCode: "competition",
             link: "/competition",
             icon: "el-icon-menu",
             lft: 11,
-            rgt: 17,
-            depth: 3
-        },
-        {
-            menuId: 9,  /* 16 */
-            menuName: "赛季列表",
-            menuCode: "competition",
-            link: "/competition/dashboard",
-            icon: "el-icon-menu",
-            lft: 9,
-            rgt: 9,
+            rgt: 13,
             depth: 1
         },
+
         {
-            menuId: 10, /* 8 */
+            menuId: 10,
             menuName: "赛季",
             menuCode: "season",
             link: "/competition/season",
             icon: "el-icon-menu",
-            lft: 11,
-            rgt: 12,
-            depth: 3
+            lft: 12,
+            rgt: 13,
+            depth: 2
         },
         {
-            menuId: 11,  /* 9 */
+            menuId: 11,
             menuName: "球队",
             menuCode: "team",
             link: "/competition/team",
             icon: "el-icon-menu",
             lft: 13,
             rgt: 14,
-            depth: 3
+            depth: 2
         },
         {
-            menuId: 12, /* 10 */
+            menuId: 12,
             menuName: "轮次",
             menuCode: "round",
             link: "/competition/round",
             icon: "el-icon-menu",
-            lft: 15,
-            rgt: 16,
+            lft: 14,
+            rgt: 15,
             depth: 3
         },
-
-
         {
             menuId: 12,
             menuName: "比赛信息",
@@ -126,19 +114,10 @@ const queryUserAuthority = () => ({
             icon: "el-icon-menu",
             lft: 18,
             rgt: 25,
-            depth: 3
-        },
-        {
-            menuId: 13,
-            menuName: "赛程信息",
-            menuCode: "match_dashboard",
-            link: "/match/dashboard",
-            icon: "el-icon-menu",
-            lft: 17,
-            rgt: 17,
             depth: 1
         },
-        {
+
+       {
             menuId: 14,
             menuName: "首发阵容",
             menuCode: "lineup",

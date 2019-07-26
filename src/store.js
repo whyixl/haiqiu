@@ -70,7 +70,7 @@ const store = new Vuex.Store({
     // 分页控件组件布局，子组件名用逗号分隔
     paginationLayout: "total, sizes, prev, pager, next, jumper"
   },
-  mutations: {
+ mutations: {
     setToken(state, newToken) {
       localStorage.setItem("token", newToken);
       state.token = newToken;
