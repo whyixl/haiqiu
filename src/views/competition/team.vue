@@ -95,8 +95,21 @@
             this.query(this.seasonId);
             this.queryCompetition();
             this.queryTeam();
+            this.fun();
         },
         methods: {
+            fun() {
+                const menusList = [];
+                console.log(this.$route.matched);
+                var index;
+                for (index of _.map(this.$route.matched)) {
+                    const menusMap = new Map();
+                    menusMap.set('path', index.path);
+                    menusMap.set('menuName', index.meta.menuName);
+                    menusList.push(menusMap)
+                }
+                // console.log(this.menusList);
+            },
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {

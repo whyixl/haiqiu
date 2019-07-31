@@ -69,21 +69,24 @@
             };
         },
         mounted() {
-            // const menusList = [];
-            console.log(this.$route.matched);
-            var index;
-            for (index of _.map(this.$route.matched)) {
-                const menusMap = new Map();
-                menusMap.set('path', index.path);
-                menusMap.set('menuName', index.meta.menuName);
-                this.menusList.push(menusMap)
-            }
-            // console.log(this.menusList);
+            this.fun();
         },
         methods: {
+            fun() {
+                // const menusList = [];
+                console.log(this.$route.matched);
+                var index;
+                for (index of _.map(this.$route.matched)) {
+                    const menusMap = new Map();
+                    menusMap.set('path', index.path);
+                    menusMap.set('menuName', index.meta.menuName);
+                    this.menusList.push(menusMap)
+                }
+                // console.log(this.menusList);
+            },
             getBreadcrumb() {
                 this.breadList = this.$route.matched.filter(item => item.name);
-                console.log(this.breadList)
+                // console.log(this.breadList)
             },
             handleCommand(command) {
                 switch (command) {

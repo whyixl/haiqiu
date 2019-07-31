@@ -34,7 +34,11 @@
                 </el-table-column>
                 <el-table-column align="center" prop="name" label="姓名"></el-table-column>
                 <el-table-column align="center" prop="surname" label="英文名"></el-table-column>
-                <el-table-column align="center" prop="gender" label="性别"></el-table-column>
+                <el-table-column align="center" prop="gender" label="性别">
+                  <template slot-scope="scope">
+                    {{scope.row.gender ? (scope.row.gender == "male" ? "男" : "女") : scope.row.gender}}
+                  </template>
+                </el-table-column>
                 <el-table-column align="center" prop="birthday" label="出生日期" width="100">
                     <template slot-scope="scope">
                         {{ scope.row.birthday | moment('YYYY-MM-DD') }}
@@ -43,12 +47,20 @@
                 <el-table-column  align="center" prop="teamId" label="所属球队"></el-table-column>
                 <el-table-column  align="center" prop="roleId" label="领域"></el-table-column>
                 <el-table-column  align="center" prop="position1" label="角色"></el-table-column>
-                <el-table-column align="center" prop="birth_countryId" label="出生国家"></el-table-column>
+                <el-table-column align="center" prop="birth_countryId" label="出生国家">
+                  <template slot-scope="scope">
+                    {{scope.row.countryId | idFormatter(countryList)}}
+                  </template>
+                </el-table-column>
                 <el-table-column align="center" prop="birth_place" label="出生地"></el-table-column>
                 <el-table-column align="center" prop="shoesize" label="球鞋尺寸"></el-table-column>
                 <el-table-column align="center" prop="jerseysize" label="球衣尺寸"></el-table-column>
                 <el-table-column align="center" prop="shortssize" label="短裤尺寸"></el-table-column>
-                <el-table-column align="center" prop="countryId" label="国籍"></el-table-column>
+                <el-table-column align="center" prop="countryId" label="国籍">
+                  <template slot-scope="scope">
+                    {{scope.row.countryId | idFormatter(countryList)}}
+                  </template>
+                </el-table-column>
                 <el-table-column  align="center" prop="nationality2" label="第二国籍"></el-table-column>
                 <el-table-column align="center" prop="start" label="生效日期" width="100">
                     <template slot-scope="scope">
@@ -62,8 +74,9 @@
                 </el-table-column>
                 <el-table-column align="center" fixed="right" label="操作" width="100">
                     <template slot-scope="scope">
-                        <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-                        <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
+                      <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
+                      <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
+                                 title="删除"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -159,16 +172,12 @@
 
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary">确 定</el-button>
+                <el-button @click="submit('form')" type="primary">提 交</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
-<style>
-    .input-with-select .el-input-group__prepend {
-        background-color: #fff;
-    }
-</style>
+
 <script>
     export default {
         name: "player",
@@ -180,6 +189,7 @@
                 surnameSearch:null,
                 nameSearch:null,
                 teamSearch:null,
+                countryList: [],
                 form:{
                     id:'',
                     name:'',
@@ -277,45 +287,45 @@
         },
         mounted() {
             this.query();
+            this.queryCountry();
         },
         methods: {
-
-            getPosition:function (id) {
-                var positions=this.areas.filter(function (position) {
+            getPosition: function (id) {
+                const positions = this.areas.filter(function (position) {
                     return position.pid == id;
-                })
+                });
                 this.positions = positions;
             },
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('/club', {
-                            data: this.form
-                        })
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
-            },
-            submit(detail) {
-                this.$refs[detail].validate((valid) => {
-                    if (valid) {
-                        this.$http.post('/club', {
-                            data: this.detail
-                        })
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
-            },
-            submit(distribution) {
-                this.$refs[distribution].validate((valid) => {
-                    if (valid) {
-                        this.$http.post('/club', {
-                            data: this.distribution
-                        })
+                        if(!this.form.id) {
+                            // 新增
+                            this.$http.post('/person',
+                                this.form
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else if (res.data.status == 'FAILED' && !res.data.data) {
+                                    alert(res.data.data);
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        } else {
+                            // 修改
+                            this.$http.put('/person',
+                                this.form
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else {
+                                    alert("修改失败")
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        }
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -323,17 +333,27 @@
                 });
             },
             add() {
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "添加职员";
                 this.dialogVisible = true;
                 this.form = {};
-                this.detail = {};
-                this.distribution = {}
             },
-            remove() {
+            remove(id, rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
-                }).then()
+                }).then(() => {
+                    this.$http.delete('/person', {
+                        params: {
+                            id: id
+                        }
+                    }).then(res => {
+                        if (res.status === 200 && res.data.status === 'SUCCESS') {
+                            this.pager.total--;
+                            this.pager.records.splice(rowNum, 1)
+                        }
+                    })
+                });
             },
             deleteBatch() {
                 this.$http.delete('', {
@@ -343,15 +363,30 @@
                 })
             },
             edit(player) {
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑职员";
                 this.dialogVisible = true;
                 this.form = player
             },
             query() {
-                this.$http.get('/club/co', {
-                    params: this.pager,
+                this.$http.get('/person', {
+                    params: {
+                        size: this.pager.size,
+                        current: this.pager.current
+                    },
                 }).then(res => {
                     this.pager = res.data
                 });
+            },
+            queryTeam() {
+                this.$http.get("/team", {params: {current: 1, size: 100}}).then(res => {
+                    this.teamList = res.data.records;
+                })
+            },
+            queryCountry() {
+                this.$http.get("/country",).then(res => {
+                    this.countryList = res.data;
+                    return res.data;
+                })
             },
             // 分页组件点击事件
             pageChange(val) {
@@ -362,7 +397,7 @@
                 this.pager.size = val;
                 this.query()
             },
-
+            
             onSelectionChange(rows) {
                 this.selectedRows = rows.map(item => item.id);
             }

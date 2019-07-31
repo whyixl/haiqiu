@@ -58,7 +58,7 @@
             <el-form :label-position="'right'" label-width="80px">
                 <el-form :model="menusForm" :rules="menusRule" label-width="160px" ref="menusForm">
                     <el-form-item style="display: none;" label="menuId" prop="menuId">
-                        <el-input v-model="menusForm.menuId"></el-input>
+                        <el-input v-model="menusForm.id"></el-input>
                     </el-form-item>
                     <el-form-item label="menuName" prop="menuName">
                         <el-input placeholder="请输入menuName " v-model="menusForm.menuName"></el-input>
@@ -100,7 +100,7 @@
         data() {
             return {
                 menusForm: {
-                    menuId: '',
+                    id: '',
                     menuName: '',
                     menuCode: '',
                     parentLink:'',
@@ -131,7 +131,7 @@
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        if (this.menusForm.menuId) {
+                        if (this.menusForm.id) {
                             this.$http.post('/menus',
                                 this.menusForm
                             ).then(res => {
