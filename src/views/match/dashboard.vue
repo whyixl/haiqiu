@@ -28,29 +28,29 @@
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="matchId" type="selection" width="55"></el-table-column>
         <el-table-column align="center" label="轮次" prop="roundId" width="55"></el-table-column>
-        <el-table-column align="center" label="日期" prop="matchDate" width="120">
+        <el-table-column align="center" label="日期" prop="matchDate">
           <template slot-scope="scope">
             {{ scope.row.matchDate | moment('YYYY-MM-DD') }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="时间" prop="matchTime" width="80">
+        <el-table-column align="center" label="时间" prop="matchTime">
           <template slot-scope="scope">
-            {{ scope.row.matchTime | timeFormatter(+8,":") }}
+            {{ scope.row.matchTime | timeFormatter(8) }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="主队" prop="homeId" width="150">
+        <el-table-column align="center" label="主队" prop="homeId">
           <template slot-scope="scope">
             {{ scope.row.homeId | idFormatter(teamList) }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="客队" prop="awayId" width="150">
+        <el-table-column align="center" label="客队" prop="awayId">
           <template slot-scope="scope">
             {{ scope.row.awayId | idFormatter(teamList) }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="比分" prop="matchResult" width="60"></el-table-column>
-        <el-table-column align="center" label="地点" prop="venueId" width="150"></el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="160">
+        <el-table-column align="center" label="比分" prop="matchResult"></el-table-column>
+        <el-table-column align="center" label="地点" prop="venueId"></el-table-column>
+        <el-table-column align="center" label="操作" width="160">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
             <router-link :to="{path: '/match/dashboard/lineup',query: {id: scope.row.name}}">
@@ -97,8 +97,8 @@
             <el-time-picker editable align="right" placeholder="选择时间" style="width: 50%;"
                             type="time" v-model="matchForm.matchTime" value-format="HH:mm" format="HH:mm"></el-time-picker>
           </el-form-item>
-          <el-form-item label="轮次ID" prop="datetime">
-            <el-input type="text"></el-input>
+          <el-form-item label="轮次ID" prop="datetime" >
+            <el-input type="text" v-model="matchForm.roundId"></el-input>
           </el-form-item>
           <el-form-item label="主队" prop="homeId">
             <el-select filterable placeholder="请选择主场球队" style="width:100%" v-model="matchForm.homeId">
@@ -173,9 +173,9 @@
                             this.$http.post('/match',
                                 this.matchForm
                             ).then(res => {
-                                if (res.data.status == 'SUCCESS') {
+                                if (res.status == 200 && res.data.status == 'SUCCESS') {
                                     this.query();
-                                } else if (res.data.status == 'FAILED') {
+                                } else if (res.status!= 200 || res.data.status == 'FAILED') {
                                     alert(res.data.data);
                                 }
                             }).finally(() => {
@@ -183,7 +183,7 @@
                             })
                         } else {
                             this.$http.put('/match',
-                                this.competitionForm
+                                this.matchForm
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();

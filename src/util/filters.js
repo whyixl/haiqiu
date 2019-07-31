@@ -39,9 +39,12 @@ let idFormatter = (id,entityList) => {
 let timeFormatter = (U0Time, timeZone, timeSeparator) => {
     if (!U0Time) {
         return U0Time;
+    };
+    if (!timeSeparator) {
+        timeSeparator = ":"
     }
     const subTime =  U0Time.toString().split(timeSeparator);
-    return parseInt(subTime[0]) + timeZone + ":" + subTime[1]
+    return parseInt(subTime[0]) + 8-timeZone + timeSeparator + subTime[1]
 };
 /**
  * 赛季名称转换

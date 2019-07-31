@@ -7,7 +7,8 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
-import filters from "./util/filters"
+import filters from "./util/filters";
+import globalVariable from "./util/global_variable";
 
 Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
 
@@ -19,6 +20,7 @@ Vue.use(require("vue-moment"), {moment});
 Vue.use(ElementUI);
 
 Vue.prototype.$http = axios;
+Vue.prototype.GLOBAL = globalVariable;
 Vue.prototype._ = _;
 
 new Vue({

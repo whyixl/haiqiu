@@ -54,8 +54,8 @@
               </el-form-item>
               <el-form-item label="角色" prop="form.roleId">
                 <el-select filterable placeholder="请选择角色" style="width:100%" v-model="form.roleId">
-                  <el-option label="管理员" value="1"></el-option>
-                  <el-option label="普通用户" value="2"></el-option>
+                  <el-option :label="'管理员'" :value=1></el-option>
+                  <el-option :label="'普通用户'" :value=2></el-option>
                 </el-select>
               </el-form-item>
             </el-form>

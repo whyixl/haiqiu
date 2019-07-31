@@ -28,12 +28,12 @@ export const asyncRouter = [
                 component: () => import("@/views/competition/season.vue")
             },
             {
-                path: "/competition/team",
+                path: "/competition/dashboard/season/team",
                 name: "team",
                 component: () => import("@/views/competition/team.vue")
             },
             {
-                path: "/competition/round",
+                path: "/competition/dashboard/season/round",
                 name: "round",
                 component: () => import("@/views/competition/round.vue")
             }
@@ -71,20 +71,8 @@ export const asyncRouter = [
         children: [
             {
                 path: "/match/dashboard",
-                name: "match_dashboard",
+                name: "matchDashboard",
                 component: () => import("@/views/match/dashboard.vue"),
-                /*children: [
-                    {
-                        path: "/match/dashboard/lineup",
-                        name: "lineup",
-                        component: () => import("@/views/match/lineup.vue")
-                    },
-                    {
-                        path: "/match/dashboard/matchStatistics",
-                        name: "matchStatistics",
-                        component: () => import("@/views/match/matchStatistics.vue")
-                    }
-                ]*/
             },
             {
                 path: "/match/dashboard/lineup",
@@ -92,7 +80,7 @@ export const asyncRouter = [
                 component: () => import("@/views/match/lineup.vue")
             },
             {
-                path: "/match/matchStatistics",
+                path: "/match/dashboard/matchStatistics",
                 name: "matchStatistics",
                 component: () => import("@/views/match/matchStatistics.vue")
             }
