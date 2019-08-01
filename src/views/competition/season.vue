@@ -29,10 +29,10 @@
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
             <router-link :to="{path: '/competition/dashboard/season/team',query: {seId: scope.row.id, coId: competitionId, start: scope.row.start}}">
-              <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="球队"></el-button>
+              <el-button @click="saveId" circle icon="el-icon-menu" size="small" style="width: 32px" title="球队"></el-button>
             </router-link>
             <router-link :to="{path: '/competition/dashboard/season/round',query: {seId: scope.row.id}}">
-              <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="轮次"></el-button>
+              <el-button @click="saveId" circle icon="el-icon-news" size="small" style="width: 32px" title="轮次"></el-button>
             </router-link>
             <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
           </template>
@@ -189,10 +189,14 @@
                     }
                 })
             },
-            edit(season) {
+            edit(rowEntity) {
                 this.dialogVisible = true;
-                this.seasonForm = season;
-                this.dateRange = [season.start, season.end]
+                this.seasonForm = rowEntity;
+                this.dateRange = [rowEntity.start, rowEntity.end];
+                console.log(this.GLOBAL.coId)
+            },
+            saveId() {
+                this.GLOBAL.coId = this.competitionId;
             },
             query() {
                 this.$http.get('/season', {

@@ -14,32 +14,6 @@ export const constantRouter = [
 
 export const asyncRouter = [
     {
-        path: "/competition",
-        component: BasicLayout,
-        children: [
-            {
-                path: "/competition/dashboard",
-                name: "competition",
-                component: () => import("@/views/competition/dashboard.vue")
-            },
-            {
-                path: "/competition/dashboard/season",
-                name: "season",
-                component: () => import("@/views/competition/season.vue")
-            },
-            {
-                path: "/competition/dashboard/season/team",
-                name: "team",
-                component: () => import("@/views/competition/team.vue")
-            },
-            {
-                path: "/competition/dashboard/season/round",
-                name: "round",
-                component: () => import("@/views/competition/round.vue")
-            }
-        ]
-    },
-    {
         path: "/club",
         component: BasicLayout,
         children: [
@@ -62,13 +36,68 @@ export const asyncRouter = [
                 path: "/club/staff",
                 name: "staff",
                 component: () => import("@/views/club/staff.vue")
-            },
-            {
-                path: "/club/teamPerson",
-                name: "teamPerson",
-                component: () => import("@/views/club/teamPerson.vue")
             }
         ]
+    },
+    {
+        path: "/competition",
+        component: BasicLayout,
+        children: [
+            {
+                path: "/competition/dashboard",
+                name: "dashboard",
+                component: () => import("@/views/competition/dashboard.vue")
+            }
+        ]
+    },
+    {   path: "/competition",
+        component:{
+            render:c=>c("router-view")},
+        children:[{
+        path: "/competition/dashboard",
+        name: "dashboard",
+        component: BasicLayout,
+        children:[
+            {
+                path: "/competition/dashboard/season",
+                name: "season",
+                component: () => import("@/views/competition/season.vue")
+            }
+        ]
+        }
+]
+    },
+    {   path: "/competition",
+        component:{
+            render:c=>c("router-view")},
+        children:[
+            {
+                path: "/competition/dashboard",
+                name: "dashboard",
+                component: {
+                    render: c => c("router-view")
+                },
+                children: [
+                    {
+                        path: "/competition/dashboard/season",
+                        name: "season",
+                        component: BasicLayout,
+                        children: [
+                            {
+                                path: "/competition/dashboard/season/team",
+                                name: "team",
+                                component: () => import("@/views/competition/team.vue")
+                            },
+                            {
+                                path: "/competition/dashboard/season/round",
+                                name: "round",
+                                component: () => import("@/views/competition/round.vue")
+                            }
+                        ]
+                    }
+                ]
+            }
+            ]
     },
     {
         path: "/match",
@@ -76,34 +105,34 @@ export const asyncRouter = [
         children: [
             {
                 path: "/match/dashboard",
-                name: "matchDashboard",
+                name: "match_dashboard",
                 component: () => import("@/views/match/dashboard.vue"),
-            },
-            {
-                path: "/match/dashboard/lineup",
-                name: "lineup",
-                component: () => import("@/views/match/lineup.vue")
-            },
-            {
-                path: "/match/dashboard/matchStatistics",
-                name: "matchStatistics",
-                component: () => import("@/views/match/matchStatistics.vue")
+
             }
         ]
     },
     {
-        path: "/auth",
-        component: BasicLayout,
+        path: "/match",
+        component: {
+            render: c => c("router-view")
+        },
         children: [
             {
-                path: "/auth/menus",
-                name: "menus",
-                component: () => import("@/views/auth/Menus.vue")
-            },
-            {
-                path: "/auth/user",
-                name: "user",
-                component: () => import("@/views/auth/User.vue")
+                path: "/match/dashboard",
+                name: "match_dashboard",
+                component: BasicLayout,
+                children: [
+                    {
+                        path: "/match/dashboard/lineup",
+                        name: "lineup",
+                        component: () => import("@/views/match/lineup.vue")
+                    },
+                    {
+                        path: "/match/dashboard/matchStatistics",
+                        name: "matchStatistics",
+                        component: () => import("@/views/match/matchStatistics.vue")
+                    }
+                ]
             }
         ]
     }

@@ -51,7 +51,7 @@
         <el-table-column align="center" fixed="right" label="操作" width="140">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-            <router-link :to="{path: '/club/teamPerson', query: {teamId: scope.row.id}}">
+            <router-link :to="{path: '/club/player', query: {teamId: scope.row.id}}">
               <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="管理球员"></el-button>
             </router-link>
             <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
