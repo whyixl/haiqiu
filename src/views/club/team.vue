@@ -13,8 +13,9 @@
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in clubList"></el-option>
             </el-select>
           </el-col>
+          
           <el-col :span="6">
-            <el-button icon="el-icon-search" type="primary">查询</el-button>
+            <el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>
           </el-col>
         </el-row>
         <br>
@@ -50,6 +51,9 @@
         <el-table-column align="center" fixed="right" label="操作" width="140">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
+            <router-link :to="{path: '/club/teamPerson', query: {teamId: scope.row.id}}">
+              <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="管理球员"></el-button>
+            </router-link>
             <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
                        title="删除"></el-button>
           </template>
@@ -240,7 +244,9 @@
                 this.$http.get('/team', {
                     params: {
                         size: this.pager.size,
-                        current: this.pager.current
+                        current: this.pager.current,
+                        clubSearch: this.clubSearch,
+                        countrySearch: this.countrySearch
                     },
                 }).then(res => {
                     this.pager = res.data

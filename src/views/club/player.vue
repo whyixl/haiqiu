@@ -2,7 +2,7 @@
   <div>
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
-        <el-row :gutter="10">
+        <el-row style="float: left; width: 750px" :gutter="10">
           <el-col :span="3">
             <el-select filterable placeholder="球队" v-model="teamSearch">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in teamList"></el-option>
@@ -14,17 +14,17 @@
           <el-col :span="3">
             <el-input placeholder="英文名" v-model="surnameSearch"></el-input>
           </el-col>
-          <el-col :span="6">
-            <el-date-picker :picker-options="$store.state.dateRangePickerOptions" align="right" end-placeholder="查询结束日期"
-                            range-separator="至" start-placeholder="查询开始日期"
-                            type="daterange" unlink-panels
-                            v-model="dateRange">
+          <el-col :span="3">
+            <el-date-picker align="left" end-placeholder="查询结束日期" range-separator="至" start-placeholder="查询开始日期"
+                            type="daterange" v-model="dateRange">
             </el-date-picker>
           </el-col>
-          <el-col :span="6">
-            <el-button icon="el-icon-search" type="primary">查询</el-button>
-          </el-col>
         </el-row>
+        <el-col :span="2">
+          <el-button icon="el-icon-search" type="primary">查询</el-button>
+        </el-col>
+        <br>
+        <br>
         <br>
         <el-button @click="dialogVisible = true" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
         <el-button :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>
@@ -32,8 +32,7 @@
       
       <!-- 球员列表 -->
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
-                style="width: 100%"
-                v-loading="$store.state.loading">
+                style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="personId" type="selection" width="55"></el-table-column>
         <el-table-column align="center" label="姓名" prop="name"></el-table-column>
         <el-table-column align="center" label="英文名" prop="surname" show-overflow-tooltip width="100"></el-table-column>
@@ -171,40 +170,6 @@
               </el-form-item>
               <el-form-item label="短裤尺寸" prop="detail.shortssize">
                 <el-input placeholder="请输入短裤号" v-model="detail.shortssize"></el-input>
-              </el-form-item>
-            </el-form>
-          </el-tab-pane>
-          
-          <el-tab-pane label="分配信息">
-            <el-form :model="distribution" label-width="80px" ref="distribution">
-              <el-form-item label="所属球队" prop="distribution.teamId">
-                <el-select filterable placeholder="请选择球队" style="width:100%" v-model="distribution.teamId">
-                  <el-option :label="item.name" :value="item.id" v-for="item in teamList"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="球衣号" prop="distribution.shirtnumber">
-                <el-input placeholder="请输入球衣号" v-model="distribution.shirtnumber"></el-input>
-              </el-form-item>
-              <el-form-item label="位置" prop="distribution.roleId">
-                <el-select filterable @change="getPosition(distribution.roleId)" id="" name="" placeholder="请选择位置组"
-                           style="width:50%;" v-model="distribution.roleId">
-                  <el-option :label="role.text " :value="role.id" v-for="role in roles">{{role.text}}</el-option>
-                </el-select>
-                <el-select filterable id="" name="" placeholder="请选择具体位置" style="width:50%;" v-model="distribution.position1">
-                  <el-option :label="position.text " :value="position.id" v-for="position in positions">
-                    {{position.text}}
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="生效日期" prop="distribution.start">
-                <el-date-picker :picker-options="$store.state.datePickerOptions" align="right" placeholder="选择成员生效日期"
-                                style="width: 100%;"
-                                type="date" v-model="distribution.start"></el-date-picker>
-              </el-form-item>
-              <el-form-item label="到期日期" prop="distribution.end">
-                <el-date-picker :picker-options="$store.state.datePickerOptions" align="right" placeholder="选择成员到期日期"
-                                style="width: 100%;"
-                                type="date" v-model="distribution.end"></el-date-picker>
               </el-form-item>
             </el-form>
           </el-tab-pane>

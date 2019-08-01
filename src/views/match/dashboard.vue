@@ -3,16 +3,15 @@
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
         <el-row :gutter="10">
-          <el-col :span="4">
+          <!--<el-col :span="4">
             <el-select filterable placeholder="赛季" v-model="seasonSearch">
               <el-option :label="'中国足球协会甲级联赛2019'" :value="1"></el-option>
               <el-option :label="'内蒙古中优'" :value="2"></el-option>
             </el-select>
-          </el-col>
+          </el-col>-->
           <el-col :span="4">
             <el-select filterable placeholder="球队" v-model="teamSearch">
-              <el-option :label="'北京北体大'" :value="1"></el-option>
-              <el-option :label="'内蒙古中优'" :value="2"></el-option>
+              <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in teamList"></el-option>
             </el-select>
           </el-col>
           <el-col :span="6">

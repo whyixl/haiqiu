@@ -8,8 +8,8 @@
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
             </el-select>
           </el-col>
-          <el-col :span="6">
-            <el-button icon="el-icon-search" type="primary">查询</el-button>
+          <el-col :span="2">
+            <el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>
           </el-col>
         </el-row>
         <br>
@@ -180,7 +180,8 @@
                 this.$http.get('/club', {
                     params : {
                         size: this.pager.size,
-                        current: this.pager.current
+                        current: this.pager.current,
+                        country: this.countrySearch
                     },
                 }).then(res => {
                     this.pager = res.data;
