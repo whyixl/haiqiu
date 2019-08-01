@@ -41,7 +41,7 @@ const store = new Vuex.Store({
     // 分页控件组件布局，子组件名用逗号分隔
     paginationLayout: "total, sizes, prev, pager, next, jumper"
   },
- mutations: {
+  mutations: {
     setToken(state, newToken) {
       localStorage.setItem("token", newToken);
       state.token = newToken;
@@ -51,7 +51,7 @@ const store = new Vuex.Store({
     },
     setMenuTree(state, menuTree) {
       state.menuTree = menuTree;
-    }/*,
+    } /*,
     setAuthorities(state, authorities) {
       state.authorities = authorities;
     }*/
@@ -59,18 +59,20 @@ const store = new Vuex.Store({
   actions: {
     // 重新从服务器读取用户信息
     reloadUserAuthority(context) {
-      return axios.get("/user/queryUserAuthority",{
-          params: {token:localStorage["token"]}
-      }).then(response => {
-        const menus = response.data.menus;
-        const rootMenu = _.find(menus, { menuCode: "root" });
-        const rootMenuNode = { ...rootMenu, children: [] };
+      return axios
+        .get("/user/queryUserAuthority", {
+          params: { token: localStorage["token"] }
+        })
+        .then(response => {
+          const menus = response.data.menus;
+          const rootMenu = _.find(menus, { menuCode: "root" });
+          const rootMenuNode = { ...rootMenu, children: [] };
 
-        subTree(rootMenuNode, menus);
-        context.commit("setMenus", menus);
-        context.commit("setMenuTree", rootMenuNode.children);
-        // context.commit("setAuthorities", response.data.authorities);
-      });
+          subTree(rootMenuNode, menus);
+          context.commit("setMenus", menus);
+          context.commit("setMenuTree", rootMenuNode.children);
+          // context.commit("setAuthorities", response.data.authorities);
+        });
     },
     signOut(context) {
       localStorage.removeItem("token");
