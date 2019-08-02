@@ -13,7 +13,7 @@
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in clubList"></el-option>
             </el-select>
           </el-col>
-          
+
           <el-col :span="6">
             <el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>
           </el-col>
@@ -63,7 +63,7 @@
         </el-table-column>
       </el-table>
       <!-- 赛季列表结束 -->
-      grewed
+
       <!-- 分页组件 -->
       <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
                      :page-sizes="$store.state.paginationPageSizes"
@@ -73,7 +73,7 @@
                      class="pagination text-right">
       </el-pagination>
     </el-card>
-    
+
     <!-- 编辑页面 -->
     <el-dialog :visible.sync="dialogVisible" id="dialog" title="添加球队">
       <el-form :label-position="'right'" label-width="80px">
@@ -132,170 +132,177 @@
 </template>
 
 <script>
-import * as qs from "qs";
+    import * as qs from "qs";
 
-export default {
-  name: "team",
-  data() {
-    return {
-      teamForm: {
-        id: "",
-        name: "",
-        shortname: "",
-        ageId: "",
-        clubId: "",
-        gender: ""
-      },
-      teamRule: null,
-      clubSearch: null,
-      clubList: [],
-      countrySearch: null,
-      countryList: [],
-      selectedRows: [],
-      dialogVisible: false,
-      pager: { current: 1, size: 10, total: 0, records: [] }
-    };
-  },
-  mounted() {
-    this.query();
-    this.queryClub();
-    this.queryCountry();
-  },
-  methods: {
-    submit(form) {
-      this.$refs[form].validate(valid => {
-        if (valid) {
-          if (!this.teamForm.id) {
-            this.$http
-              .post("/team", this.teamForm)
-              .then(res => {
-                if (res.data.status == "SUCCESS") {
-                  this.query();
-                } else if (res.data.status == "FAILED") {
-                  alert(res.data.data);
-                }
-              })
-              .finally(() => {
-                this.dialogVisible = false;
-              });
-          } else {
-            this.$http
-              .put("/team", this.teamForm)
-              .then(res => {
-                if (res.data.status == "SUCCESS") {
-                  this.query();
-                } else {
-                  alert("修改失败");
-                }
-              })
-              .finally(() => {
-                this.dialogVisible = false;
-              });
-          }
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    add() {
-      document
-        .getElementById("dialog")
-        .getElementsByClassName("el-dialog__title")[0].innerText =
-        "添加球队";
-      this.dialogVisible = true;
-      this.teamForm = {
-        id: "",
-        name: "",
-        shortname: "",
-        ageId: "",
-        clubId: "",
-        gender: ""
-      };
-    },
-    remove(id, rowNum) {
-      this.$confirm("此操作将永久删除, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        this.$http
-          .delete("/team", {
-            params: {
-              id: id
-            }
-          })
-          .then(res => {
-            if (res.status === 200 && res.data.status === "SUCCESS") {
-              this.pager.total--;
-              this.pager.records.splice(rowNum, 1);
-            }
-          });
-      });
-    },
-    // TODO 批量删除
-      deleteBatch() {
-                for (let i = 0; i < this.selectedRows.length; i++) {
-                    this.$http.delete("/team", {
-                        params: {
-                            id: this.selectedRows[i]
+    export default {
+        name: "team",
+        data() {
+            return {
+                teamForm: {
+                    id: "",
+                    name: "",
+                    shortname: "",
+                    ageId: "",
+                    clubId: "",
+                    gender: ""
+                },
+                teamRule: null,
+                clubSearch: null,
+                clubList: [],
+                countrySearch: null,
+                countryList: [],
+                selectedRows: [],
+                dialogVisible: false,
+                pager: {current: 1, size: 10, total: 0, records: []}
+            };
+        },
+        mounted() {
+            this.query();
+            this.queryClub();
+            this.queryCountry();
+        },
+        methods: {
+            submit(form) {
+                this.$refs[form].validate(valid => {
+                    if (valid) {
+                        if (!this.teamForm.id) {
+                            this.$http
+                                .post("/team", this.teamForm)
+                                .then(res => {
+                                    if (res.data.status == "SUCCESS") {
+                                        this.query();
+                                    } else if (res.data.status == "FAILED") {
+                                        alert(res.data.data);
+                                    }
+                                })
+                                .finally(() => {
+                                    this.dialogVisible = false;
+                                });
+                        } else {
+                            this.$http
+                                .put("/team", this.teamForm)
+                                .then(res => {
+                                    if (res.data.status == "SUCCESS") {
+                                        this.query();
+                                    } else {
+                                        alert("修改失败");
+                                    }
+                                })
+                                .finally(() => {
+                                    this.dialogVisible = false;
+                                });
                         }
-                    }).then(res => {
-                        if (res.status != 200) {
-                            alert("批量删除遇到问题，请重试")
-                        }
-                    });
-                    if (i == this.selectedRows.length - 1) {
-                        this.query();
+                    } else {
+                        console.log("error submit!!");
+                        return false;
                     }
-                }
+                });
             },
-    edit(team) {
-      this.dialogVisible = true;
-      this.teamForm = team;
-      document
-        .getElementById("dialog")
-        .getElementsByClassName("el-dialog__title")[0].innerText =
-        "修改球队";
-    },
-    query() {
-      this.$http
-        .get("/team", {
-          params: {
-            size: this.pager.size,
-            current: this.pager.current,
-            clubSearch: this.clubSearch,
-            countrySearch: this.countrySearch
-          }
-        })
-        .then(res => {
-          this.pager = res.data;
-        });
-    },
-    queryClub() {
-      this.$http
-        .get("/club", { params: { current: 1, size: 100 } })
-        .then(res => {
-          this.clubList = res.data.records;
-        });
-    },
-    queryCountry() {
-      this.$http.get("/country").then(res => {
-        this.countryList = res.data;
-      });
-    },
-    // 分页组件点击事件
-    pageChange(val) {
-      this.pager.current = val;
-      this.query();
-    },
-    sizeChange(val) {
-      this.pager.size = val;
-      this.query();
-    },
-    onSelectionChange(rows) {
-      this.selectedRows = rows.map(item => item.id);
-    }
-  }
-};
+            add() {
+                document
+                    .getElementById("dialog")
+                    .getElementsByClassName("el-dialog__title")[0].innerText =
+                    "添加球队";
+                this.dialogVisible = true;
+                this.teamForm = {
+                    id: "",
+                    name: "",
+                    shortname: "",
+                    ageId: "",
+                    clubId: "",
+                    gender: ""
+                };
+            },
+            remove(id, rowNum) {
+                this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(() => {
+                    this.$http
+                        .delete("/team", {
+                            params: {
+                                id: id
+                            }
+                        })
+                        .then(res => {
+                            if (res.status === 200 && res.data.status === "SUCCESS") {
+                                this.pager.total--;
+                                this.pager.records.splice(rowNum, 1);
+                            }
+                        });
+                });
+            },
+            deleteBatch() {
+                this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(() => {
+                    let temp = 0;
+                    for (let i = 0; i < this.selectedRows.length; i++) {
+                        temp++;
+                        this.$http.delete("/team", {
+                            params: {
+                                id: this.selectedRows[i]
+                            },
+                        }).then(res => {
+                            if (res.status != 200) {
+                                alert("批量删除遇到问题，请重试");
+                            }
+                            if (temp == this.selectedRows.length) {
+                                this.query();
+                            }
+                        });
+                    }
+                });
+            },
+            edit(team) {
+                this.dialogVisible = true;
+                this.teamForm = team;
+                document
+                    .getElementById("dialog")
+                    .getElementsByClassName("el-dialog__title")[0].innerText =
+                    "修改球队";
+            },
+            query() {
+                this.$http
+                    .get("/team", {
+                        params: {
+                            size: this.pager.size,
+                            current: this.pager.current,
+                            clubSearch: this.clubSearch,
+                            countrySearch: this.countrySearch
+                        }
+                    })
+                    .then(res => {
+                        this.pager = res.data;
+                    });
+            },
+            queryClub() {
+                this.$http
+                    .get("/club", {params: {current: 1, size: 100}})
+                    .then(res => {
+                        this.clubList = res.data.records;
+                    });
+            },
+            queryCountry() {
+                this.$http.get("/country").then(res => {
+                    this.countryList = res.data;
+                });
+            },
+            // 分页组件点击事件
+            pageChange(val) {
+                this.pager.current = val;
+                this.query();
+            },
+            sizeChange(val) {
+                this.pager.size = val;
+                this.query();
+            },
+            onSelectionChange(rows) {
+                this.selectedRows = rows.map(item => item.id);
+            }
+        }
+    };
 </script>

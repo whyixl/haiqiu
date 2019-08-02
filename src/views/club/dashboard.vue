@@ -14,9 +14,10 @@
         </el-row>
         <br>
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-        <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
+        <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除
+        </el-button>
       </div>
-      
+
       <div style="width: 100%">
         <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                   style="width: 100%" v-loading="$store.state.loading">
@@ -35,13 +36,14 @@
           <el-table-column align="center" label="操作" width="100">
             <template slot-scope="scope">
               <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-              <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
+              <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete" size="small"
+                         title="删除"></el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <!-- 赛季列表结束 -->
-      
+
       <!-- 分页组件 -->
       <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
                      :page-sizes="$store.state.paginationPageSizes"
@@ -51,7 +53,7 @@
                      class="pagination text-right">
       </el-pagination>
     </el-card>
-    
+
     <!-- 编辑页面 -->
     <el-dialog :visible.sync="dialogVisible" title="编辑页面">
       <el-form :label-position="'right'" label-width="80px">
@@ -113,7 +115,7 @@
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        if(!this.clubForm.id) {
+                        if (!this.clubForm.id) {
                             // 新增
                             this.$http.post('/club',
                                 this.clubForm
@@ -146,7 +148,7 @@
                     }
                 });
             },
-            remove(id,rowNum) {
+            remove(id, rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
@@ -156,29 +158,38 @@
                         params: {
                             id: id
                         }
-                    }).then(res=>{
+                    }).then(res => {
                         if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.records.splice(rowNum,1);
+                            this.pager.records.splice(rowNum, 1);
                             this.pager.total--;
                         }
                     })
                 });
+
             },
             deleteBatch() {
-                for (let i = 0; i < this.selectedRows.length; i++) {
-                    this.$http.delete("/club", {
-                        params: {
-                            id: this.selectedRows[i]
-                        }
-                    }).then(res => {
-                        if (res.status != 200) {
-                            alert("批量删除遇到问题，请重试")
-                        }
-                    });
-                    if (i == this.selectedRows.length - 1) {
-                        this.query();
+                this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(() => {
+                    let temp = 0;
+                    for (let i = 0; i < this.selectedRows.length; i++) {
+                        temp++;
+                        this.$http.delete("/club", {
+                            params: {
+                                id: this.selectedRows[i]
+                            },
+                        }).then(res => {
+                            if (res.status != 200) {
+                                alert("批量删除遇到问题，请重试");
+                            }
+                            if (temp == this.selectedRows.length) {
+                                this.query();
+                            }
+                        });
                     }
-                }
+                });
             },
             edit(rowEntity) {
                 this.dialogVisible = true;
@@ -187,7 +198,7 @@
             },
             query() {
                 this.$http.get('/club', {
-                    params : {
+                    params: {
                         size: this.pager.size,
                         current: this.pager.current,
                         country: this.countrySearch
