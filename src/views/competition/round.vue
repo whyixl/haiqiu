@@ -2,43 +2,34 @@
     <div>
         <el-card :body-style="{ padding: '0px' }" shadow="never">
             <div slot="header">
-                <el-row :gutter="10">
-                    <el-col :span="4">
-                        <el-select filterable v-model="seasonSearch" placeholder="赛季">
-                            <el-option :label="'中国足球协会甲级联赛2019'" :value="1"></el-option>
-                            <el-option :label="'内蒙古中优'" :value="2"></el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-button type="primary" icon="el-icon-search">查询</el-button>
-                    </el-col>
-                </el-row>
-                <br>
                 <el-button size="medium" type="primary" icon="el-icon-plus" @click="dialogVisible = true">新增</el-button>
                 <el-button size="medium" icon="el-icon-delete" :disabled="selectedRows.length==0">删除</el-button>
             </div>
 
-
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
                 <el-table-column align="center" prop="roundId" type="selection" width="55"></el-table-column>
-                <el-table-column label="赛季名称" align="center" prop="seasonId" width="500"></el-table-column>
-                <el-table-column label="轮次名称" align="center" prop="name" width="500"></el-table-column>
-                <el-table-column label="轮次顺序" align="center" prop="round_order" width="500"></el-table-column>
-                <el-table-column label="开始日期" prop="start" align="center" width="200">
+                <el-table-column label="赛季名称" align="center" prop="seasonId">
+                    <template slot-scope="scope">
+                        {{scope.row.seasonId | seasonNameFmt(start,competitionId,competitionList)}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="轮次名称" align="center" prop="name"></el-table-column>
+                <el-table-column label="轮次顺序" align="center" prop="round_order"></el-table-column>
+                <el-table-column label="开始日期" prop="start" align="center">
                     <template slot-scope="scope">
                         {{ scope.row.start | moment('YYYY-MM-DD') }}
                     </template>
                 </el-table-column>
-                <el-table-column label="结束日期" prop="end" align="center" width="200">
+                <el-table-column label="结束日期" prop="end" align="center">
                     <template slot-scope="scope">
                         {{ scope.row.end | moment('YYYY-MM-DD') }}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" fixed="right" label="操作" width="350">
+                <el-table-column align="center" fixed="right" label="操作" width="150">
                     <template slot-scope="scope">
                         <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-                        <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
+                        <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -58,7 +49,7 @@
                         <el-input  v-model="roundForm.id"></el-input>
                     </el-form-item>
                     <el-form-item label="赛季名称" prop="roundForm.seasonId" >
-                        <el-select filterable  placeholder="请选择相关赛季" v-model="roundForm.seasonId" style="width:100%" >
+                        <el-select clearable filterable  placeholder="请选择相关赛季" v-model="roundForm.seasonId" style="width:100%" >
                             <el-option :label="'男性'" :value="1"></el-option>
                             <el-option :label="'女性'" :value="2"></el-option>
                             <el-option :label="'混合'" :value="3"></el-option>
@@ -91,21 +82,16 @@
     </div>
 </template>
 
-<style>
-    .input-with-select .el-input-group__prepend {
-        background-color: #fff;
-    }
-</style>
 <script>
-
     export default {
-        name: "season",
-
+        name: "round",
         data() {
             return {
                 selectedRows: [],
+                competitionList: [],
                 roundRule:null,
                 seasonSearch:null,
+                start: null,
                 roundForm:{
                     id:'',
                     seasonId:'',
@@ -119,19 +105,44 @@
             };
         },
         created() {
-            this.competitionId = this.$route.query.id;
+            this.roundForm.seasonId = this.$route.query.seId;
+            this.competitionId = this.$route.query.coId;
+            this.start = this.$route.query.start;
         },
         mounted() {
-            this.query(this.competitionId);
+            this.query(this.seasonId);
+            this.queryCompetition();
         },
 
         methods: {
-            submit(se_teForm) {
-                this.$refs[se_teForm].validate((valid) => {
+            submit(form) {
+                this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post('/club', {
-                            data: this.se_teForm
-                        })
+                        if (!this.roundForm.id) {
+                            this.$http.post('/round',
+                                this.roundForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else if (res.data.status == 'FAILED') {
+                                    alert(res.data.data);
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        } else {
+                            this.$http.put('/round',
+                                this.roundForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else {
+                                    alert("修改失败")
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        }
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -142,29 +153,57 @@
                 this.dialogVisible = true;
                 this.se_teForm = {}
             },
-            remove() {
+            remove(id,rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
-                }).then()
+                }).then(() => {
+                    this.$http.delete('/round', {
+                        params: {
+                            id: id
+                        }
+                    }).then(res=>{
+                        if (res.status === 200 && res.data.status === 'SUCCESS') {
+                            this.pager.records.splice(rowNum,1);
+                            this.pager.total--;
+                        }
+                    })
+                });
             },
             deleteBatch() {
-                this.$http.delete('', {
-                    data: {
-                        coIds: this.selectedRows
-                    }
-                })
+                for (const id of this.selectedRows) {
+                    this.$http.delete("/round", {
+                        params: {
+                            id: id
+                        }
+                    }).then(res => {
+                        if (res.status != 200) {
+                            alert("批量删除遇到问题，请重试")
+                        }
+                    });
+                }
+                this.query();
             },
             edit(se_te) {
                 this.dialogVisible = true;
                 this.se_teForm = se_te
             },
             query() {
-                this.$http.get('/club/co', {
-                    params: this.pager,
+                this.$http.get('/round', {
+                    params: {
+                        size: this.pager.size,
+                        current: this.pager.current
+                    },
                 }).then(res => {
                     this.pager = res.data
+                });
+            },
+            queryCompetition() {
+                this.$http.get('/competition', {
+                    params: {size: 100, current: 1},
+                }).then(res => {
+                    this.competitionList = res.data.records;
                 });
             },
             // 分页组件点击事件

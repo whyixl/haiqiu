@@ -14,8 +14,8 @@
                     </el-col>
                 </el-row>
                 <br>
-                <el-button @click="dialogVisible = true" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-                <el-button :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>
+                <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
+                <el-button  @click="deleteBatch" :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>
             </div>
 
             <!-- 人员列表 -->
@@ -88,7 +88,7 @@
                                 <el-input placeholder="请输入英文名" v-model="form.surname"></el-input>
                             </el-form-item>
                             <el-form-item label="性别" prop="form.gender">
-                                <el-select filterable placeholder="请选择性别" style="width:100%" v-model="form.gender">
+                                <el-select clearable filterable placeholder="请选择性别" style="width:100%" v-model="form.gender">
                                     <el-option label="男" value="male"></el-option>
                                     <el-option label="女" value="female"></el-option>
                                 </el-select>
@@ -278,11 +278,18 @@
                 });
             },
             deleteBatch() {
-                this.$http.delete('', {
-                    data: {
-                        coIds: this.selectedRows
-                    }
-                })
+                for (const id of this.selectedRows) {
+                    this.$http.delete("/person", {
+                        params: {
+                            id: id
+                        }
+                    }).then(res => {
+                        if (res.status != 200) {
+                            alert("批量删除遇到问题，请重试")
+                        }
+                    });
+                }
+                this.query();
             },
             edit(player) {
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑人员";

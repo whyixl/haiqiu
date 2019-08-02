@@ -4,7 +4,7 @@
       <div slot="header">
         <el-row :gutter="10">
           <el-col :span="4">
-            <el-select filterable placeholder="国家" style="width:100%" v-model="countrySearch">
+            <el-select clearable filterable placeholder="国家" style="width:100%" v-model="countrySearch">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
             </el-select>
           </el-col>
@@ -66,7 +66,7 @@
             <el-input placeholder="请输入俱乐部简称 " v-model="clubForm.shortname"></el-input>
           </el-form-item>
           <el-form-item label="国家" prop="countryId" clearable>
-            <el-select filterable placeholder="请选择国家" style="width:100%" v-model="clubForm.countryId">
+            <el-select clearable filterable placeholder="请选择国家" style="width:100%" v-model="clubForm.countryId">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
             </el-select>
           </el-form-item>
@@ -165,11 +165,18 @@
                 });
             },
             deleteBatch() {
-                this.$http.delete('', {
-                    data: {
-                        coIds: this.selectedRows
-                    }
-                })
+                for (const id of this.selectedRows) {
+                    this.$http.delete("/club", {
+                        params: {
+                            id: id
+                        }
+                    }).then(res => {
+                        if (res.status != 200) {
+                            alert("批量删除遇到问题，请重试")
+                        }
+                    });
+                }
+                this.query();
             },
             edit(rowEntity) {
                 this.dialogVisible = true;

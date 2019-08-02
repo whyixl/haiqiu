@@ -4,12 +4,12 @@
       <div slot="header">
         <el-row :gutter="10">
           <el-col :span="4">
-            <el-select filterable placeholder="国家/地区" v-model="countrySearch">
+            <el-select clearable filterable placeholder="国家/地区" v-model="countrySearch">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
             </el-select>
           </el-col>
           <el-col :span="4">
-            <el-select filterable placeholder="俱乐部名称" v-model="clubSearch">
+            <el-select clearable filterable placeholder="俱乐部名称" v-model="clubSearch">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in clubList"></el-option>
             </el-select>
           </el-col>
@@ -88,14 +88,14 @@
             <el-input placeholder="请输入球队简称 " v-model="teamForm.shortname"></el-input>
           </el-form-item>
           <el-form-item label="性别" prop="gender">
-            <el-select filterable placeholder="请选择性别" style="width:100%" v-model="teamForm.gender">
+            <el-select clearable filterable placeholder="请选择性别" style="width:100%" v-model="teamForm.gender">
               <el-option :label="'男性'" :value="'male'"></el-option>
               <el-option :label="'女性'" :value="'female'"></el-option>
               <el-option :label="'混合'" :value="'mix'"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="年龄" prop="age">
-            <el-select filterable placeholder="请选择年龄段" style="width:100%" v-model="teamForm.ageId">
+            <el-select clearable filterable placeholder="请选择年龄段" style="width:100%" v-model="teamForm.ageId">
               <el-option :label="'--'" :value="0"></el-option>
               <el-option :label="'职业'" :value="1"></el-option>
               <el-option :label="'U23'" :value="2"></el-option>
@@ -117,7 +117,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="俱乐部名称" prop="clubId">
-            <el-select filterable placeholder="请选择俱乐部" style="width:100%" v-model="teamForm.clubId">
+            <el-select clearable filterable placeholder="请选择俱乐部" style="width:100%" v-model="teamForm.clubId">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in clubList"></el-option>
             </el-select>
           </el-form-item>
@@ -234,16 +234,20 @@ export default {
       });
     },
     // TODO 批量删除
-    deleteBatch() {
-      this.$http.delete("/delete/team", {
-        params: {
-          teamIds: this.selectedRows
-        },
-        paramsSerializer: params => {
-          return qs.stringify(params, { indices: false });
-        }
-      });
-    },
+      deleteBatch() {
+          for (const id of this.selectedRows) {
+              this.$http.delete("/team", {
+                  params: {
+                      id: id
+                  }
+              }).then(res => {
+                  if (res.status != 200) {
+                      alert("批量删除遇到问题，请重试")
+                  }
+              });
+          }
+          this.query();
+      },
     edit(team) {
       this.dialogVisible = true;
       this.teamForm = team;

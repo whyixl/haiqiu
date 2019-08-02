@@ -4,7 +4,7 @@
             <div slot="header">
                 <el-row :gutter="10">
                     <el-col :span="4">
-                        <el-select  filterable placeholder="父级菜单" v-model="menusByLink">
+                        <el-select clearable  filterable placeholder="父级菜单" v-model="menusByLink">
                             <el-option :label=item :value=item v-for="item in linkList"></el-option>
                         </el-select>
                     </el-col>

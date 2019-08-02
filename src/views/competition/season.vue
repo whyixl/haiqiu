@@ -31,7 +31,7 @@
             <router-link :to="{path: '/competition/dashboard/season/team',query: {seId: scope.row.id, coId: competitionId, start: scope.row.start}}">
               <el-button @click="saveId" circle icon="el-icon-menu" size="small" style="width: 32px" title="球队"></el-button>
             </router-link>
-            <router-link :to="{path: '/competition/dashboard/season/round',query: {seId: scope.row.id}}">
+            <router-link :to="{path: '/competition/dashboard/season/round',query: {seId: scope.row.id, coId: competitionId, start: scope.row.start}}">
               <el-button @click="saveId" circle icon="el-icon-news" size="small" style="width: 32px" title="轮次"></el-button>
             </router-link>
             <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
@@ -58,14 +58,14 @@
           <el-form-item label="id" prop="id" style="display:none">
             <el-input v-model="seasonForm.id"></el-input>
           </el-form-item>
+          <el-form-item label="相关赛事" >
+            <el-select clearable disabled filterable placeholder="请选择相关赛事" style="width:100%" v-model="seasonForm.competitionId">
+              <el-option :label="item.name" :value="item.id" v-for="item in competitionList"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="名称" prop="name">
             <!-- name -->
             <el-input placeholder="请输入赛季名称" v-model="seasonForm.name"></el-input>
-          </el-form-item>
-          <el-form-item label="相关赛事">
-            <el-select filterable placeholder="请选择相关赛事" style="width:100%" v-model="seasonForm.competitionId">
-              <el-option :label="item.name" :value="item.id" v-for="item in competitionList"></el-option>
-            </el-select>
           </el-form-item>
           <el-form-item label="时间" prop="roundForm.dateRange">
             <el-col :span="6">
@@ -183,11 +183,18 @@
                 });
             },
             deleteBatch() {
-                this.$http.delete('', {
-                    data: {
-                        coIds: this.selectedRows
-                    }
-                })
+                for (const id of this.selectedRows) {
+                    this.$http.delete("/season", {
+                        params: {
+                            id: id
+                        }
+                    }).then(res => {
+                        if (res.status != 200) {
+                            alert("批量删除遇到问题，请重试")
+                        }
+                    });
+                }
+                this.query();
             },
             edit(rowEntity) {
                 this.dialogVisible = true;

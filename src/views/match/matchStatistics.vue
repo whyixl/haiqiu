@@ -3,7 +3,7 @@
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
         <el-button size="medium" type="primary" icon="el-icon-plus" @click="add">新增</el-button>
-        <el-button size="medium" icon="el-icon-delete" :disabled="selectedRows.length==0" @click="deleteBatch">删除</el-button>
+        <el-button @click="deleteBatch" size="medium" icon="el-icon-delete" :disabled="selectedRows.length==0">删除</el-button>
       </div>
 
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
@@ -23,8 +23,9 @@
         </el-table-column>
         <el-table-column align="center" label="操作" width="120">
           <template slot-scope="scope">
-            <el-button @click="edit()" size="small" type="text">编辑</el-button>
-            <el-button @click="remove()" size="small" type="text">删除</el-button>
+            <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
+            <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
+                       title="删除"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -42,43 +43,43 @@
     <!-- 编辑页面 -->
     <el-dialog :visible.sync="dialogVisible" title="添加比赛统计">
       <el-form :label-position="'right'" label-width="80px">
-        <el-form :model="match_eventForm" :rules="match_eventRule" label-width="160px" ref="seasonForm">
+        <el-form :model="match_eventForm" :rules="match_eventRule" label-width="160px" ref="match_eventForm">
           <el-form-item label="id" prop="id" style="display:none">
             <el-input v-model="match_eventForm.id"></el-input>
           </el-form-item>
-          <el-form-item label="球队" prop="match_eventForm.teamId">
-            <el-select filterable placeholder="请选择球队" v-model="match_eventForm.teamId" style="width:100%">
-              <el-option :label="item.name" :value="item.name" v-for="item in teamList"></el-option>
+          <el-form-item label="球队" prop="teamId">
+            <el-select clearable @change="queryPersonByTeam" filterable placeholder="请选择球队" v-model="match_eventForm.teamId" style="width:100%">
+              <el-option :label="item.name" :value="item.id" v-for="item in teamList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="球员" prop="match_eventForm.personId">
-            <el-select filterable placeholder="请选择球员" v-model="match_eventForm.personId" style="width:100%">
+          <el-form-item label="球员" prop="personId">
+            <el-select clearable filterable placeholder="请选择球员" v-model="match_eventForm.personId" style="width:100%">
               <el-option :label="item.name" :value="item.id" v-for="item in personList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="相关球员" prop="match_eventForm.additional_personId">
-            <el-select filterable placeholder="进球加助攻球员/替换加替下球员"
+          <el-form-item label="相关球员" prop="additional_personId">
+            <el-select clearable filterable placeholder="进球加助攻球员/替换加替下球员"
                        v-model="match_eventForm.additional_personId" style="width:100%">
               <el-option :label="item.name" :value="item.id" v-for="item in personList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="分钟" prop="match_eventForm.minute">
+          <el-form-item label="分钟" prop="minute">
             <el-input placeholder="请输入分钟" v-model="match_eventForm.minute"></el-input>
           </el-form-item>
-          <el-form-item label="事件及类型" prop="match_eventForm.action">
-            <el-select filterable name="" id="" @change="getPosition(action)"
+          <el-form-item label="事件及类型" prop="action">
+            <el-select clearable filterable @change="getPosition(action)"
                        v-model="match_eventForm.action" placeholder="请选择事件" style="width:50%;">
               <el-option :label="action.text " v-for="action in actions" :value="action.id">
                 {{action.text}}
               </el-option>
             </el-select>
-            <el-select filterable name="" id="" v-model="match_eventForm.kind" placeholder="请选择类型"
+            <el-select clearable filterable name="" id="" v-model="match_eventForm.kind" placeholder="请选择类型"
                        style="width:50%;">
               <el-option :label="kind.text " v-for="kind in kinds" :value="kind.id">{{kind.text}}
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="创建时间" prop="match_eventForm.created">
+          <el-form-item label="创建时间" prop="created">
             <el-date-picker v-model="match_eventForm.created" align="right" type="date" placeholder="选择日期"
                             :picker-options="$store.state.datePickerOptions"
                             style="width: 100%;"></el-date-picker>
@@ -87,16 +88,16 @@
       </el-form>
       <div class="dialog-footer" slot="footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button @click="submit('competitionForm')" type="primary">提 交</el-button>
+        <el-button @click="submit('match_eventForm')" type="primary">提 交</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+    import filters from "../../util/filters";
     export default {
         name: "season",
-
         data() {
             return {
                 selectedRows: [],
@@ -113,6 +114,8 @@
                     kind: "",
                     minute: ""
                 },
+                personList: [{'id':'','name':''}],
+                teamList: [],
                 actions: [],
                 kinds: [],
                 areas: null,
@@ -149,9 +152,13 @@
                 return area.pid == 0;
             });
             this.actions = actions;
+            this.homeId = this.$route.query.homeId;
+            this.awayId = this.$route.query.awayId;
+
         },
         mounted() {
             this.query();
+            this.queryTeam();
         },
         methods: {
             getPosition: function (id) {
@@ -160,19 +167,44 @@
                 });
                 this.kinds = kinds;
             },
-            submit(match_eventForm) {
-                this.$refs[match_eventForm].validate(valid => {
+            submit(form) {
+                this.$refs[form].validate((valid) => {
                     if (valid) {
-                        this.$http.post("/club", {
-                            data: this.match_eventForm
-                        });
+                        if (!this.match_eventForm.id) {
+                            // 新增
+                            this.$http.post('/matchEvent',
+                                this.match_eventForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else if (res.data.status == 'FAILED' && !res.data.data) {
+                                    alert(res.data.data);
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        } else {
+                            // 修改
+                            this.$http.put('/matchEvent',
+                                this.match_eventForm
+                            ).then(res => {
+                                if (res.data.status == 'SUCCESS') {
+                                    this.query();
+                                } else {
+                                    alert("修改失败")
+                                }
+                            }).finally(() => {
+                                this.dialogVisible = false;
+                            })
+                        }
                     } else {
-                        console.log("error submit!!");
+                        console.log('error submit!!');
                         return false;
                     }
                 });
             },
             add() {
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "添加事件";
                 this.dialogVisible = true;
                 this.match_eventForm = {};
             },
@@ -197,21 +229,28 @@
                 });
             },
             deleteBatch() {
-                this.$http.delete("", {
-                    data: {
-                        coIds: this.selectedRows
-                    }
-                });
+                for (const id of this.selectedRows) {
+                    this.$http.delete("/team", {
+                        params: {
+                            id: id
+                        }
+                    }).then(res => {
+                        if (res.status != 200) {
+                            alert("批量删除遇到问题，请重试")
+                        }
+                    });
+                }
+                this.query();
             },
             edit(rowEntity) {
                 document.getElementsByClassName("el-dialog__title")[0].innerText =
-                    "编辑比赛";
+                    "修改事件";
                 this.dialogVisible = true;
                 this.matchForm = rowEntity;
             },
             query() {
                 this.$http
-                    .get("/match", {
+                    .get("/matchEvent", {
                         params: {
                             size: this.pager.size,
                             current: this.pager.size
@@ -220,6 +259,28 @@
                     .then(res => {
                         this.pager = res.data;
                     });
+            },
+            queryTeam() {
+                this.$http.get('/team', {
+                    params: {size: 100, current: 1},
+                }).then(res => {
+                    this.allTeamList = res.data.records;
+                    this.getTeamList();
+                });
+            },
+            getTeamList() {
+                const aid = this.awayId;
+                const hid = this.homeId;
+                const all = this.allTeamList;
+                this.teamList.push({'id': aid, 'name': filters.idFormatter(aid, all)},
+                    {'id': hid, 'name': filters.idFormatter(hid, all)});
+                console.log(this.teamList)
+            },
+            queryPersonByTeam(val) {
+                this.$http.get('/person/selectByTeam', {params: {teamId: val}})
+                    .then(res => {
+                        this.personList = res.data;
+                    })
             },
             // 分页组件点击事件
             pageChange(val) {

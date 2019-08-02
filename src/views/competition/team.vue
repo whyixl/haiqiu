@@ -3,7 +3,7 @@
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
         <el-button @click="dialogVisible = true" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-        <el-button :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>
+        <el-button @click="deleteBatch" :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>
       </div>
       
       <!-- 这一部分是赛事赛季与球队的关系列表 -->
@@ -46,11 +46,11 @@
           <el-form-item label="id" prop="id" style="display:none">
             <el-input v-model="se_teForm.id"></el-input>
           </el-form-item>
-          <el-form-item label="赛季ID" prop="seasonId">
-            <el-input v-model="se_teForm.seasonId" disabled></el-input>
+          <el-form-item label="赛季ID" prop="seasonId" style="display: none">
+            <el-input v-model="se_teForm.seasonId" disabled ></el-input>
           </el-form-item>
           <el-form-item label="球队" prop="teamId">
-            <el-select filterable placeholder="请选择相关球队" style="width:100%" v-model="se_teForm.teamId">
+            <el-select clearable filterable placeholder="请选择相关球队" style="width:100%" v-model="se_teForm.teamId">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in teamList"></el-option>
             </el-select>
           </el-form-item>
@@ -135,7 +135,8 @@
             },
             add() {
                 this.dialogVisible = true;
-                this.se_teForm = {}
+                this.se_teForm = {};
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "添加球队";
             },
             remove(id, rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -156,15 +157,23 @@
                 });
             },
             deleteBatch() {
-                this.$http.delete('', {
-                    data: {
-                        coIds: this.selectedRows
-                    }
-                })
+                for (const id of this.selectedRows) {
+                    this.$http.delete("/team", {
+                        params: {
+                            id: id
+                        }
+                    }).then(res => {
+                        if (res.status != 200) {
+                            alert("批量删除遇到问题，请重试")
+                        }
+                    });
+                }
+                this.query();
             },
             edit(se_te) {
                 this.dialogVisible = true;
-                this.se_teForm = se_te
+                this.se_teForm = se_te;
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑球队";
             },
             query() {
                 this.$http.get('/sete', {
@@ -179,7 +188,7 @@
             },
             queryCompetition() {
                 this.$http.get('/competition', {
-                    params: {size: 1000, current: 1},
+                    params: {size: 100, current: 1},
                 }).then(res => {
                     this.competitionList = res.data.records;
                 });
