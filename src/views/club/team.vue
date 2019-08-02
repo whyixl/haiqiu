@@ -63,7 +63,7 @@
         </el-table-column>
       </el-table>
       <!-- 赛季列表结束 -->
-      
+      grewed
       <!-- 分页组件 -->
       <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
                      :page-sizes="$store.state.paginationPageSizes"

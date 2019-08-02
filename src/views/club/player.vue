@@ -4,20 +4,10 @@
             <div slot="header">
                 <el-row :gutter="10">
                     <el-col :span="3">
-                        <el-select filterable placeholder="球队" v-model="teamSearch">
-                            <el-option v-bind:label="item.name" v-bind:value="item.id"
-                                       v-for="item in teamList"></el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="3">
                         <el-input placeholder="姓名" v-model="nameSearch"></el-input>
                     </el-col>
                     <el-col :span="3">
                         <el-input placeholder="英文名" v-model="surnameSearch"></el-input>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-date-picker type="daterange" v-model="dateRange" align="left" unlink-panels range-separator="至" start-placeholder="查询开始日期" end-placeholder="查询结束日期" :picker-options="$store.state.dateRangePickerOptions">
-                        </el-date-picker>
                     </el-col>
                     <el-col :span="2">
                         <el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>
@@ -28,7 +18,7 @@
                 <el-button :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>
             </div>
 
-            <!-- 球员列表 -->
+            <!-- 人员列表 -->
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
                 <el-table-column align="center" prop="personId" type="selection" width="55"></el-table-column>
@@ -47,15 +37,11 @@
                 </el-table-column>
                 <el-table-column align="center" label="身高/CM" prop="height"></el-table-column>
                 <el-table-column align="center" label="体重/KG" prop="weight"></el-table-column>
-                <el-table-column align="center" label="所属球队" prop="teamId"></el-table-column>
                 <el-table-column align="center" label="国籍" prop="countryId">
                     <template slot-scope="scope">
                         {{scope.row.countryId | idFormatter(countryList)}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="位置组" prop="roleId"></el-table-column>
-                <el-table-column align="center" label="确切位置" prop="position1"></el-table-column>
-                <el-table-column align="center" label="球衣号" prop="shirtnumber"></el-table-column>
                 <el-table-column align="center" label="出生国家" prop="birth_countryId"></el-table-column>
                 <el-table-column align="center" label="出生地" prop="birth_place"></el-table-column>
                 <el-table-column align="center" label="惯用脚" prop="preferred_side"></el-table-column>
@@ -64,20 +50,13 @@
                 <el-table-column align="center" label="球衣尺寸" prop="jerseysize"></el-table-column>
                 <el-table-column align="center" label="短裤尺寸" prop="shortssize"></el-table-column>
                 <el-table-column align="center" label="第二国籍" prop="nationality2"></el-table-column>
-                <el-table-column align="center" label="生效日期" prop="start" width="100">
-                    <template slot-scope="scope">
-                        {{ scope.row.start ? (scope.row.start | moment('YYYY-MM-DD')) : scope.row.start }}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="到期日期" prop="end" width="100">
-                    <template slot-scope="scope">
-                        {{ scope.row.end ? (scope.row.end | moment('YYYY-MM-DD')) : scope.row.end}}
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" fixed="right" label="操作" width="100">
+                <el-table-column align="center" fixed="right" label="操作" width="140">
                     <template slot-scope="scope">
                         <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small"
                                    title="编辑"></el-button>
+                      <router-link :to="{path: '/club/player/personRole', query: {personId: scope.row.id}}">
+                        <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="分配信息查看"></el-button>
+                      </router-link>
                         <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
                                    title="删除"></el-button>
                     </template>
@@ -94,7 +73,7 @@
             </el-pagination>
         </el-card>
 
-        <el-dialog :visible.sync="dialogVisible" title="新增球员">
+        <el-dialog :visible.sync="dialogVisible" title="新增人员">
             <el-form :label-position="'right'" label-width="80px">
                 <el-tabs>
                     <el-tab-pane label="常规信息">
@@ -213,14 +192,7 @@
                     jerseysize: '',
                     shortssize: ''
                 },
-                distribution: {
-                    teamId: '',
-                    roleId: '',
-                    position1: '',
-                    shirtnumber: '',
-                    start: '',
-                    end: ''
-                },
+
                 dialogVisible: false,
                 state: null,
                 dateRange: null,
@@ -229,55 +201,10 @@
                 teamSearch: null,
                 teamList: [],
                 countryList: [],
-                roles: [],
-                positions: [],
-                areas: [],
                 selectedRows: [],
                 bucketName: "public",
                 pager: {current: 1, size: 10, total: 0, records: []}
             }
-        },
-        created: function () {
-            this.areas = [
-                {text: '守门员', id: 1, pid: 0},
-                {text: '后卫', id: 2, pid: 0},
-                {text: '中场', id: 3, pid: 0},
-                {text: '前锋', id: 4, pid: 0},
-                {text: '无位置', id: 5, pid: 0},
-                {text: '守门员', id: 11, pid: 1},
-                {text: '左后卫', id: 21, pid: 2},
-                {text: '右后卫', id: 22, pid: 2},
-                {text: '中后卫', id: 23, pid: 2},
-                {text: '左中后卫', id: 24, pid: 2},
-                {text: '右中后卫', id: 25, pid: 2},
-                {text: '拖后中卫', id: 26, pid: 2},
-                {text: '自由中卫', id: 27, pid: 2},
-                {text: '防守型中场', id: 31, pid: 3},
-                {text: '左防守型中场', id: 32, pid: 3},
-                {text: '右防守型中场', id: 33, pid: 3},
-                {text: '左中场', id: 34, pid: 3},
-                {text: '左前卫', id: 35, pid: 3},
-                {text: '中前卫', id: 36, pid: 3},
-                {text: '右前卫', id: 37, pid: 3},
-                {text: '右中场', id: 38, pid: 3},
-                {text: '攻击型中场', id: 39, pid: 3},
-                {text: '左攻击型中场', id: 310, pid: 3},
-                {text: '中攻击型中场', id: 311, pid: 3},
-                {text: '右攻击型中场', id: 312, pid: 3},
-                {text: '中锋', id: 41, pid: 4},
-                {text: '左边锋', id: 42, pid: 4},
-                {text: '右边锋', id: 43, pid: 4},
-                {text: '左前锋', id: 44, pid: 4},
-                {text: '右前锋', id: 45, pid: 4},
-                {text: '第二前锋', id: 46, pid: 4},
-                {text: '--', id: 51, pid: 5}
-            ];
-
-            var roles = this.areas.filter(function (area) {
-                return area.pid == 0;
-            });
-            this.roles = roles;
-
         },
         mounted() {
             this.query();
@@ -328,7 +255,7 @@
                 });
             },
             add() {
-                document.getElementsByClassName("el-dialog__title")[0].innerText = "添加球员";
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "添加人员";
                 this.dialogVisible = true;
                 this.form = {};
             },
@@ -358,7 +285,7 @@
                 })
             },
             edit(player) {
-                document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑球员";
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑人员";
                 this.dialogVisible = true;
                 this.form = player
             },
