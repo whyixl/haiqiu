@@ -279,20 +279,28 @@
                 });
             },
             deleteBatch() {
-                for (let i = 0; i < this.selectedRows.length; i++) {
-                    this.$http.delete("/person", {
-                        params: {
-                            id: this.selectedRows[i]
-                        }
-                    }).then(res => {
-                        if (res.status != 200) {
-                            alert("批量删除遇到问题，请重试")
-                        }
-                    });
-                    if (i == this.selectedRows.length - 1) {
-                        this.query();
+                this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(() => {
+                    let temp = 0;
+                    for (let i = 0; i < this.selectedRows.length; i++) {
+                        temp++;
+                        this.$http.delete("/person", {
+                            params: {
+                                id: this.selectedRows[i]
+                            },
+                        }).then(res => {
+                            if (res.status != 200) {
+                                alert("批量删除遇到问题，请重试");
+                            }
+                            if (temp == this.selectedRows.length) {
+                                this.query();
+                            }
+                        });
                     }
-                }
+                });
             },
             edit(person) {
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑人员";

@@ -58,7 +58,7 @@
           <el-form-item label="id" prop="id" style="display:none">
             <el-input v-model="seasonForm.id"></el-input>
           </el-form-item>
-          <el-form-item label="相关赛事" >
+          <el-form-item label="相关赛事" prop="competitionId">
             <el-select clearable disabled filterable placeholder="请选择相关赛事" style="width:100%" v-model="seasonForm.competitionId">
               <el-option :label="item.name" :value="item.id" v-for="item in competitionList"></el-option>
             </el-select>
@@ -67,10 +67,9 @@
             <!-- name -->
             <el-input placeholder="请输入赛季名称" v-model="seasonForm.name"></el-input>
           </el-form-item>
-          <el-form-item label="时间" prop="roundForm.dateRange">
+          <el-form-item label="时间" prop="dateRange">
             <el-col :span="6">
-              <el-date-picker :picker-options="$store.state.dateRangePickerOptions"
-                              align="right" start-placeholder="赛季开始时间" range-separator="至"
+              <el-date-picker align="right" start-placeholder="赛季开始时间" range-separator="至"
                               end-placeholder="赛季结束时间" style="width: 400%"
                               type="daterange"
                               unlink-panels v-model="dateRange">
@@ -165,6 +164,7 @@
                 }
             },
             remove(id, rowNum) {
+                console.log(id,rowNum);
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
@@ -183,20 +183,28 @@
                 });
             },
             deleteBatch() {
-                for (let i = 0; i < this.selectedRows.length; i++) {
-                    this.$http.delete("/season", {
-                        params: {
-                            id: this.selectedRows[i]
-                        }
-                    }).then(res => {
-                        if (res.status != 200) {
-                            alert("批量删除遇到问题，请重试")
-                        }
-                    });
-                    if (i == this.selectedRows.length - 1) {
-                        this.query();
+                this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(() => {
+                    let temp = 0;
+                    for (let i = 0; i < this.selectedRows.length; i++) {
+                        temp++;
+                        this.$http.delete("/season", {
+                            params: {
+                                id: this.selectedRows[i]
+                            },
+                        }).then(res => {
+                            if (res.status != 200) {
+                                alert("批量删除遇到问题，请重试");
+                            }
+                            if (temp == this.selectedRows.length) {
+                                this.query();
+                            }
+                        });
                     }
-                }
+                });
             },
             edit(rowEntity) {
                 this.dialogVisible = true;
