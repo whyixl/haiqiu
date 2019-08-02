@@ -30,7 +30,7 @@ export const asyncRouter = [
       {
         path: "/club/player",
         name: "player",
-        component: () => import("@/views/club/player.vue")
+        component: () => import("@/views/club/person.vue")
       },
     ]
   },

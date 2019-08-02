@@ -44,12 +44,13 @@
             <router-link :to="{path: '/competition/dashboard/season',query: {coId: scope.row.id}}">
               <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="赛季"></el-button>
             </router-link>
-            <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
+            <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete" size="small"
+                       title="删除"></el-button>
           </template>
         </el-table-column>
       </el-table>
       <!-- 赛事列表结束 -->
-      
+
       <!-- 分页组件 -->
       <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
                      :page-sizes="$store.state.paginationPageSizes"
@@ -59,7 +60,7 @@
                      class="pagination text-right">
       </el-pagination>
     </el-card>
-    
+
     <!-- 编辑页面 -->
     <el-dialog :visible.sync="dialogVisible" title="添加赛事">
       <el-form :label-position="'right'" label-width="80px">
@@ -111,7 +112,8 @@
           </el-form-item>
           <!-- 地区列表，从后台查出来 -->
           <el-form-item label="联盟" prop="federation">
-            <el-select clearable filterable placeholder="请输选择联盟" style="width:100%" v-model="competitionForm.federationId">
+            <el-select clearable filterable placeholder="请输选择联盟" style="width:100%"
+                       v-model="competitionForm.federationId">
               <el-option :label="'--'" :value="1"></el-option>
               <el-option :label="'世界'" :value="2"></el-option>
               <el-option :label="'欧洲'" :value="3"></el-option>
@@ -126,14 +128,14 @@
           <el-form-item label="开始日期" prop="starttime">
             <el-col :span="6">
               <el-date-picker
-                placeholder="选择日期"
-                type="date"
-                v-model="competitionForm.starttime">
+                  placeholder="选择日期"
+                  type="date"
+                  v-model="competitionForm.starttime">
               </el-date-picker>
             </el-col>
           </el-form-item>
         </el-form>
-      
+
       </el-form>
       <div class="dialog-footer" slot="footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -231,9 +233,10 @@
                     ageId: null,
                     countryId: null,
                     federationId: null,
-                    starttime: null,}
+                    starttime: null,
+                }
             },
-            remove(id,rowNum) {
+            remove(id, rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
@@ -243,27 +246,29 @@
                         params: {
                             id: id
                         }
-                    }).then(res=>{
+                    }).then(res => {
                         if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.records.splice(rowNum,1);
+                            this.pager.records.splice(rowNum, 1);
                             this.pager.total--;
                         }
                     })
                 });
             },
             deleteBatch() {
-                for (const id of this.selectedRows) {
+                for (let i = 0; i < this.selectedRows.length; i++) {
                     this.$http.delete("/competition", {
                         params: {
-                            id: id
+                            id: this.selectedRows[i]
                         }
                     }).then(res => {
                         if (res.status != 200) {
                             alert("批量删除遇到问题，请重试")
                         }
                     });
+                    if (i == this.selectedRows.length - 1) {
+                        this.query();
+                    }
                 }
-                this.query();
             },
             edit(rowEntity) {
                 this.dialogVisible = true;

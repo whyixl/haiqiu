@@ -183,18 +183,20 @@
                 });
             },
             deleteBatch() {
-                for (const id of this.selectedRows) {
+                for (let i = 0; i < this.selectedRows.length; i++) {
                     this.$http.delete("/season", {
                         params: {
-                            id: id
+                            id: this.selectedRows[i]
                         }
                     }).then(res => {
                         if (res.status != 200) {
                             alert("批量删除遇到问题，请重试")
                         }
                     });
+                    if (i == this.selectedRows.length - 1) {
+                        this.query();
+                    }
                 }
-                this.query();
             },
             edit(rowEntity) {
                 this.dialogVisible = true;

@@ -138,8 +138,8 @@
                 teamList: [],
                 competitionList: [],
                 seasonList: [],
-                seasonId: null,
-                competitionId: null,
+                seasonId: 5,
+                competitionId: 3,
                 matchRule: null,
                 seasonSearch: null,
                 teamSearch: null,
@@ -227,18 +227,20 @@
                 });
             },
             deleteBatch() {
-                for (const id of this.selectedRows) {
+                for (let i = 0; i < this.selectedRows.length; i++) {
                     this.$http.delete("/match", {
                         params: {
-                            id: id
+                            id: this.selectedRows[i]
                         }
                     }).then(res => {
                         if (res.status != 200) {
                             alert("批量删除遇到问题，请重试")
                         }
                     });
+                    if (i == this.selectedRows.length - 1) {
+                        this.query();
+                    }
                 }
-              this.query(this.seasonId);
             },
             edit(rowEntity) {
                 this.dialogVisible = true;
