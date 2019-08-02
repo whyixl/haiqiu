@@ -27,32 +27,35 @@
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="teamId" type="selection" width="55"></el-table-column>
-        <el-table-column align="center" label="球队名称" prop="name" width="280"></el-table-column>
-        <el-table-column align="center" label="简称" prop="shortname" width="200">
+        <el-table-column align="center" label="球队名称" prop="name" width="200"></el-table-column>
+        <el-table-column align="center" label="简称" prop="shortname" width="150">
           <template slot-scope="scope">
             {{!scope.row.shortname ? scope.row.name : scope.row.shortname}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="性别" prop="gender" width="175">
+        <el-table-column align="center" label="性别" prop="gender" width="150">
           <template slot-scope="scope">
             {{scope.row.gender=="male" ? '男性':(scope.row.gender==="female"? '女性':'混合' )}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="年龄" prop="ageId" width="175">
+        <el-table-column align="center" label="年龄" prop="ageId" width="150">
           <template slot-scope="scope">
             {{scope.row.ageId==1 ? '职业' : scope.row.ageId==0||!scope.row.ageId ? "--" : 'U梯队'}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="俱乐部名称" prop="clubId" width="280">
+        <el-table-column align="center" label="俱乐部名称" prop="clubId" width="200">
           <template slot-scope="scope">
             {{scope.row.clubId | idFormatter(clubList)}}
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="140">
+        <el-table-column align="center" fixed="right" label="操作" width="240">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-            <router-link :to="{path: '/club/player', query: {teamId: scope.row.id}}">
-              <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="管理球员"></el-button>
+            <router-link :to="{path: '/club/team/teamPlayer', query: {teamId: scope.row.id}}">
+              <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="添加球员"></el-button>
+            </router-link>
+            <router-link :to="{path: '/club/team/teamStaff', query: {teamId: scope.row.id}}">
+              <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="添加职员"></el-button>
             </router-link>
             <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
                        title="删除"></el-button>
@@ -129,151 +132,164 @@
 </template>
 
 <script>
-    import * as qs from "qs";
+import * as qs from "qs";
 
-    export default {
-        name: "team",
-        data() {
-            return {
-                teamForm:
-                    {
-                        id: '',
-                        name: '',
-                        shortname: '',
-                        ageId: '',
-                        clubId: '',
-                        gender: ''
-                    },
-                teamRule: null,
-                clubSearch: null,
-                clubList: [],
-                countrySearch: null,
-                countryList: [],
-                selectedRows: [],
-                dialogVisible: false,
-                pager: {current: 1, size: 10, total: 0, records: []}
-            };
-        },
-        mounted() {
-            this.query();
-            this.queryClub();
-            this.queryCountry();
-        },
-        methods: {
-            submit(form) {
-                this.$refs[form].validate((valid) => {
-                    if (valid) {
-                        if (!this.teamForm.id) {
-                            this.$http.post('/team',
-                                this.teamForm
-                            ).then(res => {
-                                if (res.data.status == 'SUCCESS') {
-                                    this.query();
-                                } else if (res.data.status == 'FAILED') {
-                                    alert(res.data.data);
-                                }
-                            }).finally(() => {
-                                this.dialogVisible = false;
-                            })
-                        } else {
-                            this.$http.put('/team',
-                                this.teamForm
-                            ).then(res => {
-                                if (res.data.status == 'SUCCESS') {
-                                    this.query();
-                                } else {
-                                    alert("修改失败")
-                                }
-                            }).finally(() => {
-                                this.dialogVisible = false;
-                            })
-                        }
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
-            },
-            add() {
-                document.getElementById('dialog').getElementsByClassName("el-dialog__title")[0].innerText = "添加球队";
-                this.dialogVisible = true;
-                this.teamForm = {
-                    id: '',
-                    name: '',
-                    shortname: '',
-                    ageId: '',
-                    clubId: '',
-                    gender: ''
-                };
-            },
-            remove(id, rowNum) {
-                this.$confirm("此操作将永久删除, 是否继续?", "提示", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning"
-                }).then(() => {
-                    this.$http.delete('/team', {
-                        params: {
-                            id: id
-                        }
-                    }).then(res => {
-                        if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.total--;
-                            this.pager.records.splice(rowNum, 1)
-                        }
-                    })
-                });
-            },
-            // TODO 批量删除
-            deleteBatch() {
-                this.$http.delete('/delete/team', {
-                    params: {
-                        teamIds: this.selectedRows
-                    },
-                    paramsSerializer: params => {
-                        return qs.stringify(params, {indices: false})
-                    }
-                })
-            },
-            edit(team) {
-                this.dialogVisible = true;
-                this.teamForm = team;
-                document.getElementById('dialog').getElementsByClassName("el-dialog__title")[0].innerText = "修改球队";
-            },
-            query() {
-                this.$http.get('/team', {
-                    params: {
-                        size: this.pager.size,
-                        current: this.pager.current,
-                        clubSearch: this.clubSearch,
-                        countrySearch: this.countrySearch
-                    },
-                }).then(res => {
-                    this.pager = res.data
-                });
-            },
-            queryClub() {
-                this.$http.get("/club", {params: {current: 1, size: 100}}).then(res => {
-                    this.clubList = res.data.records;
-                })
-            },
-            queryCountry() {
-                this.$http.get("/country",).then(res => {
-                    this.countryList = res.data;
-                })
-            },
-            // 分页组件点击事件
-            pageChange(val) {
-                this.pager.current = val;
-                this.query()
-            },
-            sizeChange(val) {
-                this.pager.size = val;
-                this.query()
-            },
-            onSelectionChange(rows) {
-                this.selectedRows = rows.map(item => item.id);
-            }
-        },
+export default {
+  name: "team",
+  data() {
+    return {
+      teamForm: {
+        id: "",
+        name: "",
+        shortname: "",
+        ageId: "",
+        clubId: "",
+        gender: ""
+      },
+      teamRule: null,
+      clubSearch: null,
+      clubList: [],
+      countrySearch: null,
+      countryList: [],
+      selectedRows: [],
+      dialogVisible: false,
+      pager: { current: 1, size: 10, total: 0, records: [] }
     };
+  },
+  mounted() {
+    this.query();
+    this.queryClub();
+    this.queryCountry();
+  },
+  methods: {
+    submit(form) {
+      this.$refs[form].validate(valid => {
+        if (valid) {
+          if (!this.teamForm.id) {
+            this.$http
+              .post("/team", this.teamForm)
+              .then(res => {
+                if (res.data.status == "SUCCESS") {
+                  this.query();
+                } else if (res.data.status == "FAILED") {
+                  alert(res.data.data);
+                }
+              })
+              .finally(() => {
+                this.dialogVisible = false;
+              });
+          } else {
+            this.$http
+              .put("/team", this.teamForm)
+              .then(res => {
+                if (res.data.status == "SUCCESS") {
+                  this.query();
+                } else {
+                  alert("修改失败");
+                }
+              })
+              .finally(() => {
+                this.dialogVisible = false;
+              });
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    add() {
+      document
+        .getElementById("dialog")
+        .getElementsByClassName("el-dialog__title")[0].innerText =
+        "添加球队";
+      this.dialogVisible = true;
+      this.teamForm = {
+        id: "",
+        name: "",
+        shortname: "",
+        ageId: "",
+        clubId: "",
+        gender: ""
+      };
+    },
+    remove(id, rowNum) {
+      this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.$http
+          .delete("/team", {
+            params: {
+              id: id
+            }
+          })
+          .then(res => {
+            if (res.status === 200 && res.data.status === "SUCCESS") {
+              this.pager.total--;
+              this.pager.records.splice(rowNum, 1);
+            }
+          });
+      });
+    },
+    // TODO 批量删除
+    deleteBatch() {
+      this.$http.delete("/delete/team", {
+        params: {
+          teamIds: this.selectedRows
+        },
+        paramsSerializer: params => {
+          return qs.stringify(params, { indices: false });
+        }
+      });
+    },
+    edit(team) {
+      this.dialogVisible = true;
+      this.teamForm = team;
+      document
+        .getElementById("dialog")
+        .getElementsByClassName("el-dialog__title")[0].innerText =
+        "修改球队";
+    },
+    query() {
+      this.$http
+        .get("/team", {
+          params: {
+            size: this.pager.size,
+            current: this.pager.current,
+            clubSearch: this.clubSearch,
+            countrySearch: this.countrySearch
+          }
+        })
+        .then(res => {
+          this.pager = res.data;
+        });
+    },
+    queryClub() {
+      this.$http
+        .get("/club", { params: { current: 1, size: 100 } })
+        .then(res => {
+          this.clubList = res.data.records;
+        });
+    },
+    queryCountry() {
+      this.$http.get("/country").then(res => {
+        this.countryList = res.data;
+      });
+    },
+    // 分页组件点击事件
+    pageChange(val) {
+      this.pager.current = val;
+      this.query();
+    },
+    sizeChange(val) {
+      this.pager.size = val;
+      this.query();
+    },
+    onSelectionChange(rows) {
+      this.selectedRows = rows.map(item => item.id);
+    }
+  }
+};
 </script>

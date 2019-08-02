@@ -39,6 +39,32 @@ export const asyncRouter = [
       }
     ]
   },
+    {
+        path: "/club",
+        component: {
+            render: c => c("router-view")
+        },
+        children: [
+            {
+                path: "/club/team",
+                name: "team",
+                component: BasicLayout,
+                children:[
+                    {
+                        path: "/club/team/teamStaff",
+                        name: "teamStaff",
+                        component: () => import("@/views/club/teamStaff.vue")
+                    },
+                    {
+                        path: "/club/team/teamPlayer",
+                        name: "teamPlayer",
+                        component: () => import("@/views/club/teamPlayer.vue")
+                    }
+                ]
+            },
+
+        ]
+    },
   {
     path: "/competition",
     component: BasicLayout,

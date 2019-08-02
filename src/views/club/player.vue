@@ -2,8 +2,8 @@
     <div>
         <el-card :body-style="{ padding: '0px' }" shadow="never">
             <div slot="header">
-                <el-row style="float: left; width: 750px" :gutter="10">
-                    <el-col :span="4">
+                <el-row :gutter="10">
+                    <el-col :span="3">
                         <el-select filterable placeholder="球队" v-model="teamSearch">
                             <el-option v-bind:label="item.name" v-bind:value="item.id"
                                        v-for="item in teamList"></el-option>
@@ -15,18 +15,14 @@
                     <el-col :span="3">
                         <el-input placeholder="英文名" v-model="surnameSearch"></el-input>
                     </el-col>
-                    <el-col :span="3">
-                        <el-date-picker align="left" end-placeholder="查询结束日期" range-separator="至"
-                                        start-placeholder="查询开始日期"
-                                        type="daterange" v-model="dateRange">
+                    <el-col :span="8">
+                        <el-date-picker type="daterange" v-model="dateRange" align="left" unlink-panels range-separator="至" start-placeholder="查询开始日期" end-placeholder="查询结束日期" :picker-options="$store.state.dateRangePickerOptions">
                         </el-date-picker>
                     </el-col>
+                    <el-col :span="2">
+                        <el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>
+                    </el-col>
                 </el-row>
-                <el-col :span="2">
-                    <el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>
-                </el-col>
-                <br>
-                <br>
                 <br>
                 <el-button @click="dialogVisible = true" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
                 <el-button :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>

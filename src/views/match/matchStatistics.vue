@@ -17,7 +17,7 @@
         <el-table-column label="类型" align="center" prop="kind" width="150"></el-table-column>
         <el-table-column label="相关球员" align="center" prop="additional_personId" width="160"></el-table-column>
         <el-table-column align="center" prop="created" label="创建时间" width="150">
-          <template slot-scope="">
+          <template slot-scope="scope">
             {{ scope.row.created | moment('YYYY-MM-DD hh:mm') }}
           </template>
         </el-table-column>
@@ -211,7 +211,7 @@
             },
             query() {
                 this.$http
-                    .get("/club", {
+                    .get("/match", {
                         params: {
                             size: this.pager.size,
                             current: this.pager.size
