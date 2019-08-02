@@ -27,7 +27,7 @@
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="teamId" type="selection" width="55"></el-table-column>
-        <el-table-column align="center" label="球队名称" prop="name" width="200"></el-table-column>
+        <el-table-column align="center" label="球队名称" prop="name" width="150"></el-table-column>
         <el-table-column align="center" label="简称" prop="shortname" width="150">
           <template slot-scope="scope">
             {{!scope.row.shortname ? scope.row.name : scope.row.shortname}}
@@ -40,15 +40,18 @@
         </el-table-column>
         <el-table-column align="center" label="年龄" prop="ageId" width="150">
           <template slot-scope="scope">
-            {{scope.row.ageId==1 ? '职业' : scope.row.ageId==0||!scope.row.ageId ? "--" : 'U梯队'}}
+            {{scope.row.ageId==1 ? '职业' : scope.row.ageId==2 ? 'U23' :scope.row.ageId==3 ? 'U21' :scope.row.ageId==4 ? 'U20'
+            :scope.row.ageId==5 ? 'U19' :scope.row.ageId==6 ? 'U18' :scope.row.ageId==7 ? 'U17' :scope.row.ageId==8 ? 'U16'
+            :scope.row.ageId==9 ? 'U15' :scope.row.ageId==10 ? 'U14' :scope.row.ageId==11 ? 'U13' :scope.row.ageId==12 ? 'U12'
+            :scope.row.ageId==13 ? 'U11' :scope.row.ageId==14 ? 'U10' :scope.row.ageId==15 ? 'U9' :scope.row.ageId==16 ? 'U8' :'U7'}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="俱乐部名称" prop="clubId" width="200">
+        <el-table-column align="center" label="俱乐部名称" prop="clubId" width="180">
           <template slot-scope="scope">
             {{scope.row.clubId | idFormatter(clubList)}}
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="240">
+        <el-table-column align="center" fixed="right" label="操作" width="180">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
             <router-link :to="{path: '/club/team/teamPlayer', query: {teamId: scope.row.id}}">
@@ -63,7 +66,7 @@
         </el-table-column>
       </el-table>
       <!-- 赛季列表结束 -->
-      grewed
+
       <!-- 分页组件 -->
       <el-pagination :current-page="pager.current" :layout="$store.state.paginationLayout" :page-size="pager.size"
                      :page-sizes="$store.state.paginationPageSizes"
@@ -96,7 +99,6 @@
           </el-form-item>
           <el-form-item label="年龄" prop="age">
             <el-select clearable filterable placeholder="请选择年龄段" style="width:100%" v-model="teamForm.ageId">
-              <el-option :label="'--'" :value="0"></el-option>
               <el-option :label="'职业'" :value="1"></el-option>
               <el-option :label="'U23'" :value="2"></el-option>
               <el-option :label="'U21'" :value="3"></el-option>
