@@ -66,11 +66,6 @@ export const asyncRouter = [
                 component: BasicLayout,
                 children:[
                     {
-                        path: "/club/team/teamStaff",
-                        name: "teamStaff",
-                        component: () => import("@/views/club/teamStaff.vue")
-                    },
-                    {
                         path: "/club/team/teamPlayer",
                         name: "teamPlayer",
                         component: () => import("@/views/club/teamPlayer.vue")
