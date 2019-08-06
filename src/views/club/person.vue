@@ -78,36 +78,36 @@
       <el-form :label-position="'right'" label-width="80px">
         <el-tabs>
           <el-tab-pane label="常规信息">
-            <el-form :model="form" label-width="80px" ref="form">
+            <el-form :model="person" label-width="80px" ref="person">
               <el-form-item label="id" prop="id" style="display:none">
-                <el-input v-model="form.id"></el-input>
+                <el-input v-model="person.id"></el-input>
               </el-form-item>
-              <el-form-item label="姓名" prop="form.name">
-                <el-input placeholder="请输入姓名" v-model="form.name"></el-input>
+              <el-form-item label="姓名" prop="person.name">
+                <el-input placeholder="请输入姓名" v-model="person.name"></el-input>
               </el-form-item>
-              <el-form-item label="英文名" prop="form.surname">
-                <el-input placeholder="请输入英文名" v-model="form.surname"></el-input>
+              <el-form-item label="英文名" prop="person.surname">
+                <el-input placeholder="请输入英文名" v-model="person.surname"></el-input>
               </el-form-item>
-              <el-form-item label="性别" prop="form.gender">
-                <el-select clearable filterable placeholder="请选择性别" style="width:100%" v-model="form.gender">
+              <el-form-item label="性别" prop="person.gender">
+                <el-select clearable filterable placeholder="请选择性别" style="width:100%" v-model="person.gender">
                   <el-option label="男" value="male"></el-option>
                   <el-option label="女" value="female"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="身高/cm" prop="form.height">
-                <el-input placeholder="请输入身高" v-model="form.height"></el-input>
+              <el-form-item label="身高/cm" prop="person.height">
+                <el-input placeholder="请输入身高" v-model="person.height"></el-input>
               </el-form-item>
-              <el-form-item label="体重/kg" prop="form.weight">
-                <el-input placeholder="请输入体重" v-model="form.weight"></el-input>
+              <el-form-item label="体重/kg" prop="person.weight">
+                <el-input placeholder="请输入体重" v-model="person.weight"></el-input>
               </el-form-item>
-              <el-form-item label="出生日期" prop="form.birthday">
-                <el-date-picker :picker-options="$store.state.datePickerOptions" align="right"
+              <el-form-item label="出生日期" prop="person.birthday">
+                <el-date-picker align="right"
                                 placeholder="选择日期"
                                 style="width: 100%;"
-                                type="date" v-model="form.birthday"></el-date-picker>
+                                type="date" v-model="person.birthday"></el-date-picker>
               </el-form-item>
-              <el-form-item label="国籍" prop="form.country">
-                <el-select filterable placeholder="请输入国籍" style="width:100%" v-model="form.countryId">
+              <el-form-item label="国籍" prop="person.country">
+                <el-select filterable placeholder="请输入国籍" style="width:100%" v-model="person.countryId">
                   <el-option :label="item.name" :value="item.id"
                              v-for="item in countryList"></el-option>
                 </el-select>
@@ -116,45 +116,45 @@
           </el-tab-pane>
 
           <el-tab-pane label="详细信息">
-            <el-form :model="detail" label-width="80px" ref="detail">
-              <el-form-item label="出生国家" prop="detail.birth_country">
+            <el-form :model="personDetail" label-width="80px" ref="personDetail">
+              <el-form-item label="出生国家" prop="personDetail.birth_country">
                 <el-select filterable placeholder="请输入出生国家" style="width:100%"
-                           v-model="detail.birth_countryId">
+                           v-model="personDetail.birthCountryId">
                   <el-option :label="item.name" :value="item.id"
                              v-for="item in countryList"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="出生地" prop="detail.birth_place">
-                <el-input placeholder="请输入出生地" v-model="detail.birth_place"></el-input>
+              <el-form-item label="出生地" prop="personDetail.birth_place">
+                <el-input placeholder="请输入出生地" v-model="personDetail.birthPlace"></el-input>
               </el-form-item>
-              <el-form-item label="第二国籍" prop="form.nationality2">
-                <el-input placeholder="请输入第二国籍" v-model="detail.nationality2"></el-input>
+              <el-form-item label="第二国籍" prop="personDetail.nationality2">
+                <el-input placeholder="请输入第二国籍" v-model="personDetail.nationality2"></el-input>
               </el-form-item>
-              <el-form-item label="惯用脚" prop="detail.preferred_side">
+              <el-form-item label="惯用脚" prop="personDetail.preferred_side">
                 <el-select filterable placeholder="请选择惯用脚" style="width:100%"
-                           v-model="detail.preferred_side">
+                           v-model="personDetail.preferredSide">
                   <el-option label="--" value="null_foot"></el-option>
                   <el-option label="左脚" value="left_foot"></el-option>
                   <el-option label="右脚" value="right_foot"></el-option>
                   <el-option label="双脚" value="double_foot"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="站立脚" prop="detail.foot">
-                <el-select filterable placeholder="请选择站立脚" style="width:100%" v-model="detail.foot">
+              <el-form-item label="站立脚" prop="personDetail.foot">
+                <el-select filterable placeholder="请选择站立脚" style="width:100%" v-model="personDetail.foot">
                   <el-option label="--" value="null_foot"></el-option>
                   <el-option label="左" value="left_foot"></el-option>
                   <el-option label="右" value="right_foot"></el-option>
                   <el-option label="二者" value="double_foot"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="球鞋尺寸" prop="detail.shoesize">
-                <el-input placeholder="请输入球鞋尺寸" v-model="detail.shoesize"></el-input>
+              <el-form-item label="球鞋尺寸" prop="personDetail.shoesize">
+                <el-input placeholder="请输入球鞋尺寸" v-model="personDetail.shoesize"></el-input>
               </el-form-item>
-              <el-form-item label="球衣尺寸" prop="detail.jerseysize">
-                <el-input placeholder="请输入球衣号" v-model="detail.jerseysize"></el-input>
+              <el-form-item label="球衣尺寸" prop="personDetail.jerseysize">
+                <el-input placeholder="请输入球衣号" v-model="personDetail.jerseysize"></el-input>
               </el-form-item>
-              <el-form-item label="短裤尺寸" prop="detail.shortssize">
-                <el-input placeholder="请输入短裤号" v-model="detail.shortssize"></el-input>
+              <el-form-item label="短裤尺寸" prop="personDetail.shortssize">
+                <el-input placeholder="请输入短裤号" v-model="personDetail.shortssize"></el-input>
               </el-form-item>
             </el-form>
           </el-tab-pane>
@@ -162,7 +162,7 @@
       </el-form>
       <div class="dialog-footer" slot="footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button @click="submit('form')" type="primary">确 定</el-button>
+        <el-button @click="submit('person')" type="primary">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -173,7 +173,7 @@
         name: "player",
         data() {
             return {
-                form: {
+                person: {
                     id: '',
                     name: '',
                     surname: '',
@@ -183,17 +183,16 @@
                     weight: '',
                     countryId: ''
                 },
-                detail: {
-                    birth_countryId: '',
-                    birth_place: '',
+                personDetail: {
+                    birthCountryId: '',
+                    birthPlace: '',
                     nationality2: '',
-                    preferred_side: '',
+                    preferredSide: '',
                     foot: '',
                     shoesize: '',
                     jerseysize: '',
                     shortssize: ''
                 },
-
                 dialogVisible: false,
                 state: null,
                 dateRange: null,
@@ -220,12 +219,15 @@
                 this.positions = positions;
             },
             submit(form) {
+                let p = new Map();
+                p.set('person', this.person);
+                p.set('personDetail', this.personDetail);
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        if (!this.form.id) {
+                        if (!this.person.id) {
                             // 新增
                             this.$http.post('/person',
-                                this.form
+                                {person: this.person,personDetail: this.personDetail}
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
@@ -238,7 +240,7 @@
                         } else {
                             // 修改
                             this.$http.put('/person',
-                                this.form
+                                {person: this.person,personDetail: this.personDetail}
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
@@ -258,7 +260,7 @@
             add() {
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "添加人员";
                 this.dialogVisible = true;
-                this.form = {};
+                this.person = {};
             },
             remove(id, rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -305,7 +307,7 @@
             edit(person) {
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑人员";
                 this.dialogVisible = true;
-                this.form = person
+                this.person = person
             },
             query() {
                 this.$http.get('/person', {

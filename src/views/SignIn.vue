@@ -62,7 +62,7 @@ export default {
         if (res.data.data) {
           this.$store.commit("setToken", res.data.data);
           this.$router.push({ path: "/club/dashboard" });
-          this.GLOBAL.userName = this.user.name;
+          window.localStorage.setItem('userName',this.user.name);
         }
       });
     }

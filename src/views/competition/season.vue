@@ -5,6 +5,7 @@
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
         <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
       </div>
+
       <!-- 这一部分是赛季列表 -->
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading" :default-sort = "{prop: 'start', order: 'descending'}">
@@ -158,27 +159,23 @@
                 this.seasonForm = {
                     id: '',
                     name: '',
-                    dateRange: '',
                     competitionId: parseInt(this.competitionId)
-                }
+                };
+                this.dateRange = '';
             },
             remove(id, rowNum) {
-                console.log(id,rowNum);
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
+                    console.log(id,rowNum);
                     this.$http.delete('/season', {
                         params: {
                             id: id
                         }
-                    }).then(res => {
-                        if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.total--;
-                            this.pager.records.splice(rowNum, 1)
-                        }
-                    })
+                    });
+                    this.query();
                 });
             },
             deleteBatch() {
@@ -205,15 +202,13 @@
                     }
                 });
             },
-
             edit(rowEntity) {
                 this.dialogVisible = true;
                 this.seasonForm = rowEntity;
                 this.dateRange = [rowEntity.start, rowEntity.end];
-                console.log(this.GLOBAL.coId)
             },
             saveId() {
-                this.GLOBAL.coId = this.competitionId;
+                window.localStorage.setItem('coId',this.competitionId);
             },
             query() {
                 this.$http.get('/season', {

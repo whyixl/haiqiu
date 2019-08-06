@@ -58,8 +58,8 @@
         data() {
             return {
                 isCollapse: false,
-                name: this.GLOBAL.userName,
-                coId: this.GLOBAL.coId
+                name: window.localStorage.getItem('userName'),
+                coId: window.localStorage.getItem('coId')
             };
         },
         methods: {
