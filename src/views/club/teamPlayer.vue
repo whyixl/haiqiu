@@ -33,8 +33,14 @@
             {{scope.row.teamId | idFormatter(teamList)}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="位置组" prop="roleId"></el-table-column>
-        <el-table-column align="center" label="具体位置" prop="position1"></el-table-column>
+        <el-table-column align="center" label="角色" prop="roleId">
+          <template slot-scope="scope">
+            {{scope.row.roleId==1 ? '守门员' : scope.row.roleId==2 ? '后卫' :scope.row.roleId==3 ? '中场' :scope.row.roleId==4 ? '前锋'
+            :scope.row.roleId==5 ? '主教练' :scope.row.roleId==6 ? '助力教练' :scope.row.roleId==7 ? '守门员教练' :scope.row.roleId==56 ? '运动教练'
+            :scope.row.roleId==59 ? '随队医生' :scope.row.roleId==60 ? '俱乐部支持' :scope.row.roleId==61 ? '理疗师' :'无位置'}}
+          </template>
+        </el-table-column>
+
         <el-table-column align="center" label="球衣号" prop="shirtnumber"></el-table-column>
         <el-table-column align="center" label="生效日期" prop="start" width="120">
           <template slot-scope="scope">
@@ -81,15 +87,12 @@
           <el-form-item label="球衣号" prop="shirtnumber">
             <el-input clearable  placeholder="请输入球衣号" v-model="distributionForm.shirtnumber"></el-input>
           </el-form-item>
-          <el-form-item label="位置" prop="roleId">
-            <el-select filterable @change="getPosition(distributionForm.roleId)" id="" name="" placeholder="请选择位置组"
-                       style="width:50%;" v-model="distributionForm.roleId">
-              <el-option :label="role.name " :value="role.id" v-for="role in roles">{{role.name}}</el-option>
+          <el-form-item label="人员属性" prop="position">
+            <el-select  id="" name="" @change="getPosition(distributionForm.position)" filterable placeholder="请选择人员属性" style="width:50%" v-model="distributionForm.position">
+              <el-option :label="position.name " :value="position.id" v-for="position in positions">{{position.name}}</el-option>
             </el-select>
-            <el-select filterable id="" name="" placeholder="请选择具体位置" style="width:50%;" v-model="distributionForm.position1">
-              <el-option :label="position.name" :value=position.id v-for="position in positions">
-                {{position.name}}
-              </el-option>
+            <el-select  id="" name="" filterable placeholder="请选择角色" style="width:50%" v-model="distributionForm.roleId">
+              <el-option :label="role.name " :value="role.id" v-for="role in roles">{{role.name}}</el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="生效日期" prop="start">
@@ -118,6 +121,7 @@
                 distributionForm: {
                     teamId: '',
                     roleId: '',
+                    person:'',
                     personId: '',
                     shirtnumber: '',
                     start: '',
@@ -130,9 +134,10 @@
                 teamSearch: null,
                 teamList: [],
                 personList: [],
-                positions: [],
                 countryList: [],
                 roles: [],
+                areas:[],
+                persons:[],
                 selectedRows: [],
                 bucketName: "public",
                 pager: {current: 1, size: 10, total: 0, records: []}
@@ -140,43 +145,25 @@
         },
         created: function () {
             this.areas = [
-                {name: '守门员', id: 1, pid: 0},
-                {name: '后卫', id: 2, pid: 0},
-                {name: '中场', id: 3, pid: 0},
-                {name: '前锋', id: 4, pid: 0},
-                {name: '无位置', id: 5, pid: 0},
-                {name: '守门员', id: 11, pid: 1},
-                {name: '左后卫', id: 21, pid: 2},
-                {name: '右后卫', id: 22, pid: 2},
-                {name: '中后卫', id: 23, pid: 2},
-                {name: '左中后卫', id: 24, pid: 2},
-                {name: '右中后卫', id: 25, pid: 2},
-                {name: '拖后中卫', id: 26, pid: 2},
-                {name: '自由中卫', id: 27, pid: 2},
-                {name: '防守型中场', id: 31, pid: 3},
-                {name: '左防守型中场', id: 32, pid: 3},
-                {name: '右防守型中场', id: 33, pid: 3},
-                {name: '左中场', id: 34, pid: 3},
-                {name: '左前卫', id: 35, pid: 3},
-                {name: '中前卫', id: 36, pid: 3},
-                {name: '右前卫', id: 37, pid: 3},
-                {name: '右中场', id: 38, pid: 3},
-                {name: '攻击型中场', id: 39, pid: 3},
-                {name: '左攻击型中场', id: 310, pid: 3},
-                {name: '中攻击型中场', id: 311, pid: 3},
-                {name: '右攻击型中场', id: 312, pid: 3},
-                {name: '中锋', id: 41, pid: 4},
-                {name: '左边锋', id: 42, pid: 4},
-                {name: '右边锋', id: 43, pid: 4},
-                {name: '左前锋', id: 44, pid: 4},
-                {name: '右前锋', id: 45, pid: 4},
-                {name: '第二前锋', id: 46, pid: 4},
-                {name: '--', id: 51, pid: 5}
+                {name: '守门员', id: 1, pid: 11},
+                {name: '后卫', id: 2, pid: 11},
+                {name: '中场', id: 3, pid: 11},
+                {name: '前锋', id: 4, pid: 11},
+                {name: '无位置', id: 0, pid: 11},
+                {name: '球员', id: 11, pid: 0},
+                {name: '职员', id: 21, pid: 0},
+                {name: '主教练', id: 5, pid: 21},
+                {name: '助力教练', id: 6, pid: 21},
+                {name: '守门员教练', id: 7, pid: 21},
+                {name: '运动教练', id: 8, pid: 21},
+                {name: '随队医生', id: 59, pid: 21},
+                {name: '俱乐部支持', id: 60, pid: 21},
+                {name: '理疗师', id: 61, pid: 21}
             ];
-            var roles = this.areas.filter(function (area) {
+            var positions = this.areas.filter(function (area) {
                 return area.pid == 0;
             });
-            this.roles = roles;
+            this.positions = positions;
 
         },
         mounted() {
@@ -187,10 +174,10 @@
         },
         methods: {
             getPosition: function (id) {
-                const positions = this.areas.filter(function (position) {
-                    return position.pid == id;
+                const roles = this.areas.filter(function (role) {
+                    return role.pid == id;
                 });
-                this.positions = positions;
+                this.roles = roles;
             },
             submit(form) {
                 this.$refs[form].validate((valid) => {
