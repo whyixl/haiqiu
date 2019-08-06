@@ -27,7 +27,7 @@
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="teamId" type="selection" width="55"></el-table-column>
-        <el-table-column align="center" label="球队名称" prop="name" width="150"></el-table-column>
+        <el-table-column align="center" label="球队名称" prop="name" width="200"></el-table-column>
         <el-table-column align="center" label="简称" prop="shortname" width="150">
           <template slot-scope="scope">
             {{!scope.row.shortname ? scope.row.name : scope.row.shortname}}

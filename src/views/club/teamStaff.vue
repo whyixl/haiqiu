@@ -14,8 +14,8 @@
                     </el-col>
                 </el-row>
                 <br>
-                <el-button @click="dialogVisible = true" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-                <el-button :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>
+                <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
+                <el-button @click="deleteBatch":disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>
             </div>
 
             <!-- 职员列表 -->
@@ -32,6 +32,8 @@
                         {{scope.row.teamId | idFormatter(teamList)}}
                     </template>
                 </el-table-column>
+                <el-table-column align="center" label="领域" prop="roleId"></el-table-column>
+                <el-table-column align="center" label="角色" prop="position1"></el-table-column>
                 <el-table-column align="center" label="生效日期" prop="start" width="120">
                     <template slot-scope="scope">
                         {{scope.row.start | moment('YYYY-MM-DD')}}
@@ -64,17 +66,17 @@
         <el-dialog :visible.sync="dialogVisible" title="新增球员">
             <el-form :label-position="'right'" label-width="80px">
                 <el-form :model="distributionForm" label-width="80px" ref="distributionForm">
-                    <el-form-item label="所属球队" prop="distributionForm.teamId">
+                    <el-form-item label="所属球队" prop="teamId">
                         <el-select filterable placeholder="请选择球队" style="width:100%" v-model="distributionForm.teamId">
                             <el-option :label="item.name" :value="item.id" v-for="item in teamList"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="添加职员" prop="distributionForm.teamId">
+                    <el-form-item label="添加职员" prop="personId">
                         <el-select filterable placeholder="请选择职员" style="width:100%" v-model="distributionForm.personId">
                             <el-option :label="item.name" :value="item.id" v-for="item in personList"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="领域" prop="distributionForm.roleId">
+                    <el-form-item label="领域" prop="roleId">
                         <el-select filterable @change="getPosition(distributionForm.roleId)" id="" name="" placeholder="请选择领域"
                                    style="width:50%;" v-model="distributionForm.roleId">
                             <el-option :label="role.name " :value="role.id" v-for="role in roles">{{role.name}}</el-option>
@@ -85,11 +87,11 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="生效日期" prop="distributionForm.start">
+                    <el-form-item label="生效日期" prop="start">
                         <el-date-picker align="right" placeholder="选择成员生效日期"
                                         style="width: 100%;" type="date" v-model="distributionForm.start"></el-date-picker>
                     </el-form-item>
-                    <el-form-item label="到期日期" prop="distributionForm.end">
+                    <el-form-item label="到期日期" prop="end">
                         <el-date-picker align="right" placeholder="选择成员到期日期"
                                         style="width: 100%;" type="date" v-model="distributionForm.end"></el-date-picker>
                     </el-form-item>
@@ -261,11 +263,28 @@
                 });
             },
             deleteBatch() {
-                this.$http.delete('', {
-                    data: {
-                        coIds: this.selectedRows
+                this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }).then(() => {
+                    let temp = 0;
+                    for (let i = 0; i < this.selectedRows.length; i++) {
+                        temp++;
+                        this.$http.delete("/teamPerson", {
+                            params: {
+                                id: this.selectedRows[i]
+                            },
+                        }).then(res => {
+                            if (res.status != 200) {
+                                alert("批量删除遇到问题，请重试");
+                            }
+                            if (temp == this.selectedRows.length) {
+                                this.query();
+                            }
+                        });
                     }
-                })
+                });
             },
             edit(player) {
                 document.getElementsByClassName("el-dialog__title")[0].innername = "编辑职员";

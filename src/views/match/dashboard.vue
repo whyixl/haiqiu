@@ -4,22 +4,26 @@
       <div slot="header">
         <el-row :gutter="10">
           <el-col :span="4">
+            <el-select clearable @change="querySeason" filterable placeholder="赛事" v-model="competitionId">
+              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in competitionList">
+              </el-option>
+            </el-select>
+
+          </el-col>
+          <el-col :span="4">
+            <el-select clearable @change="query" filterable placeholder="赛季"  v-model="seasonId">
+              <el-option :key="item.id" :label="item.name" :value='item.id' v-for="item in seasonList">
+              </el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="4">
             <el-select clearable filterable placeholder="球队" v-model="teamSearch">
               <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in teamList"></el-option>
             </el-select>
           </el-col>
-          <el-col :span="6">
-            <el-select clearable @change="querySeason" filterable placeholder="请选择赛事" style="width:50%"
-                       v-model="competitionId">
-              <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in competitionList"></el-option>
-            </el-select>
-            <el-select clearable @change="query" filterable placeholder="赛季" style="width:50%" v-model="seasonId">
-              <el-option :key="item.id" :label="item.name" :value='item.id' v-for="item in seasonList"></el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="6">
-            <el-button @click="query(this.seasonId)" icon="el-icon-search" type="primary">查询</el-button>
-          </el-col>
+          <!--<el-col :span="3">-->
+            <!--<el-button @click="query(this.seasonId)" icon="el-icon-search" type="primary">查询</el-button>-->
+          <!--</el-col>-->
         </el-row>
         <br>
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
@@ -131,15 +135,15 @@
 
 <script>
     export default {
-        name: "season",
+        name: "match",
         data() {
             return {
                 selectedRows: [],
                 teamList: [],
                 competitionList: [],
                 seasonList: [],
-                seasonId: 5,
-                competitionId: 3,
+                seasonId:'2018' ,
+                competitionId:'1',
                 matchRule: null,
                 seasonSearch: null,
                 teamSearch: null,
@@ -257,7 +261,7 @@
             },
             query(val) {
                 if (!val){
-                    val = 3
+                    val =2
                 }
                 this.$http
                     .get("/match", {

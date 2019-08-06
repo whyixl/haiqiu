@@ -3,13 +3,13 @@
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-        <el-button :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
+        <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
       </div>
       <!-- 这一部分是赛季列表 -->
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading" :default-sort = "{prop: 'start', order: 'descending'}">
         <el-table-column align="center" prop="seasonId" type="selection" width="55"></el-table-column>
-        <el-table-column align="center" label="赛季名称" prop="name" width="100"></el-table-column>
+        <el-table-column align="center" label="赛季名称" prop="name" width="200"></el-table-column>
         <el-table-column align="center" label="相关赛事名称" prop="competitionId" width="200">
           <template slot-scope="scope">
             {{ scope.row.competitionId | idFormatter(competitionList)}}
@@ -154,7 +154,6 @@
                 });
             },
             add() {
-                
                 this.dialogVisible = true;
                 this.seasonForm = {
                     id: '',
@@ -206,6 +205,7 @@
                     }
                 });
             },
+
             edit(rowEntity) {
                 this.dialogVisible = true;
                 this.seasonForm = rowEntity;

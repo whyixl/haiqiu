@@ -2,7 +2,7 @@
   <div>
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
-        <el-button @click="dialogVisible = true" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
+        <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
         <el-button @click="deleteBatch" :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">删除</el-button>
       </div>
       
@@ -135,7 +135,10 @@
             },
             add() {
                 this.dialogVisible = true;
-                this.se_teForm = {};
+                this.se_teForm = {
+                    teamId:'',
+                    seasonId: this.se_teForm.seasonId
+                };
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "添加球队";
             },
             remove(id, rowNum) {
@@ -165,7 +168,7 @@
                     let temp = 0;
                     for (let i = 0; i < this.selectedRows.length; i++) {
                         temp++;
-                        this.$http.delete("/team", {
+                        this.$http.delete("/sete", {
                             params: {
                                 id: this.selectedRows[i]
                             },

@@ -10,14 +10,14 @@
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="competitionId" type="selection" width="40"></el-table-column>
-        <el-table-column align="center" label="描述" prop="name" width="220"></el-table-column>
+        <el-table-column align="center" label="描述" prop="name" width="200"></el-table-column>
         <el-table-column align="center" label="简称" prop="shortname" width="120"></el-table-column>
-        <el-table-column align="center" label="性别" prop="gender" width="120">
+        <el-table-column align="center" label="性别" prop="gender" width="100">
           <template slot-scope="scope">
             {{ scope.row.gender==="male" ? '男性':(scope.row.gender==="female"? '女性':'混合' )}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="年龄" prop="ageId" width="120">
+        <el-table-column align="center" label="年龄" prop="ageId" width="100">
           <template slot-scope="scope">
             {{scope.row.ageId==1 ? '职业' : scope.row.ageId==2 ? 'U23' :scope.row.ageId==3 ? 'U21' :scope.row.ageId==4 ? 'U20'
             :scope.row.ageId==5 ? 'U19' :scope.row.ageId==6 ? 'U18' :scope.row.ageId==7 ? 'U17' :scope.row.ageId==8 ? 'U16'
@@ -25,7 +25,7 @@
             :scope.row.ageId==13 ? 'U11' :scope.row.ageId==14 ? 'U10' :scope.row.ageId==15 ? 'U9' :scope.row.ageId==16 ? 'U8' :'U7'}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="类型" prop="type" width="120">
+        <el-table-column align="center" label="类型" prop="type" width="100">
           <template slot-scope="scope">
             {{ scope.row.type == "club" ? '俱乐部': '国际' }}
           </template>
