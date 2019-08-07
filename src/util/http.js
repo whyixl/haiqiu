@@ -7,6 +7,7 @@ import {Vue} from "vue";
  */
 axios.defaults.baseURL = 'http://172.16.6.6:8090';
 // cceui
+axios.defaults.baseURL = 'http://172.16.6.6:8090';
 /*
 测试
  */
