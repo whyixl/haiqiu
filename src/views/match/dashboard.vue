@@ -8,7 +8,6 @@
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in competitionList">
               </el-option>
             </el-select>
-
           </el-col>
           <el-col :span="4">
             <el-select clearable @change="query" filterable placeholder="赛季"  v-model="seasonId">
@@ -16,14 +15,20 @@
               </el-option>
             </el-select>
           </el-col>
-          <el-col :span="4">
-            <el-select clearable filterable placeholder="球队" v-model="teamSearch">
-              <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in teamList"></el-option>
-            </el-select>
-          </el-col>
-          <!--<el-col :span="3">-->
-            <!--<el-button @click="query(this.seasonId)" icon="el-icon-search" type="primary">查询</el-button>-->
+          <!--<el-col :span="4">-->
+            <!--<el-select clearable @change="queryTeam" filterable placeholder="赛季"  v-model="seasonId">-->
+              <!--<el-option :key="item.id" :label="item.name" :value='item.id' v-for="item in seasonList">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
           <!--</el-col>-->
+          <!--<el-col :span="4">-->
+            <!--<el-select clearable @change="query" filterable placeholder="球队" v-model="teamId">-->
+              <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in teamList"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-col>-->
+          <el-col :span="3">
+            <el-button @click="query(this.seasonId)" icon="el-icon-search" type="primary">查询</el-button>
+          </el-col>
         </el-row>
         <br>
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
@@ -95,7 +100,7 @@
                        v-model="matchForm.competitionId">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in competitionList"></el-option>
             </el-select>
-            <el-select clearable filterable placeholder="请选择赛季" style="width:50%" v-model="matchForm.seasonId">
+            <el-select clearable @change="saveSeasonId" filterable placeholder="请选择赛季" style="width:50%" v-model="matchForm.seasonId">
               <el-option v-bind:key="item.id" v-bind:label="item.name" v-bind:value='item.id' v-for="item in seasonList"></el-option>
             </el-select>
           </el-form-item>
@@ -140,10 +145,11 @@
             return {
                 selectedRows: [],
                 teamList: [],
-                competitionList: [],
+                competitionList:[],
                 seasonList: [],
-                seasonId:'2018' ,
-                competitionId:'1',
+                seasonId:2,
+                competitionId:1,
+                teamId:'',
                 matchRule: null,
                 seasonSearch: null,
                 teamSearch: null,
@@ -162,6 +168,7 @@
                 pager: {current: 1, size: 8, total: 0, records: []}
             };
         },
+
         mounted() {
             this.query();
             this.queryCompetition();
@@ -261,13 +268,13 @@
             },
             query(val) {
                 if (!val){
-                    val =2
+                    val=2;
+                    this.querySeason(this.competitionId)
                 }
                 this.$http
                     .get("/match", {
                         params: {
-                            seasonId: val,
-                            teamSearch: this.teamSearch,
+                            seasonId: this.seasonId,
                             size: this.pager.size,
                             current: this.pager.current
                         }
@@ -300,11 +307,16 @@
             queryTeam() {
                 this.$http
                     .get("/team", {
-                        params: {size: 100, current: 1}
+                        params: {
+                            size: 100,
+                            current: 1}
                     })
                     .then(res => {
                         this.teamList = res.data.records;
                     });
+            },
+            saveSeasonId(val) {
+                this.seasonId = val;
             },
 
             // 分页组件点击事件
