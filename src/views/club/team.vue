@@ -55,11 +55,11 @@
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
             <router-link :to="{path: '/club/team/teamPlayer', query: {teamId: scope.row.id}}">
-              <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="添加人员"></el-button>
+              <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="添加球员"></el-button>
             </router-link>
-            <!--<router-link :to="{path: '/club/team/teamStaff', query: {teamId: scope.row.id}}">-->
-              <!--<el-button circle icon="el-icon-news" size="small" style="width: 32px" title="添加职员"></el-button>-->
-            <!--</router-link>-->
+            <router-link :to="{path: '/club/team/teamStaff', query: {teamId: scope.row.id}}">
+              <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="添加职员"></el-button>
+            </router-link>
             <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
                        title="删除"></el-button>
           </template>

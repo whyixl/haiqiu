@@ -110,7 +110,6 @@
         },
         created() {
             this.roundForm.seasonId = this.season.id = parseInt(this.$route.query.seId);
-            console.log(this.roundForm.seasonId,'seID')
             this.competitionId = this.$route.query.coId;
             this.start = this.$route.query.start;
         },
@@ -240,7 +239,6 @@
             },
             generateSeason() {
                 this.season.name = filters.seasonNameFmt(this.seasonId,this.start,this.competitionId,this.competitionList)
-                console.log(this.season.name,this.season.id,'generation')
             },
             // 分页组件点击事件
             pageChange(val) {

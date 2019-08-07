@@ -241,7 +241,6 @@
                 const all = this.allTeamList;
                 this.teamList.push({'id': aid, 'name': filters.idFormatter(aid, all)},
                     {'id': hid, 'name': filters.idFormatter(hid, all)});
-                console.log(this.teamList)
             },
             queryPersonByTeam(val) {
                 this.$http.get('/person/selectByTeam', {params: {teamId: val}})

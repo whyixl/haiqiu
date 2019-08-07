@@ -66,6 +66,11 @@ export const asyncRouter = [
                 component: BasicLayout,
                 children:[
                     {
+                        path: "/club/team/teamStaff",
+                        name: "teamStaff",
+                        component: () => import("@/views/club/teamStaff.vue")
+                    },
+                    {
                         path: "/club/team/teamPlayer",
                         name: "teamPlayer",
                         component: () => import("@/views/club/teamPlayer.vue")
@@ -175,7 +180,29 @@ export const asyncRouter = [
         ]
       }
     ]
-  }
+  },
+    {
+        path: "/auth",
+        component: BasicLayout,
+        children: [
+            {
+                path: "/auth/user",
+                name: "user",
+                component: () => import("@/views/auth/User.vue")
+            }
+        ]
+    },
+    {
+        path: "/auth",
+        component: BasicLayout,
+        children: [
+            {
+                path: "/auth/menus",
+                name: "menus",
+                component: () => import("@/views/auth/Menus.vue")
+            }
+        ]
+    }
 ];
 
 const router = new Router({ mode: "history", routes: constantRouter });
