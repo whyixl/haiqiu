@@ -173,6 +173,7 @@
             this.query();
             this.queryCompetition();
             this.queryTeam();
+
         },
         methods: {
             add() {

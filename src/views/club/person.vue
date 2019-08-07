@@ -82,31 +82,31 @@
               <el-form-item label="id" prop="id" style="display:none">
                 <el-input v-model="person.id"></el-input>
               </el-form-item>
-              <el-form-item label="姓名" prop="person.name">
+              <el-form-item label="姓名" prop="name">
                 <el-input placeholder="请输入姓名" v-model="person.name"></el-input>
               </el-form-item>
-              <el-form-item label="英文名" prop="person.surname">
+              <el-form-item label="英文名" prop="surname">
                 <el-input placeholder="请输入英文名" v-model="person.surname"></el-input>
               </el-form-item>
-              <el-form-item label="性别" prop="person.gender">
+              <el-form-item label="性别" prop="gender">
                 <el-select clearable filterable placeholder="请选择性别" style="width:100%" v-model="person.gender">
                   <el-option label="男" value="male"></el-option>
                   <el-option label="女" value="female"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="身高/cm" prop="person.height">
+              <el-form-item label="身高/cm" prop="height">
                 <el-input placeholder="请输入身高" v-model="person.height"></el-input>
               </el-form-item>
-              <el-form-item label="体重/kg" prop="person.weight">
+              <el-form-item label="体重/kg" prop="weight">
                 <el-input placeholder="请输入体重" v-model="person.weight"></el-input>
               </el-form-item>
-              <el-form-item label="出生日期" prop="person.birthday">
+              <el-form-item label="出生日期" prop="birthday">
                 <el-date-picker align="right"
                                 placeholder="选择日期"
                                 style="width: 100%;"
                                 type="date" v-model="person.birthday"></el-date-picker>
               </el-form-item>
-              <el-form-item label="国籍" prop="person.country">
+              <el-form-item label="国籍" prop="country">
                 <el-select filterable placeholder="请输入国籍" style="width:100%" v-model="person.countryId">
                   <el-option :label="item.name" :value="item.id"
                              v-for="item in countryList"></el-option>
@@ -117,20 +117,20 @@
 
           <el-tab-pane label="详细信息">
             <el-form :model="personDetail" label-width="80px" ref="personDetail">
-              <el-form-item label="出生国家" prop="personDetail.birth_country">
+              <el-form-item label="出生国家" prop="birth_country">
                 <el-select filterable placeholder="请输入出生国家" style="width:100%"
                            v-model="personDetail.birthCountryId">
                   <el-option :label="item.name" :value="item.id"
                              v-for="item in countryList"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="出生地" prop="personDetail.birth_place">
+              <el-form-item label="出生地" prop="birth_place">
                 <el-input placeholder="请输入出生地" v-model="personDetail.birthPlace"></el-input>
               </el-form-item>
-              <el-form-item label="第二国籍" prop="personDetail.nationality2">
+              <el-form-item label="第二国籍" prop="nationality2">
                 <el-input placeholder="请输入第二国籍" v-model="personDetail.nationality2"></el-input>
               </el-form-item>
-              <el-form-item label="惯用脚" prop="personDetail.preferred_side">
+              <el-form-item label="惯用脚" prop="preferred_side">
                 <el-select filterable placeholder="请选择惯用脚" style="width:100%"
                            v-model="personDetail.preferredSide">
                   <el-option label="--" value="null_foot"></el-option>
@@ -139,7 +139,7 @@
                   <el-option label="双脚" value="double_foot"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="站立脚" prop="personDetail.foot">
+              <el-form-item label="站立脚" prop="foot">
                 <el-select filterable placeholder="请选择站立脚" style="width:100%" v-model="personDetail.foot">
                   <el-option label="--" value="null_foot"></el-option>
                   <el-option label="左" value="left_foot"></el-option>
@@ -147,13 +147,13 @@
                   <el-option label="二者" value="double_foot"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="球鞋尺寸" prop="personDetail.shoesize">
+              <el-form-item label="球鞋尺寸" prop="shoesize">
                 <el-input placeholder="请输入球鞋尺寸" v-model="personDetail.shoesize"></el-input>
               </el-form-item>
-              <el-form-item label="球衣尺寸" prop="personDetail.jerseysize">
+              <el-form-item label="球衣尺寸" prop="jerseysize">
                 <el-input placeholder="请输入球衣号" v-model="personDetail.jerseysize"></el-input>
               </el-form-item>
-              <el-form-item label="短裤尺寸" prop="personDetail.shortssize">
+              <el-form-item label="短裤尺寸" prop="shortssize">
                 <el-input placeholder="请输入短裤号" v-model="personDetail.shortssize"></el-input>
               </el-form-item>
             </el-form>

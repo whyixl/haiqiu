@@ -67,13 +67,13 @@
             <el-input placeholder="请输入分钟" v-model="match_eventForm.minute"></el-input>
           </el-form-item>
           <el-form-item label="事件及类型" prop="action">
-            <el-select clearable filterable @change="getPosition(action)"
-                       v-model="match_eventForm.action" placeholder="请选择事件" style="width:50%;">
+            <el-select clearable filterable placeholder="请选择事件" @change="getPosition(match_eventForm.action)"
+                       v-model="match_eventForm.action"  style="width:50%;">
               <el-option :label="action.text " v-for="action in actions" :value="action.id">
                 {{action.text}}
               </el-option>
             </el-select>
-            <el-select clearable filterable name="" id="" v-model="match_eventForm.kind" placeholder="请选择类型"
+            <el-select clearable filterable placeholder="请选择类型" name="" id="" v-model="match_eventForm.kind"
                        style="width:50%;">
               <el-option :label="kind.text " v-for="kind in kinds" :value="kind.id">{{kind.text}}
               </el-option>
@@ -118,7 +118,7 @@
                 teamList: [],
                 actions: [],
                 kinds: [],
-                areas: null,
+                areas: [],
                 dialogVisible: false,
                 pager: {current: 1, size: 10, total: 0, records: []}
             };
@@ -167,8 +167,8 @@
                 });
                 this.kinds = kinds;
             },
-            submit(form) {
-                this.$refs[form].validate((valid) => {
+            submit(match_eventForm) {
+                this.$refs[match_eventForm].validate((valid) => {
                     if (valid) {
                         if (!this.match_eventForm.id) {
                             // 新增
