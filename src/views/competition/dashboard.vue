@@ -25,7 +25,7 @@
             :scope.row.ageId==13 ? 'U11' :scope.row.ageId==14 ? 'U10' :scope.row.ageId==15 ? 'U9' :scope.row.ageId==16 ? 'U8' :'U7'}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="类型" prop="type" width="100">
+        <el-table-column align="center" label="类型" prop="type" width="80">
           <template slot-scope="scope">
             {{ scope.row.type == "club" ? '俱乐部': '国际' }}
           </template>
@@ -35,7 +35,7 @@
             {{ scope.row.starttime | moment('YYYY-MM-DD') }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="国家/地区" prop="countryId" width="140">
+        <el-table-column align="center" label="国家/地区" prop="countryId" width="120">
           <template slot-scope="scope">
             {{scope.row.countryId | idFormatter(countryList)}}
           </template>

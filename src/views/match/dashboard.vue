@@ -200,7 +200,6 @@
                                     if (res.status == 200 && res.data.status == "SUCCESS") {
                                         this.query();
                                         this.dialogVisible = false;
-
                                     } else if (res.status != 200 || res.data.status == "FAILED") {
                                         alert(res.data.data);
                                     }
