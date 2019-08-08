@@ -158,12 +158,7 @@
                         params: {
                             id: id
                         }
-                    }).then(res => {
-                        if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.records.splice(rowNum, 1);
-                            this.pager.total--;
-                        }
-                    })
+                    }).then(this.query);
                 });
 
             },
@@ -173,9 +168,8 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    let temp = 0;
+                    let temp = 1;
                     for (let i = 0; i < this.selectedRows.length; i++) {
-                        temp++;
                         this.$http.delete("/club", {
                             params: {
                                 id: this.selectedRows[i]
@@ -184,7 +178,7 @@
                             if (res.status != 200) {
                                 alert("批量删除遇到问题，请重试");
                             }
-                            if (temp == this.selectedRows.length) {
+                            if (temp++ == this.selectedRows.length) {
                                 this.query();
                             }
                         });

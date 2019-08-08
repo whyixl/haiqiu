@@ -173,12 +173,7 @@
                         params: {
                             id: id
                         }
-                    }).then(res => {
-                        if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.total--;
-                            this.pager.records.splice(rowNum, 1)
-                        }
-                    })
+                    }).then(this.query)
                 });
             },
             deleteBatch() {

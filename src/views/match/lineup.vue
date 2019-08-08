@@ -98,6 +98,7 @@
         created() {
             this.homeId = this.$route.query.homeId;
             this.awayId = this.$route.query.awayId;
+            this.lineupForm.matchId = this.$route.query.maId;
         },
         data() {
             return {
@@ -180,12 +181,7 @@
                         params: {
                             id: id
                         }
-                    }).then(res => {
-                        if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.records.splice(rowNum, 1);
-                            this.pager.total--;
-                        }
-                    })
+                    }).then(this.query)
                 });
             },
             deleteBatch() {
@@ -194,9 +190,8 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    let temp = 0;
+                    let temp = 1;
                     for (let i = 0; i < this.selectedRows.length; i++) {
-                        temp++;
                         this.$http.delete("/matchLineUp", {
                             params: {
                                 id: this.selectedRows[i]
@@ -205,7 +200,7 @@
                             if (res.status != 200) {
                                 alert("批量删除遇到问题，请重试");
                             }
-                            if (temp == this.selectedRows.length) {
+                            if (temp++ == this.selectedRows.length) {
                                 this.query();
                             }
                         });
@@ -229,7 +224,7 @@
             },
             queryTeam() {
                 this.$http.get('/team', {
-                    params: {size: 100, current: 1},
+                    params: {size: 1000, current: 1},
                 }).then(res => {
                     this.allTeamList = res.data.records;
                     this.getTeamList();

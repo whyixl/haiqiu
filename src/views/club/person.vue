@@ -240,7 +240,7 @@
                         } else {
                             // 修改
                             this.$http.put('/person',
-                                {person: this.person,personDetail: this.personDetail}
+                                {person: this.person, personDetail: this.personDetail}
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
@@ -261,6 +261,7 @@
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "添加人员";
                 this.dialogVisible = true;
                 this.person = {};
+                this.personDetail = {};
             },
             remove(id, rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -272,12 +273,7 @@
                         params: {
                             id: id
                         }
-                    }).then(res => {
-                        if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.total--;
-                            this.pager.records.splice(rowNum, 1)
-                        }
-                    })
+                    }).then(this.query);
                 });
             },
             deleteBatch() {
@@ -286,9 +282,8 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    let temp = 0;
+                    let temp = 1;
                     for (let i = 0; i < this.selectedRows.length; i++) {
-                        temp++;
                         this.$http.delete("/person", {
                             params: {
                                 id: this.selectedRows[i]
@@ -297,7 +292,7 @@
                             if (res.status != 200) {
                                 alert("批量删除遇到问题，请重试");
                             }
-                            if (temp == this.selectedRows.length) {
+                            if (temp++ == this.selectedRows.length) {
                                 this.query();
                             }
                         });
@@ -305,19 +300,24 @@
                 });
             },
             edit(person) {
+                this.$http.get('/personDetail',{params:{
+                    id: person.id
+                    }}).then(res => {this.personDetail = res.data});
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑人员";
                 this.dialogVisible = true;
                 this.person = person
             },
             query() {
                 this.$http.get('/person', {
-                    params: {
-                        size: this.pager.size,
-                        current: this.pager.current,
+                    data: {
                         surnameSearch: this.surnameSearch,
                         nameSearch: this.nameSearch,
                         teamSearch: this.teamSearch,
                         dateRange: this.dateRange
+                    },
+                    params: {
+                        size: this.pager.size,
+                        current: this.pager.current
                     },
                 }).then(res => {
                     this.pager = res.data

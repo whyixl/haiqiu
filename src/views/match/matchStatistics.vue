@@ -3,25 +3,45 @@
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
         <el-button size="medium" type="primary" icon="el-icon-plus" @click="add">新增</el-button>
-        <el-button @click="deleteBatch" size="medium" icon="el-icon-delete" :disabled="selectedRows.length==0">删除</el-button>
+        <el-button @click="deleteBatch" size="medium" icon="el-icon-delete" :disabled="selectedRows.length==0">删除
+        </el-button>
       </div>
 
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="match_eventId" type="selection" width="55"></el-table-column>
-        <el-table-column label="球队" align="center" prop="teamId" width="180"></el-table-column>
-        <el-table-column label="球员" align="center" prop="personId" width="160"></el-table-column>
-        <el-table-column label="球衣号" align="center" prop="shirtnumber" width="110"></el-table-column>
-        <el-table-column label="分钟" align="center" prop="minute" width="110"></el-table-column>
-        <el-table-column label="事件" align="center" prop="action" width="150"></el-table-column>
-        <el-table-column label="类型" align="center" prop="kind" width="150"></el-table-column>
-        <el-table-column label="相关球员" align="center" prop="additional_personId" width="160"></el-table-column>
-        <el-table-column align="center" prop="created" label="创建时间" width="150">
+        <el-table-column label="球队" align="center" prop="teamId">
           <template slot-scope="scope">
-            {{ scope.row.created | moment('YYYY-MM-DD hh:mm') }}
+            {{ scope.row.teamId | idFormatter(allTeamList) }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="120">
+        <el-table-column label="球员" align="center" prop="personId">
+          <template slot-scope="scope">
+            {{ scope.row.personId | idFormatter(allPersonList) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="分钟" align="center" prop="minute"></el-table-column>
+        <el-table-column label="事件" align="center" prop="action">
+          <template slot-scope="scope">
+            {{ scope.row.action | idFormatter(areas) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" align="center" prop="kind">
+          <template slot-scope="scope">
+            {{ scope.row.kind | idFormatter(areas) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="相关球员" align="center" prop="additionalPersonId">
+          <template slot-scope="scope">
+            {{ scope.row.additionalPersonId | idFormatter(allPersonList) }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="created" label="创建时间">
+          <template slot-scope="scope">
+            {{ scope.row.created | moment('YYYY-MM-DD') }}
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" align="center" label="操作" width="120">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
             <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
@@ -48,8 +68,10 @@
             <el-input v-model="match_eventForm.id"></el-input>
           </el-form-item>
           <el-form-item label="球队" prop="teamId">
-            <el-select clearable @change="queryPersonByTeam" filterable placeholder="请选择球队" v-model="match_eventForm.teamId" style="width:100%">
-              <el-option :label="item.name" :value="item.id" v-for="item in teamList"></el-option>
+            <el-select clearable @change="queryPersonByTeam" filterable placeholder="请选择球队"
+                       v-model="match_eventForm.teamId" style="width:100%">
+              <el-option v-bind:key="item.id" v-bind:label="item.name" v-bind:value="item.id"
+                         v-for="item in teamList"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="球员" prop="personId">
@@ -59,7 +81,7 @@
           </el-form-item>
           <el-form-item label="相关球员" prop="additional_personId">
             <el-select clearable filterable placeholder="进球加助攻球员/替换加替下球员"
-                       v-model="match_eventForm.additional_personId" style="width:100%">
+                       v-model="match_eventForm.additionalPersonId" style="width:100%">
               <el-option :label="item.name" :value="item.id" v-for="item in personList"></el-option>
             </el-select>
           </el-form-item>
@@ -67,21 +89,18 @@
             <el-input placeholder="请输入分钟" v-model="match_eventForm.minute"></el-input>
           </el-form-item>
           <el-form-item label="事件及类型" prop="action">
-            <el-select clearable filterable placeholder="请选择事件" @change="getPosition(match_eventForm.action)"
-                       v-model="match_eventForm.action"  style="width:50%;">
-              <el-option :label="action.text " v-for="action in actions" :value="action.id">
-                {{action.text}}
-              </el-option>
+            <el-select clearable filterable @change="getPosition"
+                       v-model="match_eventForm.action" placeholder="请选择事件" style="width:50%;">
+              <el-option :label="item.name " :value="item.id" v-for="item in actions"></el-option>
             </el-select>
             <el-select clearable filterable placeholder="请选择类型" name="" id="" v-model="match_eventForm.kind"
                        style="width:50%;">
-              <el-option :label="kind.text " v-for="kind in kinds" :value="kind.id">{{kind.text}}
+              <el-option :label="kind.name " v-for="kind in kinds" :value="kind.id">{{kind.name}}
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="创建时间" prop="created">
             <el-date-picker v-model="match_eventForm.created" align="right" type="date" placeholder="选择日期"
-                            :picker-options="$store.state.datePickerOptions"
                             style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-form>
@@ -94,10 +113,12 @@
   </div>
 </template>
 
+
 <script>
     import filters from "../../util/filters";
+
     export default {
-        name: "season",
+        name: "matchEvent",
         data() {
             return {
                 selectedRows: [],
@@ -109,12 +130,14 @@
                     teamId: "",
                     lineupname: "",
                     personId: "",
-                    additional_personId: "",
+                    additionalPersonId: "",
                     action: "",
                     kind: "",
                     minute: ""
                 },
-                personList: [{'id':'','name':''}],
+                personList: [{'id': '', 'name': ''}],
+                allPersonList: [],
+                allTeamList: [],
                 teamList: [],
                 actions: [],
                 kinds: [],
@@ -125,40 +148,39 @@
         },
         created: function () {
             this.areas = [
-                {text: "进球", id: 1, pid: 0},
-                {text: "黄牌", id: 2, pid: 0},
-                {text: "红牌", id: 3, pid: 0},
-                {text: "第二张黄牌", id: 4, pid: 0},
-                {text: "替补", id: 5, pid: 0},
-                {text: "点球决胜", id: 6, pid: 0},
-                {text: "左脚", id: 11, pid: 1},
-                {text: "右脚", id: 12, pid: 1},
-                {text: "头球", id: 13, pid: 1},
-                {text: "任意球", id: 14, pid: 1},
-                {text: "直接任意球", id: 15, pid: 1},
-                {text: "点球", id: 16, pid: 1},
-                {text: "足跟踢球", id: 17, pid: 1},
-                {text: "倒钩球", id: 18, pid: 1},
-                {text: "乌龙球", id: 19, pid: 1},
-                {text: "其他", id: 120, pid: 1},
-                {text: null, id: 21, pid: 2},
-                {text: null, id: 31, pid: 3},
-                {text: null, id: 41, pid: 4},
-                {text: null, id: 51, pid: 5},
-                {text: "命中", id: 61, pid: 6}
+                {name: "进球", id: 1, pid: 0},
+                {name: "黄牌", id: 2, pid: 0},
+                {name: "红牌", id: 3, pid: 0},
+                {name: "第二张黄牌", id: 4, pid: 0},
+                {name: "替补", id: 5, pid: 0},
+                {name: "点球决胜", id: 6, pid: 0},
+                {name: "左脚", id: 11, pid: 1},
+                {name: "右脚", id: 12, pid: 1},
+                {name: "头球", id: 13, pid: 1},
+                {name: "任意球", id: 14, pid: 1},
+                {name: "直接任意球", id: 15, pid: 1},
+                {name: "点球", id: 16, pid: 1},
+                {name: "足跟踢球", id: 17, pid: 1},
+                {name: "倒钩球", id: 18, pid: 1},
+                {name: "乌龙球", id: 19, pid: 1},
+                {name: "其他", id: 120, pid: 1},
+                {name: null, id: 21, pid: 2},
+                {name: null, id: 31, pid: 3},
+                {name: null, id: 41, pid: 4},
+                {name: null, id: 51, pid: 5},
+                {name: "命中", id: 61, pid: 6}
             ];
-
             var actions = this.areas.filter(function (area) {
                 return area.pid == 0;
             });
             this.actions = actions;
             this.homeId = this.$route.query.homeId;
             this.awayId = this.$route.query.awayId;
-
+            this.match_eventForm.matchId = this.$route.query.maId;
         },
         mounted() {
-            this.query();
             this.queryTeam();
+            this.queryAllPerson();
         },
         methods: {
             getPosition: function (id) {
@@ -167,8 +189,8 @@
                 });
                 this.kinds = kinds;
             },
-            submit(match_eventForm) {
-                this.$refs[match_eventForm].validate((valid) => {
+            submit(form) {
+                this.$refs[form].validate((valid) => {
                     if (valid) {
                         if (!this.match_eventForm.id) {
                             // 新增
@@ -206,7 +228,7 @@
             add() {
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "添加事件";
                 this.dialogVisible = true;
-                this.match_eventForm = {};
+                this.match_eventForm = {matchId: this.$route.query.maId};
             },
             remove(id, rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -215,17 +237,11 @@
                     type: "warning"
                 }).then(() => {
                     this.$http
-                        .delete("/match", {
+                        .delete("/matchEvent", {
                             params: {
                                 id: id
                             }
-                        })
-                        .then(res => {
-                            if (res.status === 200 && res.data.status === "SUCCESS") {
-                                this.pager.records.splice(rowNum, 1);
-                                this.pager.total--;
-                            }
-                        });
+                        }).then(this.query);
                 });
             },
             deleteBatch() {
@@ -234,9 +250,8 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    let temp = 0;
+                    let temp = 1;
                     for (let i = 0; i < this.selectedRows.length; i++) {
-                        temp++;
                         this.$http.delete("/matchEvent", {
                             params: {
                                 id: this.selectedRows[i]
@@ -245,7 +260,7 @@
                             if (res.status != 200) {
                                 alert("批量删除遇到问题，请重试");
                             }
-                            if (temp == this.selectedRows.length) {
+                            if (temp++ == this.selectedRows.length) {
                                 this.query();
                             }
                         });
@@ -256,14 +271,16 @@
                 document.getElementsByClassName("el-dialog__title")[0].innerText =
                     "修改事件";
                 this.dialogVisible = true;
-                this.matchForm = rowEntity;
+                this.queryPersonByTeam(rowEntity.matchId);
+                this.match_eventForm = rowEntity;
             },
             query() {
                 this.$http
                     .get("/matchEvent", {
                         params: {
+                            matchId: this.match_eventForm.matchId,
                             size: this.pager.size,
-                            current: this.pager.size
+                            current: this.pager.current
                         }
                     })
                     .then(res => {
@@ -272,11 +289,12 @@
             },
             queryTeam() {
                 this.$http.get('/team', {
-                    params: {size: 100, current: 1},
+                    params: {size: 10000, current: 1},
                 }).then(res => {
                     this.allTeamList = res.data.records;
                     this.getTeamList();
                 });
+                this.query();
             },
             getTeamList() {
                 const aid = this.awayId;
@@ -284,6 +302,29 @@
                 const all = this.allTeamList;
                 this.teamList.push({'id': aid, 'name': filters.idFormatter(aid, all)},
                     {'id': hid, 'name': filters.idFormatter(hid, all)});
+            },
+            queryAllPerson() {
+                this.$http.get('/person', {params: {size: 10000,current:1},
+                }).then(res => {
+                    this.allPersonList = res.data.records;
+                })
+
+                /*then(res => {
+                    if (this.allPersonList.length == 0) {
+                        this.allPersonList = res.data
+                    } else {
+                        this.allPersonList.concat(res.data)
+                    }
+                });
+                this.$http.get('/person/selectByTeam', {
+                    params: {teamId: this.homeId},
+                }).then(res => {
+                    if (this.allPersonList.length == 0) {
+                        this.allPersonList = res.data
+                    } else {
+                        this.allPersonList.concat(res.data)
+                    }
+                });*/
             },
             queryPersonByTeam(val) {
                 this.$http.get('/person/selectByTeam', {params: {teamId: val}})

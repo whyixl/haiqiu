@@ -3,32 +3,25 @@
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
         <el-row :gutter="10">
-          <el-col :span="4">
+
+          <el-col :span="5">
             <el-select clearable @change="querySeason" filterable placeholder="赛事" v-model="competitionId">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in competitionList">
               </el-option>
             </el-select>
           </el-col>
+
           <el-col :span="4">
-            <el-select clearable @change="query" filterable placeholder="赛季"  v-model="seasonId">
+            <el-select clearable @change="query" filterable placeholder="赛季" v-model="seasonId">
               <el-option :key="item.id" :label="item.name" :value='item.id' v-for="item in seasonList">
               </el-option>
             </el-select>
           </el-col>
-          <!--<el-col :span="4">-->
-            <!--<el-select clearable @change="queryTeam" filterable placeholder="赛季"  v-model="seasonId">-->
-              <!--<el-option :key="item.id" :label="item.name" :value='item.id' v-for="item in seasonList">-->
-              <!--</el-option>-->
-            <!--</el-select>-->
-          <!--</el-col>-->
-          <!--<el-col :span="4">-->
-            <!--<el-select clearable @change="query" filterable placeholder="球队" v-model="teamId">-->
-              <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in teamList"></el-option>-->
-            <!--</el-select>-->
-          <!--</el-col>-->
+
           <el-col :span="3">
             <el-button @click="query(this.seasonId)" icon="el-icon-search" type="primary">查询</el-button>
           </el-col>
+
         </el-row>
         <br>
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
@@ -64,11 +57,11 @@
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
             <router-link
-                :to="{path: '/match/dashboard/lineup',query: {homeId: scope.row.homeId, awayId: scope.row.awayId}}">
+                :to="{path: '/match/dashboard/lineup',query: {homeId: scope.row.homeId, maId: scope.row.id, awayId: scope.row.awayId}}">
               <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="阵容"></el-button>
             </router-link>
             <router-link
-                :to="{path: '/match/dashboard/matchStatistics',query: {homeId: scope.row.homeId, awayId: scope.row.awayId}}">
+                :to="{path: '/match/dashboard/matchStatistics',query: {homeId: scope.row.homeId, maId: scope.row.id, awayId: scope.row.awayId}}">
               <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="统计"></el-button>
             </router-link>
             <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete" size="small"
@@ -95,13 +88,15 @@
           <el-form-item label="id" prop="id" style="display:none">
             <el-input v-model="matchForm.id"></el-input>
           </el-form-item>
-          <el-form-item  label="赛季名称" prop="seasonId">
+          <el-form-item label="赛季名称" prop="seasonId">
             <el-select clearable @change="querySeason" filterable placeholder="请选择赛事" style="width:50%"
                        v-model="matchForm.competitionId">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in competitionList"></el-option>
             </el-select>
-            <el-select clearable @change="saveSeasonId" filterable placeholder="请选择赛季" style="width:50%" v-model="matchForm.seasonId">
-              <el-option v-bind:key="item.id" v-bind:label="item.name" v-bind:value='item.id' v-for="item in seasonList"></el-option>
+            <el-select clearable @change="saveSeasonId" filterable placeholder="请选择赛季" style="width:50%"
+                       v-model="matchForm.seasonId">
+              <el-option v-bind:key="item.id" v-bind:label="item.name" v-bind:value='item.id'
+                         v-for="item in seasonList"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="比赛时间" prop="datetime">
@@ -111,7 +106,7 @@
                             type="time" v-model="matchForm.matchTime" value-format="HH:mm"
                             format="HH:mm"></el-time-picker>
           </el-form-item>
-          <el-form-item label="轮次ID" prop="datetime">
+          <el-form-item label="轮次" prop="datetime" placeholder="轮次">
             <el-input type="text" v-model="matchForm.roundId"></el-input>
           </el-form-item>
           <el-form-item label="主队" prop="homeId">
@@ -124,8 +119,10 @@
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in teamList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="结果" prop="matchResult">
-            <el-input placeholder="请输入比赛结果" v-model="matchForm.matchResult"></el-input>
+          <el-form-item label="比分" prop="matchResult">
+            <el-input placeholder="主队得分" v-model="matchResult[0].matchResult" style="width: 48.7%"></el-input>
+            :
+            <el-input placeholder="客队得分" v-model="matchResult[1].matchResult" style="width: 48.7%"></el-input>
           </el-form-item>
 
         </el-form>
@@ -145,35 +142,38 @@
             return {
                 selectedRows: [],
                 teamList: [],
-                competitionList:[],
+                competitionList: [],
                 seasonList: [],
-                seasonId:2,
-                competitionId:1,
-                teamId:'',
+                seasonId: 56,
+                competitionId: 2,
+                teamId: '',
                 matchRule: null,
                 seasonSearch: null,
                 teamSearch: null,
                 matchForm: {
                     id: "",
                     seasonId: "",
+                    competitionId: "",
                     roundId: "",
                     matchDate: "",
                     matchTime: "",
                     homeId: "",
                     awayId: "",
-                    matchResult: "",
                 },
+                matchResult: [{matchResult: null, matchResultAt: '0', place: 'home'}, {
+                    matchResult: null,
+                    matchResultAt: '0',
+                    place: 'away'
+                }],
                 datetime: "",
                 dialogVisible: false,
                 pager: {current: 1, size: 8, total: 0, records: []}
             };
         },
-
         mounted() {
             this.query();
             this.queryCompetition();
             this.queryTeam();
-
         },
         methods: {
             add() {
@@ -181,26 +181,36 @@
                     "添加比赛";
                 this.dialogVisible = true;
                 this.matchForm = {};
+                this.matchResult = [{matchResult: null, matchResultAt: '0', place: 'home'}, {
+                    matchResult: null,
+                    matchResultAt: '0',
+                    place: 'away'
+                }];
             },
             submit(form) {
                 this.$refs[form].validate(valid => {
                     if (valid) {
                         if (!this.matchForm.id) {
                             this.$http
-                                .post("/match", this.matchForm)
+                                .post("/match", {
+                                    match: this.matchForm,
+                                    matchResults: this.matchResult
+                                })
                                 .then(res => {
                                     if (res.status == 200 && res.data.status == "SUCCESS") {
                                         this.query();
+                                        this.dialogVisible = false;
+
                                     } else if (res.status != 200 || res.data.status == "FAILED") {
                                         alert(res.data.data);
                                     }
-                                })
-                                .finally(() => {
-                                    this.dialogVisible = false;
                                 });
                         } else {
                             this.$http
-                                .put("/match", this.matchForm)
+                                .put("/match", {
+                                    match: this.matchForm,
+                                    matchResult: this.matchResult
+                                })
                                 .then(res => {
                                     if (res.data.status == "SUCCESS") {
                                         this.query();
@@ -229,13 +239,7 @@
                             params: {
                                 id: id
                             }
-                        })
-                        .then(res => {
-                            if (res.status === 200 && res.data.status === "SUCCESS") {
-                                this.pager.records.splice(rowNum, 1);
-                                this.pager.total--;
-                            }
-                        });
+                        }).then(this.query);
                 });
             },
             deleteBatch() {
@@ -244,9 +248,8 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    let temp = 0;
+                    let j = 1;
                     for (let i = 0; i < this.selectedRows.length; i++) {
-                        temp++;
                         this.$http.delete("/match", {
                             params: {
                                 id: this.selectedRows[i]
@@ -255,7 +258,8 @@
                             if (res.status != 200) {
                                 alert("批量删除遇到问题，请重试");
                             }
-                            if (temp == this.selectedRows.length) {
+                            if (j++ == this.selectedRows.length) {
+                                console.log(j++, this.selectedRows.length);
                                 this.query();
                             }
                         });
@@ -266,10 +270,11 @@
                 this.dialogVisible = true;
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑比赛";
                 this.matchForm = rowEntity;
+                this.matchForm.competitionId = this.competitionId;
+                this.matchResult = [rowEntity.matchResults[0],rowEntity.matchResults[1]]
             },
             query(val) {
-                if (!val){
-                    val=2;
+                if (!val) {
                     this.querySeason(this.competitionId)
                 }
                 this.$http
@@ -279,10 +284,27 @@
                             size: this.pager.size,
                             current: this.pager.current
                         }
-                    })
-                    .then(res => {
-                        this.pager = res.data;
-                    });
+                    }).then(res => {
+                    this.getResultStr(res.data)
+                });
+            },
+            getResultStr(val) {
+                var hr = '';
+                var ar = '';
+                for (const record of val.records) {
+                    console.log(record.matchResults,'123');
+                    for (const item of record.matchResults) {
+                        if (item.place == 'home') {
+                            hr = item.matchResult;
+                        }
+                        if (item.place == 'away') {
+                            ar = item.matchResult;
+                        }
+                    }
+                    record.matchResult = hr + ':' + ar;
+                    console.log(record.matchResult)
+                }
+                this.pager = val
             },
             queryCompetition() {
                 this.$http
@@ -295,22 +317,22 @@
             },
             querySeason(coId) {
                 this.$http.get("/season", {
-                        params: {
-                            competitionId: coId,
-                            size: this.pager.size,
-                            current: this.pager.current
-                        }
-                    })
-                    .then(res => {
-                        this.seasonList = res.data.records;
-                    });
+                    params: {
+                        competitionId: coId,
+                        size: this.pager.size,
+                        current: this.pager.current
+                    }
+                }).then(res => {
+                    this.seasonList = res.data.records;
+                });
             },
             queryTeam() {
                 this.$http
                     .get("/team", {
                         params: {
                             size: 100,
-                            current: 1}
+                            current: 1
+                        }
                     })
                     .then(res => {
                         this.teamList = res.data.records;
@@ -319,7 +341,6 @@
             saveSeasonId(val) {
                 this.seasonId = val;
             },
-
             // 分页组件点击事件
             pageChange(val) {
                 this.pager.current = val;
@@ -329,7 +350,6 @@
                 this.pager.size = val;
                 this.query();
             },
-
             onSelectionChange(rows) {
                 this.selectedRows = rows.map(item => item.id);
             }

@@ -208,11 +208,7 @@
                         params: {
                             id: id
                         }
-                    }).then(res => {
-                        if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.records.splice(rowNUm, 1)
-                        }
-                    })
+                    }).then(this.query)
                 });
             },
             // 分页组件点击事件

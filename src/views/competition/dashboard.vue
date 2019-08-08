@@ -40,7 +40,11 @@
             {{scope.row.countryId | idFormatter(countryList)}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="联盟" prop="federationId" width="120"></el-table-column>
+        <el-table-column align="center" label="联盟" prop="federationId" width="120">
+          <template slot-scope="scope">
+            {{scope.row.federationId | idFormatter(federationList)}}
+          </template>
+        </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
@@ -170,6 +174,7 @@
                     federationId: null,
                     starttime: null,
                 },
+                federationList: [],
                 countryList: [],
                 genderOptions: [{label: "男性", value: "male"}, {label: "女性", value: "female"}],
                 dialogVisible: false,
@@ -187,6 +192,7 @@
         mounted() {
             this.query();
             this.queryCountry();
+            this.queryFederationList();
         },
         methods: {
             // 基本增删改查
@@ -248,12 +254,7 @@
                         params: {
                             id: id
                         }
-                    }).then(res => {
-                        if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.records.splice(rowNum, 1);
-                            this.pager.total--;
-                        }
-                    })
+                    }).then(this.query);
                 });
             },
             deleteBatch() {
@@ -262,9 +263,8 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    let temp = 0;
+                    let temp = 1;
                     for (let i = 0; i < this.selectedRows.length; i++) {
-                        temp++;
                         this.$http.delete("/competition", {
                             params: {
                                 id: this.selectedRows[i]
@@ -273,7 +273,7 @@
                             if (res.status != 200) {
                                 alert("批量删除遇到问题，请重试");
                             }
-                            if (temp == this.selectedRows.length) {
+                            if (temp++ == this.selectedRows.length) {
                                 this.query();
                             }
                         });
@@ -297,6 +297,11 @@
             queryCountry() {
                 this.$http.get("/country",).then(res => {
                     this.countryList = res.data;
+                })
+            },
+            queryFederationList() {
+                this.$http.get('/federation').then(res => {
+                    this.federationList = res.data;
                 })
             },
             // 分页组件点击事件

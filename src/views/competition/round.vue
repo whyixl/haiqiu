@@ -48,13 +48,12 @@
     <!-- 编辑页面 -->
     <el-dialog :visible.sync="dialogVisible" title="添加球队">
       <el-form :label-position="'right'" label-width="80px">
-
         <el-form :model="roundForm" :rules="roundRule" label-width="160px" ref="roundForm">
           <el-form-item label="id" prop="id" style="display:none">
             <el-input v-model="roundForm.id"></el-input>
           </el-form-item>
           <el-form-item label="赛季名称" prop="seasonId">
-            <el-select clearable filterable placeholder="请选择相关赛季" v-model="roundForm.seasonId" style="width:100%">
+            <el-select disabled placeholder="请选择相关赛季" v-model="roundForm.seasonId" style="width:100%">
               <el-option :label="season.name" :value="season.id"></el-option>
             </el-select>
           </el-form-item>
@@ -161,7 +160,7 @@
                 this.dateRange = '';
                 this.roundForm = {
                     id: '',
-                    seasonId: 2,
+                    seasonId: this.season.id,
                     name: '',
                     roundOrder: '',
                     start: '',
@@ -178,12 +177,7 @@
                         params: {
                             id: id
                         }
-                    }).then(res => {
-                        if (res.status === 200 && res.data.status === 'SUCCESS') {
-                            this.pager.records.splice(rowNum, 1);
-                            this.pager.total--;
-                        }
-                    })
+                    }).then(this.query);
                 });
             },
             deleteBatch() {
@@ -192,9 +186,8 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    let temp = 0;
+                    let temp = 1;
                     for (let i = 0; i < this.selectedRows.length; i++) {
-                        temp++;
                         this.$http.delete("/round", {
                             params: {
                                 id: this.selectedRows[i]
@@ -203,7 +196,7 @@
                             if (res.status != 200) {
                                 alert("批量删除遇到问题，请重试");
                             }
-                            if (temp == this.selectedRows.length) {
+                            if (temp++ == this.selectedRows.length) {
                                 console.log('query执行')
                                 this.query();
                             }

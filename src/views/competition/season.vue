@@ -174,8 +174,7 @@
                         params: {
                             id: id
                         }
-                    });
-                    this.query();
+                    }).then(this.query);
                 });
             },
             deleteBatch() {
@@ -184,9 +183,8 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    let temp = 0;
+                    let temp = 1;
                     for (let i = 0; i < this.selectedRows.length; i++) {
-                        temp++;
                         this.$http.delete("/season", {
                             params: {
                                 id: this.selectedRows[i]
@@ -195,7 +193,7 @@
                             if (res.status != 200) {
                                 alert("批量删除遇到问题，请重试");
                             }
-                            if (temp == this.selectedRows.length) {
+                            if (temp++ == this.selectedRows.length) {
                                 this.query();
                             }
                         });

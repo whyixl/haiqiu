@@ -9,15 +9,21 @@ Vue.use(Vuex);
  * @returns {string}
  */
 let idFormatter = (id,entityList) => {
+    if (!id) {
+        return '--'
+    }
+    if (!entityList) {
+        return '--'
+    }
     id = parseInt(id);
+    //console.log(id,entityList,'util');
     const tempMap = new Map();
-    // console.log(entityList);
     for (const entity of entityList) {
-        if (entity.name.toLowerCase() == "china") {
+        if (entity.name == "china" || entity.name == "China") {
             tempMap.set(entity.id, "中国")
-        } else if (entity.name.toLowerCase() == "hongkong") {
+        } else if (entity.name == "hongkong") {
             tempMap.set(entity.id, "中国(香港)")
-        } else if (entity.name.toLowerCase() == "chinesisch taipeh") {
+        } else if (entity.name == "chinesisch taipeh") {
             tempMap.set(entity.id, "中国(台湾)")
         } else {
             tempMap.set(entity.id, entity.name)
