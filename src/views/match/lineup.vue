@@ -9,18 +9,34 @@
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="lineupId" type="selection" width="55"></el-table-column>
-        <el-table-column align="center" label="比赛名称" prop="matchId" width="180"></el-table-column>
-        <el-table-column align="center" label="球队" prop="teamId" width="150"></el-table-column>
-        <el-table-column align="center" label="阵型名" prop="lineupname" width="120"></el-table-column>
-        <el-table-column align="center" label="球员" prop="playerId" width="100"></el-table-column>
-        <el-table-column align="center" label="球衣号" prop="playerNum" width="100"></el-table-column>
-        <el-table-column align="center" label="球员类型" prop="playerType" width="90"></el-table-column>
+        <el-table-column align="center" label="比赛名称" width="180">
+          <template slot-scope="scope">
+            {{matchName}}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="球队" prop="teamId">
+          <template slot-scope="scope">
+            {{ scope.row.teamId | idFormatter(teamList) }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="阵型名" prop="lineupName"></el-table-column>
+        <el-table-column align="center" label="球员" prop="playerId">
+          <template slot-scope="scope">
+            {{ scope.row.playerId | idFormatter(allPersonList) }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="球衣号" prop="playerNum"></el-table-column>
+        <el-table-column align="center" label="球员类型" prop="playerType">
+          <template slot-scope="scope">
+            {{scope.row.playerType ? (scope.row.gender == 1 ? "首发" : "替补") : scope.row.gender}}
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="球员位置" prop="position" width="90"></el-table-column>
-        <el-table-column align="center" label="场上位置X" prop="xPosition" width="100"></el-table-column>
-        <el-table-column align="center" label="场上位置Y" prop="yPosition" width="100"></el-table-column>
-        <el-table-column align="center" label="操作人员" prop="person" width="100"></el-table-column>
-        <el-table-column align="center" label="数据来源" prop="dataSource" width="100"></el-table-column>
-        <el-table-column align="center" label="操作" width="120">
+        <el-table-column align="center" label="场上位置X" prop="xposition" width="100"></el-table-column>
+        <el-table-column align="center" label="场上位置Y" prop="yposition" width="100"></el-table-column>
+        <el-table-column align="center" label="操作人员" prop="creator" width="100"></el-table-column>
+        <el-table-column align="center" label="数据来源" prop="datasource" width="100"></el-table-column>
+        <el-table-column fixed="right" align="center" label="操作" width="120">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
             <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
@@ -53,12 +69,15 @@
             </el-select>
           </el-form-item>
           <el-form-item label="阵型名" prop="lineupname">
-            <el-input placeholder="请输入阵型名" v-model="lineupForm.lineupname"></el-input>
+            <el-input placeholder="请输入阵型名" v-model="lineupForm.lineupName"></el-input>
           </el-form-item>
           <el-form-item label="球员" prop="playerId">
             <el-select clearable filterable placeholder="请选择球员" style="width:100%" v-model="lineupForm.playerId">
               <el-option :label="item.name" :value="item.id" v-for="item in personList"></el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="球员号码" prop="position">
+            <el-input placeholder="请输入球员号码" v-model="lineupForm.playerNum"></el-input>
           </el-form-item>
           <el-form-item label="球员类型" prop="playerType">
             <el-select clearable filterable placeholder="请选择球员类型" style="width:100%" v-model="lineupForm.playerType">
@@ -74,12 +93,6 @@
           </el-form-item>
           <el-form-item label="场上位置Y" prop="yposition">
             <el-input placeholder="请输入场上位置Y" v-model="lineupForm.yposition"></el-input>
-          </el-form-item>
-          <el-form-item label="操作人员" prop="person">
-            <el-input placeholder="请输入操作人员" v-model="lineupForm.person"></el-input>
-          </el-form-item>
-          <el-form-item label="数据来源" prop="dataSource">
-            <el-input placeholder="请输入数据来源" v-model="lineupForm.dataSource"></el-input>
           </el-form-item>
         </el-form>
       </el-form>
@@ -107,19 +120,21 @@
                 teamList: [],
                 allTeamList: [],
                 personList: [],
+                matchName: '',
+                allPersonList: '',
                 lineupForm: {
                     id: '',
                     matchId: '',
                     teamId: '',
-                    lineupname: '',
+                    lineupName: '',
                     playerId: '',
                     playerType: '',
                     playerNum: '',
                     position: '',
                     xposition: '',
                     yposition: '',
-                    dataSource: '',
-                    person: ''
+                    datasource: 'HiQiuData',
+                    creator: window.localStorage.getItem('userName'),
                 },
                 dialogVisible: false,
                 pager: {current: 1, size: 10, total: 0, records: []}
@@ -127,6 +142,7 @@
         },
         mounted() {
             this.query();
+            this.queryAllPerson();
             this.queryTeam();
         },
         methods: {
@@ -209,7 +225,8 @@
             },
             edit(rowEntity) {
                 this.dialogVisible = true;
-                this.clubForm = rowEntity;
+                this.lineupForm = rowEntity;
+                this.queryPersonByTeam(rowEntity.teamId);
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "修改阵型";
             },
             query() {
@@ -236,6 +253,14 @@
                 const all = this.allTeamList;
                 this.teamList.push({'id': aid, 'name': filters.idFormatter(aid, all)},
                     {'id': hid, 'name': filters.idFormatter(hid, all)});
+                this.matchName = filters.matchNameFmt(this.homeId,this.awayId,this.allTeamList);
+
+            },
+            queryAllPerson() {
+                this.$http.get('/person', {params: {size: 10000,current:1},
+                }).then(res => {
+                    this.allPersonList = res.data.records;
+                })
             },
             queryPersonByTeam(val) {
                 this.$http.get('/person/selectByTeam', {params: {teamId: val}})

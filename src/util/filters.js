@@ -10,13 +10,13 @@ Vue.use(Vuex);
  */
 let idFormatter = (id,entityList) => {
     if (!id) {
-        return '--'
+        return 'IdIsNull'
     }
     if (!entityList) {
-        return '--'
+        return 'nameListIsNull'
     }
     id = parseInt(id);
-    //console.log(id,entityList,'util');
+    console.log(id,entityList,'util');
     const tempMap = new Map();
     for (const entity of entityList) {
         if (entity.name == "china" || entity.name == "China") {
@@ -45,7 +45,7 @@ let idFormatter = (id,entityList) => {
 let timeFormatter = (U0Time, timeZone, timeSeparator) => {
     if (!U0Time) {
         return U0Time;
-    };
+    }
     if (!timeSeparator) {
         timeSeparator = ":"
     }
@@ -65,5 +65,18 @@ let seasonNameFmt = (seId, time, coId, coList) => {
     //const endYear = new Date(parseInt(time.end)).getFullYear();
     return idFormatter(coId, coList) + startYear+'/'+(startYear+1);
 };
+/**
+ * 比赛名称转换
+ * @param homeId
+ * @param awayId
+ * @param teamList
+ * @returns {string}
+ */
+let matchNameFmt = (homeId, awayId, teamList) => {
+    console.log(homeId, awayId, teamList);
+    console.log(idFormatter(homeId, teamList));
+    console.log(idFormatter(awayId, teamList));
+    return idFormatter(homeId, teamList) +"VS"+ idFormatter(awayId, teamList);
+};
 
-export default {idFormatter,timeFormatter,seasonNameFmt}
+export default {idFormatter,timeFormatter,seasonNameFmt,matchNameFmt}

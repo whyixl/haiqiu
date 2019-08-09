@@ -240,9 +240,6 @@
                 this.positions = positions;
             },
             submit(form) {
-                let p = new Map();
-                p.set('person', this.person);
-                p.set('personDetail', this.personDetail);
                 this.$refs[form].validate((valid) => {
                     if (valid) {
                         if (!this.person.id) {
@@ -333,6 +330,9 @@
                         nameSearch: this.nameSearch,
                         teamSearch: this.teamSearch,
                         dateRange: this.dateRange
+                    },
+                    headers: {
+                        /*Content-Type: application/json*/
                     },
                     params: {
                         size: this.pager.size,

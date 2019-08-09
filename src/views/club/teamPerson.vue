@@ -76,7 +76,7 @@
       <el-form :label-position="'right'" label-width="80px">
         <el-form :model="distributionForm" label-width="80px" ref="distributionForm">
           <el-form-item label="所属球队" prop="teamId">
-            <el-select  clearable disabled filterable placeholder="请选择球队" style="width:100%" v-model="distributionForm.teamId">
+            <el-select  disabled filterable placeholder="请选择球队" style="width:100%" v-model="distributionForm.teamId">
               <el-option :label="item.name" :value="item.id" v-for="item in teamList"></el-option>
             </el-select>
           </el-form-item>
@@ -278,9 +278,6 @@
                 this.dialogVisible = true;
                 this.distributionForm = player
             },
-            // saveId() {
-            //     window.localStorage.setItem('teamId',this.teamId);
-            // },
             query() {
                 this.$http.get('/teamPerson/selectByTeam', {
                     params: {
@@ -297,7 +294,6 @@
             queryTeam() {
                 this.$http.get("/team", {params: {current: 1, size: 100}}).then(res => {
                     this.teamList = res.data.records;
-
                 });
             },
 

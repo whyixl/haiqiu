@@ -119,10 +119,10 @@
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in teamList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="比分" prop="matchResult">
-            <el-input placeholder="主队得分" v-model="matchResult[0].matchResult" style="width: 48.7%"></el-input>
+          <el-form-item label="比分" prop="matchResults">
+            <el-input placeholder="主队得分" v-model="matchResults[0].matchResult" style="width: 48.7%"></el-input>
             :
-            <el-input placeholder="客队得分" v-model="matchResult[1].matchResult" style="width: 48.7%"></el-input>
+            <el-input placeholder="客队得分" v-model="matchResults[1].matchResult" style="width: 48.7%"></el-input>
           </el-form-item>
 
         </el-form>
@@ -160,11 +160,10 @@
                     homeId: "",
                     awayId: "",
                 },
-                matchResult: [{matchResult: null, matchResultAt: '0', place: 'home'}, {
-                    matchResult: null,
-                    matchResultAt: '0',
-                    place: 'away'
-                }],
+                matchResults: [
+                    {matchId: '', matchResult: '', matchResultAt: '0', place: 'home'},
+                    {matchId: '', matchResult: '', matchResultAt: '0', place: 'away'}
+                ],
                 datetime: "",
                 dialogVisible: false,
                 pager: {current: 1, size: 8, total: 0, records: []}
@@ -181,11 +180,10 @@
                     "添加比赛";
                 this.dialogVisible = true;
                 this.matchForm = {};
-                this.matchResult = [{matchResult: null, matchResultAt: '0', place: 'home'}, {
-                    matchResult: null,
-                    matchResultAt: '0',
-                    place: 'away'
-                }];
+                this.matchResults = [
+                    {matchId: '', matchResult: null, matchResultAt: '0', place: 'home'},
+                    {matchId: '', matchResult: null, matchResultAt: '0', place: 'away'}
+                ];
             },
             submit(form) {
                 this.$refs[form].validate(valid => {
@@ -194,7 +192,7 @@
                             this.$http
                                 .post("/match", {
                                     match: this.matchForm,
-                                    matchResults: this.matchResult
+                                    matchResults: this.matchResults
                                 })
                                 .then(res => {
                                     if (res.status == 200 && res.data.status == "SUCCESS") {
@@ -208,7 +206,7 @@
                             this.$http
                                 .put("/match", {
                                     match: this.matchForm,
-                                    matchResult: this.matchResult
+                                    matchResults: this.matchResults
                                 })
                                 .then(res => {
                                     if (res.data.status == "SUCCESS") {
@@ -267,10 +265,13 @@
             },
             edit(rowEntity) {
                 this.dialogVisible = true;
-                document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑比赛";
+                document.getElementsByClassName("el-dialog__title")[0].innerText = "修改比赛";
                 this.matchForm = rowEntity;
                 this.matchForm.competitionId = this.competitionId;
-                this.matchResult = [rowEntity.matchResults[0],rowEntity.matchResults[1]]
+                console.log(rowEntity);
+                this.matchResults = [
+                    {id: rowEntity.matchResults[0].id, matchId: rowEntity.id, matchResult: rowEntity.matchResults[0].matchResult, matchResultAt: '0', place: 'home'},
+                    {id: rowEntity.matchResults[1].id, matchId: rowEntity.id, matchResult: rowEntity.matchResults[1].matchResult, matchResultAt: '0', place: 'away'}];
             },
             query(val) {
                 if (!val) {
@@ -290,8 +291,13 @@
             getResultStr(val) {
                 var hr = '';
                 var ar = '';
+                console.log(val, '1');
                 for (const record of val.records) {
-                    console.log(record.matchResults,'123');
+                    if (!record.matchResults) {
+                        record.matchResult = '';
+                        record.matchResults = ['', ''];
+                        continue;
+                    }
                     for (const item of record.matchResults) {
                         if (item.place == 'home') {
                             hr = item.matchResult;
@@ -303,6 +309,7 @@
                     record.matchResult = hr + ':' + ar;
                     console.log(record.matchResult)
                 }
+                console.log(val, '2');
                 this.pager = val
             },
             queryCompetition() {

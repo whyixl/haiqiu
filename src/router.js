@@ -73,7 +73,7 @@ export const asyncRouter = [
                     {
                         path: "/club/team/teamPlayer",
                         name: "teamPlayer",
-                        component: () => import("@/views/club/teamPlayer.vue")
+                        component: () => import("@/views/club/teamPerson.vue")
                     }
                 ]
             },
