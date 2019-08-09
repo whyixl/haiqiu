@@ -29,17 +29,17 @@
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="teamId" type="selection" width="55"></el-table-column>
         <el-table-column align="center" label="球队名称" prop="name" width="200"></el-table-column>
-        <el-table-column align="center" label="简称" prop="shortname" width="150">
+        <el-table-column align="center" label="简称" prop="shortname" width="140">
           <template slot-scope="scope">
             {{!scope.row.shortname ? scope.row.name : scope.row.shortname}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="性别" prop="gender" width="150">
+        <el-table-column align="center" label="性别" prop="gender" width="140">
           <template slot-scope="scope">
             {{scope.row.gender=="male" ? '男性':(scope.row.gender==="female"? '女性':'混合' )}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="年龄" prop="ageId" width="150">
+        <el-table-column align="center" label="年龄" prop="ageId" width="140">
           <template slot-scope="scope">
             {{scope.row.ageId==1 ? '职业' : scope.row.ageId==2 ? 'U23' :scope.row.ageId==3 ? 'U21' :scope.row.ageId==4 ? 'U20'
             :scope.row.ageId==5 ? 'U19' :scope.row.ageId==6 ? 'U18' :scope.row.ageId==7 ? 'U17' :scope.row.ageId==8 ? 'U16'
