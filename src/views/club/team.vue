@@ -2,23 +2,24 @@
   <div>
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
-        <el-row :gutter="10">
-          <el-col :span="4">
-            <el-select clearable filterable placeholder="国家/地区" v-model="countrySearch">
-              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="4">
-            <el-select clearable filterable placeholder="俱乐部名称" v-model="clubSearch">
-              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in clubList"></el-option>
-            </el-select>
-          </el-col>
+        <!-- 查询功能暂时屏蔽 -->
+        <!--<el-row :gutter="10">-->
+          <!--<el-col :span="4">-->
+            <!--<el-select clearable filterable placeholder="国家/地区" v-model="countrySearch">-->
+              <!--<el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-col>-->
+          <!--<el-col :span="4">-->
+            <!--<el-select clearable filterable placeholder="俱乐部名称" v-model="clubSearch">-->
+              <!--<el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in clubList"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-col>-->
 
-          <el-col :span="6">
-            <el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>
-          </el-col>
-        </el-row>
-        <br>
+          <!--<el-col :span="6">-->
+            <!--<el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
+        <!--<br>-->
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
         <el-button :disabled="selectedRows.length==0" @click="deleteBatch" icon="el-icon-delete" size="medium">删除
         </el-button>
@@ -57,6 +58,9 @@
             <router-link :to="{path: '/club/team/teamPlayer', query: {teamId: scope.row.id}}">
               <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="添加人员"></el-button>
             </router-link>
+            <!--<router-link :to="{path: '/club/team/teamStaff', query: {teamId: scope.row.id}}">-->
+              <!--<el-button circle icon="el-icon-news" size="small" style="width: 32px" title="添加职员"></el-button>-->
+            <!--</router-link>-->
             <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
                        title="删除"></el-button>
           </template>

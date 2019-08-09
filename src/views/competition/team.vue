@@ -46,9 +46,12 @@
           <el-form-item label="id" prop="id" style="display:none">
             <el-input v-model="se_teForm.id"></el-input>
           </el-form-item>
-          <el-form-item label="赛季ID" prop="seasonId" style="display: none">
-            <el-input v-model="se_teForm.seasonId" disabled ></el-input>
+          <el-form-item label="赛季名称" prop="seasonId">
+            <el-select disabled placeholder="请选择相关赛季" v-model="se_teForm.seasonId" style="width:100%">
+              <el-option :label="season.name" :value="season.id"></el-option>
+            </el-select>
           </el-form-item>
+
           <el-form-item label="球队" prop="teamId">
             <el-select clearable filterable placeholder="请选择相关球队" style="width:100%" v-model="se_teForm.teamId">
               <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in teamList"></el-option>
@@ -66,8 +69,9 @@
 </template>
 
 <script>
+    import filters from "../../util/filters";
     export default {
-        name: "season",
+        name: "team",
         data() {
             return {
                 selectedRows: [],
@@ -79,20 +83,21 @@
                 start: null,
                 se_teForm: {
                     id: '',
-                    seasonId: null,
-                    teamId: null,
+                    seasonId:'',
+                    teamId: '',
                 },
+                season: {id:'',name:''},
                 dialogVisible: false,
                 pager: {current: 1, size: 10, total: 0, records: []}
             };
         },
         created() {
-            this.se_teForm.seasonId = this.$route.query.seId;
+            this.se_teForm.seasonId = this.season.id = parseInt(this.$route.query.seId);
             this.competitionId = this.$route.query.coId;
             this.start = this.$route.query.start;
         },
         mounted() {
-            this.query(this.seasonId);
+            this.query(this.se_teForm.seasonId);
             this.queryCompetition();
             this.queryTeam();
         },
@@ -136,8 +141,10 @@
             add() {
                 this.dialogVisible = true;
                 this.se_teForm = {
+                    id:'',
                     teamId:'',
-                    seasonId: this.se_teForm.seasonId
+                    seasonId: this.season.id
+
                 };
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "添加球队";
             },
@@ -187,7 +194,7 @@
                     params: {
                         size: this.pager.size,
                         current: this.pager.current,
-                        seasonId: this.se_teForm.seasonId
+                        seasonId: this.season.id
                     },
                 }).then(res => {
                     this.pager = res.data
@@ -198,7 +205,11 @@
                     params: {size: 100, current: 1},
                 }).then(res => {
                     this.competitionList = res.data.records;
+                    this.generateSeason();
                 });
+            },
+            generateSeason() {
+                this.season.name = filters.seasonNameFmt(this.seasonId,this.start,this.competitionId,this.competitionList)
             },
             queryTeam() {
                 this.$http.get('/team', {

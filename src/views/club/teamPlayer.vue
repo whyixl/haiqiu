@@ -2,19 +2,20 @@
   <div>
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
-        <el-row :gutter="10">
-          <el-col :span="3">
-            <el-input placeholder="姓名" v-model="nameSearch"></el-input>
-          </el-col>
-          <el-col :span="3">
-            <el-input placeholder="英文名" v-model="surnameSearch"></el-input>
-          </el-col>
-          <el-col :span="2">
-            <el-button icon="el-icon-search" type="primary">查询</el-button>
-          </el-col>
-        </el-row>
+        <!-- 查询功能暂时屏蔽 -->
+        <!--<el-row :gutter="10">-->
+          <!--<el-col :span="3">-->
+            <!--<el-input placeholder="姓名" v-model="nameSearch"></el-input>-->
+          <!--</el-col>-->
+          <!--<el-col :span="3">-->
+            <!--<el-input placeholder="英文名" v-model="surnameSearch"></el-input>-->
+          <!--</el-col>-->
+          <!--<el-col :span="2">-->
+            <!--<el-button icon="el-icon-search" type="primary">查询</el-button>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
 
-        <br>
+        <!--<br>-->
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
         <el-button @click="deleteBatch":disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
       </div>
@@ -71,11 +72,11 @@
       </el-pagination>
     </el-card>
 
-    <el-dialog :visible.sync="dialogVisible" title="新增球员">
+    <el-dialog :visible.sync="dialogVisible" title="新增人员">
       <el-form :label-position="'right'" label-width="80px">
         <el-form :model="distributionForm" label-width="80px" ref="distributionForm">
           <el-form-item label="所属球队" prop="teamId">
-            <el-select  filterable placeholder="请选择球队" style="width:100%" v-model="distributionForm.teamId">
+            <el-select  clearable disabled filterable placeholder="请选择球队" style="width:100%" v-model="distributionForm.teamId">
               <el-option :label="item.name" :value="item.id" v-for="item in teamList"></el-option>
             </el-select>
           </el-form-item>
@@ -119,6 +120,7 @@
         data() {
             return {
                 distributionForm: {
+                    id:'',
                     teamId: '',
                     roleId: '',
                     person:'',
@@ -164,12 +166,13 @@
                 return area.pid == 0;
             });
             this.positions = positions;
+            this.teamId = this.$route.query.teamId;
+
         },
         mounted() {
-            this.query();
+            this.query(this.teamId);
             this.queryTeam();
             this.queryPerson();
-            this.queryCountry();
         },
         methods: {
             getPosition: function (id) {
@@ -217,7 +220,16 @@
             add() {
                 document.getElementsByClassName("el-dialog__title")[0].innername = "添加球员";
                 this.dialogVisible = true;
-                this.distributionForm = {};
+                this.distributionForm = {
+                        id:'',
+                        teamId: parseInt(this.teamId),
+                        roleId: '',
+                        person:'',
+                        personId: '',
+                        shirtnumber: '',
+                        start: '',
+                        end: ''
+                };
             },
             remove(id, rowNum) {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -266,11 +278,15 @@
                 this.dialogVisible = true;
                 this.distributionForm = player
             },
+            // saveId() {
+            //     window.localStorage.setItem('teamId',this.teamId);
+            // },
             query() {
-                this.$http.get('/teamPerson', {
+                this.$http.get('/teamPerson/selectByTeam', {
                     params: {
                         size: this.pager.size,
-                        current: this.pager.current
+                        current: this.pager.current,
+                        teamId:this.teamId
                     },
                 }).then(res => {
                     console.log(res.data);
@@ -281,8 +297,10 @@
             queryTeam() {
                 this.$http.get("/team", {params: {current: 1, size: 100}}).then(res => {
                     this.teamList = res.data.records;
-                })
+
+                });
             },
+
             queryCountry() {
                 this.$http.get("/country",).then(res => {
                     this.countryList = res.data;

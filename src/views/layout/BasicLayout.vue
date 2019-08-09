@@ -3,7 +3,7 @@
         <el-aside class="sidebar" v-bind:class="{'sidebar-collapse':isCollapse}">
             <el-header class="logo">
                 <img src="@/assets/logo.png">
-                <h1>Hiqiu Admin</h1>
+                <h1>Hiqiu Database</h1>
             </el-header>
             <el-menu :collapse="isCollapse" :default-active="$route.path" :router="true">
                 <!-- 如果没有子级就这样 -->
@@ -33,8 +33,8 @@
                     <el-dropdown @command="handleCommand" class="header-action" trigger="click">
                         <span>{{name}}<i class="el-icon-arrow-down el-icon--right"></i></span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="Competition"><i class="el-icon-setting"></i> 个人设定
-                            </el-dropdown-item>
+                            <!--<el-dropdown-item command="Competition"><i class="el-icon-setting"></i> 个人设定-->
+                            <!--</el-dropdown-item>-->
                             <el-dropdown-item command="SignOut"><i class="el-icon-refresh"></i> 安全退出</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>

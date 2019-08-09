@@ -2,17 +2,18 @@
   <div>
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
-        <el-row :gutter="10">
-          <el-col :span="4">
-            <el-select clearable filterable placeholder="国家" style="width:100%" v-model="countrySearch">
-              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="2">
-            <el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>
-          </el-col>
-        </el-row>
-        <br>
+        <!-- 查询功能暂时屏蔽 -->
+        <!--<el-row :gutter="10">-->
+          <!--<el-col :span="4">-->
+            <!--<el-select clearable filterable placeholder="国家" style="width:100%" v-model="countrySearch">-->
+              <!--<el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in countryList"></el-option>-->
+            <!--</el-select>-->
+          <!--</el-col>-->
+          <!--<el-col :span="2">-->
+            <!--<el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
+        <!--<br>-->
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
         <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除
         </el-button>

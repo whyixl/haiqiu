@@ -18,9 +18,9 @@
             </el-select>
           </el-col>
 
-          <el-col :span="3">
-            <el-button @click="query(this.seasonId)" icon="el-icon-search" type="primary">查询</el-button>
-          </el-col>
+          <!--<el-col :span="3">-->
+            <!--<el-button @click="query(this.seasonId)" icon="el-icon-search" type="primary">查询</el-button>-->
+          <!--</el-col>-->
 
         </el-row>
         <br>

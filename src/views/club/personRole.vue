@@ -16,7 +16,9 @@
                 </el-table-column>
                 <el-table-column align="center" label="角色" prop="roleId">
                     <template slot-scope="scope">
-                        {{ scope.row.roleId | idFormatter(roleList)}}
+                        {{scope.row.roleId==1 ? '守门员' : scope.row.roleId==2 ? '后卫' :scope.row.roleId==3 ? '中场' :scope.row.roleId==4 ? '前锋'
+                        :scope.row.roleId==5 ? '主教练' :scope.row.roleId==6 ? '助力教练' :scope.row.roleId==7 ? '守门员教练' :scope.row.roleId==56 ? '运动教练'
+                        :scope.row.roleId==59 ? '随队医生' :scope.row.roleId==60 ? '俱乐部支持' :scope.row.roleId==61 ? '理疗师' :'无位置'}}
                     </template>
                 </el-table-column>
                 <el-table-column align="center" label="球衣号" prop="shirtnumber"></el-table-column>

@@ -2,18 +2,19 @@
     <div>
         <el-card :body-style="{ padding: '0px' }" shadow="never">
             <div slot="header">
-                <el-row :gutter="10">
-                    <el-col :span="3">
-                        <el-input placeholder="姓名" v-model="nameSearch"></el-input>
-                    </el-col>
-                    <el-col :span="3">
-                        <el-input placeholder="英文名" v-model="surnameSearch"></el-input>
-                    </el-col>
-                    <el-col :span="2">
-                        <el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>
-                    </el-col>
-                </el-row>
-                <br>
+                <!-- 查询功能暂时屏蔽 -->
+                <!--<el-row :gutter="10">-->
+                    <!--<el-col :span="3">-->
+                        <!--<el-input placeholder="姓名" v-model="nameSearch"></el-input>-->
+                    <!--</el-col>-->
+                    <!--<el-col :span="3">-->
+                        <!--<el-input placeholder="英文名" v-model="surnameSearch"></el-input>-->
+                    <!--</el-col>-->
+                    <!--<el-col :span="2">-->
+                        <!--<el-button @click="query" icon="el-icon-search" type="primary">查询</el-button>-->
+                    <!--</el-col>-->
+                <!--</el-row>-->
+                <!--<br>-->
                 <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
                 <el-button @click="deleteBatch" :disabled="selectedRows.length==0" icon="el-icon-delete" size="medium">
                     删除
@@ -44,14 +45,30 @@
                         {{scope.row.countryId | idFormatter(countryList)}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="出生国家" prop="personDetail.birthCountryId"></el-table-column>
+                <el-table-column align="center" label="出生国家" prop="personDetail.birthCountryId">
+                    <template slot-scope="scope">
+                        {{scope.row.personDetail.birthCountryId | idFormatter(countryList)}}
+                    </template>
+                </el-table-column>
                 <el-table-column align="center" label="出生地" prop="personDetail.birth_place"></el-table-column>
-                <el-table-column align="center" label="惯用脚" prop="personDetail.preferredSide"></el-table-column>
-                <el-table-column align="center" label="站立脚" prop="personDetail.foot"></el-table-column>
+                <el-table-column align="center" label="惯用脚" prop="personDetail.preferredSide">
+                    <template slot-scope="scope">
+                    {{scope.row.personDetail.preferredSide=="left_foot" ? '左脚' : scope.row.personDetail.preferredSide=="right_foot" ?  '右脚' :scope.row.personDetail.preferredSide=="double_foot" ?  '双脚'  :'--'}}
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" label="站立脚" prop="personDetail.foot">
+                    <template slot-scope="scope">
+                    {{scope.row.personDetail.foot=="left_foot" ? '左' : scope.row.personDetail.foot=="right_foot" ?  '右' :scope.row.personDetail.foot=="double_foot" ?  '两者'  :'--'}}
+                    </template>
+                </el-table-column>
                 <el-table-column align="center" label="球鞋尺寸" prop="personDetail.shoesize"></el-table-column>
                 <el-table-column align="center" label="球衣尺寸" prop="personDetail.jerseysize"></el-table-column>
                 <el-table-column align="center" label="短裤尺寸" prop="personDetail.shortssize"></el-table-column>
-                <el-table-column align="center" label="第二国籍" prop="personDetail.nationality2"></el-table-column>
+                <el-table-column align="center" label="第二国籍" prop="personDetail.nationality2">
+                    <template slot-scope="scope">
+                        {{scope.row.personDetail.nationality2 | idFormatter(countryList)}}
+                    </template>
+                </el-table-column>
                 <el-table-column align="center" fixed="right" label="操作" width="140">
                     <template slot-scope="scope">
                         <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small"
