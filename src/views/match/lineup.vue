@@ -28,7 +28,7 @@
         <el-table-column align="center" label="球衣号" prop="playerNum"></el-table-column>
         <el-table-column align="center" label="球员类型" prop="playerType">
           <template slot-scope="scope">
-            {{scope.row.playerType ? (scope.row.gender == 1 ? "首发" : "替补") : scope.row.gender}}
+            {{scope.row.playerType ? (scope.row.playerType == 1 ? "首发" : "替补") : scope.row.gender}}
           </template>
         </el-table-column>
         <el-table-column align="center" label="球员位置" prop="position" width="90"></el-table-column>
@@ -141,9 +141,9 @@
             };
         },
         mounted() {
-            this.query();
-            this.queryAllPerson();
             this.queryTeam();
+            this.queryAllPerson();
+            this.query();
         },
         methods: {
             add() {

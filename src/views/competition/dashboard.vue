@@ -10,7 +10,7 @@
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="competitionId" type="selection" width="40"></el-table-column>
-        <el-table-column align="center" label="描述" prop="name" width="200"></el-table-column>
+        <el-table-column align="center" label="描述" prop="name" width="180"></el-table-column>
         <el-table-column align="center" label="简称" prop="shortname" width="100"></el-table-column>
         <el-table-column align="center" label="性别" prop="gender" width="80">
           <template slot-scope="scope">
@@ -40,7 +40,7 @@
             {{scope.row.countryId | idFormatter(countryList)}}
           </template>
         </el-table-column>
-        <el-table-column fit align="center" label="联盟" prop="federationId">
+        <el-table-column :show-overflow-tooltip="true" align="center" label="联盟" prop="federationId">
           <template slot-scope="scope">
             {{scope.row.federationId | idFormatter(federationList)}}
           </template>
