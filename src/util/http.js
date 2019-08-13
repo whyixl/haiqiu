@@ -5,12 +5,12 @@ import {Vue} from "vue";
 /*
 生产
  */
-// axios.defaults.baseURL = 'http://172.16.6.6:8080/datamanager';
+axios.defaults.baseURL = 'http://172.16.6.6:8080/datamanager';
 
 /*
 测试
  */
-axios.defaults.baseURL = 'http://192.168.0.250:8090';
+//axios.defaults.baseURL = 'http://192.168.0.250:8090';
 
 const codeMessage = {
     200: "请求成功",

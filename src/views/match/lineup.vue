@@ -2,7 +2,7 @@
   <div>
     <el-card :body-style="{ padding: '0px' }" shadow="never">
       <div slot="header">
-        <el-button @click="dialogVisible = true" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
+        <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
         <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
       </div>
 
@@ -14,7 +14,7 @@
             {{matchName}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="球队" prop="teamId">
+        <el-table-column align="center" label="球队" prop="teamId" width="120">
           <template slot-scope="scope">
             {{ scope.row.teamId | idFormatter(teamList) }}
           </template>
@@ -109,9 +109,11 @@
     export default {
         name: "matchLineUp",
         created() {
-            this.homeId = this.$route.query.homeId;
-            this.awayId = this.$route.query.awayId;
+            this.homeId = parseInt(this.$route.query.homeId);
+            this.awayId = parseInt(this.$route.query.awayId);
             this.lineupForm.matchId = this.$route.query.maId;
+            this.queryAllPerson();
+            this.queryTeam();
         },
         data() {
             return {
@@ -133,22 +135,22 @@
                     position: '',
                     xposition: '',
                     yposition: '',
-                    datasource: 'HiQiuData',
-                    creator: window.localStorage.getItem('userName'),
                 },
                 dialogVisible: false,
                 pager: {current: 1, size: 10, total: 0, records: []}
             };
         },
         mounted() {
-            this.queryTeam();
-            this.queryAllPerson();
             this.query();
         },
         methods: {
             add() {
                 this.dialogVisible = true;
-                this.clubForm = {};
+                this.lineupForm = {
+                    matchId: this.$route.query.maId,
+                    datasource: 'HiQiuData',
+                    creator: window.localStorage.getItem('userName'),
+                };
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "添加阵型";
             },
             submit(form) {
@@ -226,6 +228,7 @@
             edit(rowEntity) {
                 this.dialogVisible = true;
                 this.lineupForm = rowEntity;
+                console.log(rowEntity);
                 this.queryPersonByTeam(rowEntity.teamId);
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "修改阵型";
             },
@@ -233,7 +236,8 @@
                 this.$http.get('/matchLineUp', {
                     params: {
                         size: this.pager.size,
-                        current: this.pager.current
+                        current: this.pager.current,
+                        matchId: this.lineupForm.matchId,
                     },
                 }).then(res => {
                     this.pager = res.data;

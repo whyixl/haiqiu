@@ -286,9 +286,7 @@
                         teamId:this.teamId
                     },
                 }).then(res => {
-                    console.log(res.data);
                     this.pager = res.data;
-                    console.log(this.pager)
                 });
             },
             queryTeam() {

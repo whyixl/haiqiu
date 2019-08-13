@@ -16,7 +16,7 @@ let idFormatter = (id,entityList) => {
         return 'nameListIsNull'
     }
     id = parseInt(id);
-    console.log(id,entityList,'util');
+    //console.log(id,entityList,'util');
     const tempMap = new Map();
     for (const entity of entityList) {
         if (entity.name == "china" || entity.name == "China") {
@@ -31,7 +31,7 @@ let idFormatter = (id,entityList) => {
     }
     //console.log(tempMap);
     if (!tempMap.get(id)) {
-        return id;
+        return 'error';
     }
     return tempMap.get(id);
 };
@@ -73,9 +73,6 @@ let seasonNameFmt = (seId, time, coId, coList) => {
  * @returns {string}
  */
 let matchNameFmt = (homeId, awayId, teamList) => {
-    console.log(homeId, awayId, teamList);
-    console.log(idFormatter(homeId, teamList));
-    console.log(idFormatter(awayId, teamList));
     return idFormatter(homeId, teamList) +"VS"+ idFormatter(awayId, teamList);
 };
 

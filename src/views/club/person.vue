@@ -50,25 +50,18 @@
                         {{scope.row.personDetail.birthCountryId | idFormatter(countryList)}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="出生地" prop="personDetail.birth_place"></el-table-column>
+                <el-table-column align="center" label="出生地" prop="personDetail.birthPlace"></el-table-column>
                 <el-table-column align="center" label="惯用脚" prop="personDetail.preferredSide">
                     <template slot-scope="scope">
                     {{scope.row.personDetail.preferredSide=="left_foot" ? '左脚' : scope.row.personDetail.preferredSide=="right_foot" ?  '右脚' :scope.row.personDetail.preferredSide=="double_foot" ?  '双脚'  :'--'}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="站立脚" prop="personDetail.foot">
-                    <template slot-scope="scope">
-                    {{scope.row.personDetail.foot=="left_foot" ? '左' : scope.row.personDetail.foot=="right_foot" ?  '右' :scope.row.personDetail.foot=="double_foot" ?  '两者'  :'--'}}
-                    </template>
-                </el-table-column>
                 <el-table-column align="center" label="球鞋尺寸" prop="personDetail.shoesize"></el-table-column>
-                <el-table-column align="center" label="球衣尺寸" prop="personDetail.jerseysize"></el-table-column>
-                <el-table-column align="center" label="短裤尺寸" prop="personDetail.shortssize"></el-table-column>
-                <el-table-column align="center" label="第二国籍" prop="personDetail.nationality2">
+               <!-- <el-table-column align="center" label="第二国籍" prop="personDetail.nationality2">
                     <template slot-scope="scope">
                         {{scope.row.personDetail.nationality2 | idFormatter(countryList)}}
                     </template>
-                </el-table-column>
+                </el-table-column>-->
                 <el-table-column align="center" fixed="right" label="操作" width="140">
                     <template slot-scope="scope">
                         <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small"
@@ -207,7 +200,6 @@
                 personDetail: {
                     birthCountryId: '',
                     birthPlace: '',
-                    nationality2: '',
                     preferredSide: '',
                     foot: '',
                     shoesize: '',

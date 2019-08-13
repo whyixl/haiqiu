@@ -120,9 +120,9 @@
             </el-select>
           </el-form-item>
           <el-form-item label="比分" prop="matchResults">
-            <el-input placeholder="主队得分" v-model="matchResults[0].matchResult" style="width: 48.7%"></el-input>
+            <el-input placeholder="主队得分" v-model="matchResults[0].matchResult" style="width: 47.8%"></el-input>
             :
-            <el-input placeholder="客队得分" v-model="matchResults[1].matchResult" style="width: 48.7%"></el-input>
+            <el-input placeholder="客队得分" v-model="matchResults[1].matchResult" style="width: 47.8%"></el-input>
           </el-form-item>
 
         </el-form>
@@ -256,7 +256,6 @@
                                 alert("批量删除遇到问题，请重试");
                             }
                             if (j++ == this.selectedRows.length) {
-                                console.log(j++, this.selectedRows.length);
                                 this.query();
                             }
                         });
@@ -268,7 +267,6 @@
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "修改比赛";
                 this.matchForm = rowEntity;
                 this.matchForm.competitionId = this.competitionId;
-                console.log(rowEntity);
                 this.matchResults = [
                     {id: rowEntity.matchResults[0].id, matchId: rowEntity.id, matchResult: rowEntity.matchResults[0].matchResult, matchResultAt: '0', place: 'home'},
                     {id: rowEntity.matchResults[1].id, matchId: rowEntity.id, matchResult: rowEntity.matchResults[1].matchResult, matchResultAt: '0', place: 'away'}];

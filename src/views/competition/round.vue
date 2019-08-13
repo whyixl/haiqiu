@@ -197,7 +197,6 @@
                                 alert("批量删除遇到问题，请重试");
                             }
                             if (temp++ == this.selectedRows.length) {
-                                console.log('query执行')
                                 this.query();
                             }
                         });
@@ -209,7 +208,6 @@
                 this.dialogVisible = true;
                 this.dateRange = [rowEntity.start, rowEntity.end];
                 this.roundForm = rowEntity;
-                console.log(rowEntity)
             },
             query() {
                 this.$http.get('/round', {
