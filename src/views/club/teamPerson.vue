@@ -72,7 +72,7 @@
       </el-pagination>
     </el-card>
 
-    <el-dialog :visible.sync="dialogVisible" title="新增人员">
+    <el-dialog :visible.sync="dialogVisible" title="添加人员">
       <el-form :label-position="'right'" label-width="80px">
         <el-form :model="distributionForm" label-width="80px" ref="distributionForm">
           <el-form-item label="所属球队" prop="teamId">
@@ -157,7 +157,8 @@
                 {name: '主教练', id: 5, pid: 21},
                 {name: '助力教练', id: 6, pid: 21},
                 {name: '守门员教练', id: 7, pid: 21},
-                {name: '运动教练', id: 8, pid: 21},
+                {name: '巴士司机', id: 12, pid: 21},
+                {name: '运动教练', id: 56, pid: 21},
                 {name: '随队医生', id: 59, pid: 21},
                 {name: '俱乐部支持', id: 60, pid: 21},
                 {name: '理疗师', id: 61, pid: 21}

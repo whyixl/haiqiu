@@ -4,7 +4,7 @@
       <el-col :model="user" :offset="9" :span="6">
         <el-card class="login-box" v-loading="$store.state.loading" element-loading-background="rgba(0, 0, 0, 0.8)">
           <el-form @submit.native.prevent>
-            <h1 class="title">Hiqiu DataManager</h1>
+            <h1 class="title">Hiqiu Database</h1>
             <p class="login-box-msg">专注数据服务，让价值共享!</p>
             <el-form-item>
               <el-input @keyup.enter.native="login" type="text" v-model="user.name" auto-complete="off" placeholder="请输入用户名..." suffix-icon="el-icon-bell"></el-input>

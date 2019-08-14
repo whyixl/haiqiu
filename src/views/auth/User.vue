@@ -14,7 +14,8 @@
                 v-loading="$store.state.loading">
         <el-table-column align="center" prop="id" type="selection" width="55"></el-table-column>
         <el-table-column align="center" label="姓名" prop="name"></el-table-column>
-        <el-table-column align="center" label="手机" prop="phone" show-overflow-tooltip width="100"></el-table-column>
+        <el-table-column align="center" label="手机" prop="phone" show-overflow-tooltip ></el-table-column>
+        <!--<el-table-column align="center" label="密码" prop="password"></el-table-column>-->
         <el-table-column align="center" label="角色" prop="gender">
           <template slot-scope="scope">
             {{scope.row.roleId ? (scope.row.roleId == "1" ? "管理员" : "普通用户") : scope.row.roleId}}
@@ -52,6 +53,9 @@
               <el-form-item label="手机" prop="form.phone">
                 <el-input placeholder="请输入手机" v-model="form.phone"></el-input>
               </el-form-item>
+              <!--<el-form-item label="密码" prop="form.password">-->
+                <!--<el-input placeholder="请输入密码" v-model="form.password"></el-input>-->
+              <!--</el-form-item>-->
               <el-form-item label="角色" prop="form.roleId">
                 <el-select clearable filterable placeholder="请选择角色" style="width:100%" v-model="form.roleId">
                   <el-option :label="'管理员'" :value=1></el-option>
@@ -125,7 +129,7 @@
                     if (valid) {
                         if(!this.form.id) {
                             // 新增
-                            this.$http.post('/user',
+                            this.$http.post('/user_register',
                                 this.form
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {

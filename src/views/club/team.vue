@@ -41,10 +41,10 @@
         </el-table-column>
         <el-table-column align="center" label="年龄" prop="ageId" width="140">
           <template slot-scope="scope">
-            {{scope.row.ageId==1 ? '职业' : scope.row.ageId==2 ? 'U23' :scope.row.ageId==3 ? 'U21' :scope.row.ageId==4 ? 'U20'
-            :scope.row.ageId==5 ? 'U19' :scope.row.ageId==6 ? 'U18' :scope.row.ageId==7 ? 'U17' :scope.row.ageId==8 ? 'U16'
-            :scope.row.ageId==9 ? 'U15' :scope.row.ageId==10 ? 'U14' :scope.row.ageId==11 ? 'U13' :scope.row.ageId==12 ? 'U12'
-            :scope.row.ageId==13 ? 'U11' :scope.row.ageId==14 ? 'U10' :scope.row.ageId==15 ? 'U9' :scope.row.ageId==16 ? 'U8' :'U7'}}
+            {{scope.row.ageId==1 ? '职业' : scope.row.ageId==11 ? 'U23' :scope.row.ageId==2 ? 'U21' :scope.row.ageId==3 ? 'U20'
+            :scope.row.ageId==4 ? 'U19' :scope.row.ageId==5 ? 'U18' :scope.row.ageId==6 ? 'U17' :scope.row.ageId==7 ? 'U16'
+            :scope.row.ageId==8 ? 'U15' :scope.row.ageId==9 ? 'U14' :scope.row.ageId==10 ? 'U13' :scope.row.ageId==12 ? 'U12'
+            :scope.row.ageId==13 ? 'U11' :scope.row.ageId==14 ? 'U10' :'U9'}}
           </template>
         </el-table-column>
         <el-table-column align="center" label="俱乐部名称" prop="clubId" width="180">
@@ -95,28 +95,26 @@
             <el-select clearable filterable placeholder="请选择性别" style="width:100%" v-model="teamForm.gender">
               <el-option :label="'男性'" :value="'male'"></el-option>
               <el-option :label="'女性'" :value="'female'"></el-option>
-              <el-option :label="'混合'" :value="'mix'"></el-option>
+              <el-option :label="'混合'" :value="'mixed'"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="年龄" prop="age">
             <el-select clearable filterable placeholder="请选择年龄段" style="width:100%" v-model="teamForm.ageId">
               <el-option :label="'职业'" :value="1"></el-option>
-              <el-option :label="'U23'" :value="2"></el-option>
-              <el-option :label="'U21'" :value="3"></el-option>
-              <el-option :label="'U20'" :value="4"></el-option>
-              <el-option :label="'U19'" :value="5"></el-option>
-              <el-option :label="'U18'" :value="6"></el-option>
-              <el-option :label="'U17'" :value="7"></el-option>
-              <el-option :label="'U16'" :value="8"></el-option>
-              <el-option :label="'U15'" :value="9"></el-option>
-              <el-option :label="'U14'" :value="10"></el-option>
-              <el-option :label="'U13'" :value="11"></el-option>
+              <el-option :label="'U23'" :value="11"></el-option>
+              <el-option :label="'U21'" :value="2"></el-option>
+              <el-option :label="'U20'" :value="3"></el-option>
+              <el-option :label="'U19'" :value="4"></el-option>
+              <el-option :label="'U18'" :value="5"></el-option>
+              <el-option :label="'U17'" :value="6"></el-option>
+              <el-option :label="'U16'" :value="7"></el-option>
+              <el-option :label="'U15'" :value="8"></el-option>
+              <el-option :label="'U14'" :value="9"></el-option>
+              <el-option :label="'U13'" :value="10"></el-option>
               <el-option :label="'U12'" :value="12"></el-option>
               <el-option :label="'U11'" :value="13"></el-option>
               <el-option :label="'U10'" :value="14"></el-option>
               <el-option :label="'U9'" :value="15"></el-option>
-              <el-option :label="'U8'" :value="16"></el-option>
-              <el-option :label="'U7'" :value="17"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="俱乐部名称" prop="clubId">

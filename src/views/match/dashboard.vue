@@ -53,6 +53,11 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="比分" prop="matchResult"></el-table-column>
+        <el-table-column align="center" label="是否结束" prop="finished">
+        <template slot-scope="scope">
+          {{ scope.row.finished == "yes" ? '是': '否' }}
+        </template>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="160">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
@@ -124,7 +129,12 @@
             :
             <el-input placeholder="客队得分" v-model="matchResults[1].matchResult" style="width: 47.8%"></el-input>
           </el-form-item>
-
+          <el-form-item label="是否结束" prop="finished">
+            <el-select  clearable filterable placeholder="比赛是否结束" v-model="matchForm.finished" style="width:100%">
+              <el-option :label="'是'" :value="'yes'"></el-option>
+              <el-option :label="'否'" :value="'no'"></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </el-form>
       <div class="dialog-footer" slot="footer">
@@ -159,6 +169,7 @@
                     matchTime: "",
                     homeId: "",
                     awayId: "",
+                    finished: ""
                 },
                 matchResults: [
                     {matchId: '', matchResult: '', matchResultAt: '0', place: 'home'},
