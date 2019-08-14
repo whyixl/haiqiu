@@ -3,7 +3,7 @@
         <el-aside class="sidebar" v-bind:class="{'sidebar-collapse':isCollapse}">
             <el-header class="logo">
                 <img src="@/assets/logo.png">
-                <h1>Hiqiu Database</h1>
+                <h1>Hiqiu DataManager</h1>
             </el-header>
             <el-menu :collapse="isCollapse" :default-active="$route.path" :router="true">
                 <!-- 如果没有子级就这样 -->
