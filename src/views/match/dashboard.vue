@@ -19,7 +19,7 @@
           </el-col>
 
           <!--<el-col :span="3">-->
-            <!--<el-button @click="query(this.seasonId)" icon="el-icon-search" type="primary">查询</el-button>-->
+          <!--<el-button @click="query(this.seasonId)" icon="el-icon-search" type="primary">查询</el-button>-->
           <!--</el-col>-->
 
         </el-row>
@@ -54,9 +54,9 @@
         </el-table-column>
         <el-table-column align="center" label="比分" prop="matchResult"></el-table-column>
         <el-table-column align="center" label="是否结束" prop="finished">
-        <template slot-scope="scope">
-          {{ scope.row.finished == "yes" ? '是': '否' }}
-        </template>
+          <template slot-scope="scope">
+            {{ scope.row.finished == "yes" ? '是': '否' }}
+          </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="160">
           <template slot-scope="scope">
@@ -94,7 +94,7 @@
             <el-input v-model="matchForm.id"></el-input>
           </el-form-item>
           <el-form-item label="赛季名称" prop="seasonId">
-            <el-select clearable @change="querySeason" filterable placeholder="请选择赛事" style="width:50%"
+            <el-select clearable @change="competitionChange" filterable placeholder="请选择赛事" style="width:50%"
                        v-model="matchForm.competitionId">
               <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in competitionList"></el-option>
             </el-select>
@@ -116,12 +116,12 @@
           </el-form-item>
           <el-form-item label="主队" prop="homeId">
             <el-select clearable filterable placeholder="请选择主场球队" style="width:100%" v-model="matchForm.homeId">
-              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in teamList"></el-option>
+              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in seTeamList"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="客队" prop="awayId">
             <el-select clearable filterable placeholder="请选择客场球队" style="width:100%" v-model="matchForm.awayId">
-              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in teamList"></el-option>
+              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in seTeamList"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="比分" prop="matchResults">
@@ -130,10 +130,17 @@
             <el-input placeholder="客队得分" v-model="matchResults[1].matchResult" style="width: 47.8%"></el-input>
           </el-form-item>
           <el-form-item label="是否结束" prop="finished">
-            <el-select  clearable filterable placeholder="比赛是否结束" v-model="matchForm.finished" style="width:100%">
+            <!--<el-select  clearable filterable placeholder="比赛是否结束" v-model="matchForm.finished" style="width:100%">
               <el-option :label="'是'" :value="'yes'"></el-option>
               <el-option :label="'否'" :value="'no'"></el-option>
-            </el-select>
+            </el-select>-->
+            <el-switch
+                v-model="matchForm.finished"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-value="yes"
+                inactive-value="no">
+            </el-switch>
           </el-form-item>
         </el-form>
       </el-form>
@@ -146,6 +153,8 @@
 </template>
 
 <script>
+    import filters from "../../util/filters";
+
     export default {
         name: "match",
         data() {
@@ -154,7 +163,8 @@
                 teamList: [],
                 competitionList: [],
                 seasonList: [],
-                seasonId: 56,
+                seTeamList: [],
+                seasonId: 20192,
                 competitionId: 2,
                 teamId: '',
                 matchRule: null,
@@ -184,6 +194,9 @@
             this.query();
             this.queryCompetition();
             this.queryTeam();
+        },
+        created() {
+            this.seasonId = 20192;
         },
         methods: {
             add() {
@@ -279,8 +292,20 @@
                 this.matchForm = rowEntity;
                 this.matchForm.competitionId = this.competitionId;
                 this.matchResults = [
-                    {id: rowEntity.matchResults[0].id, matchId: rowEntity.id, matchResult: rowEntity.matchResults[0].matchResult, matchResultAt: '0', place: 'home'},
-                    {id: rowEntity.matchResults[1].id, matchId: rowEntity.id, matchResult: rowEntity.matchResults[1].matchResult, matchResultAt: '0', place: 'away'}];
+                    {
+                        id: rowEntity.matchResults[0].id,
+                        matchId: rowEntity.id,
+                        matchResult: rowEntity.matchResults[0].matchResult,
+                        matchResultAt: '0',
+                        place: 'home'
+                    },
+                    {
+                        id: rowEntity.matchResults[1].id,
+                        matchId: rowEntity.id,
+                        matchResult: rowEntity.matchResults[1].matchResult,
+                        matchResultAt: '0',
+                        place: 'away'
+                    }];
             },
             query(val) {
                 if (!val) {
@@ -300,7 +325,6 @@
             getResultStr(val) {
                 var hr = '';
                 var ar = '';
-                console.log(val, '1');
                 for (const record of val.records) {
                     if (!record.matchResults) {
                         record.matchResult = '';
@@ -316,9 +340,7 @@
                         }
                     }
                     record.matchResult = hr + ':' + ar;
-                    console.log(record.matchResult)
                 }
-                console.log(val, '2');
                 this.pager = val
             },
             queryCompetition() {
@@ -329,6 +351,10 @@
                     .then(res => {
                         this.competitionList = res.data.records;
                     });
+            },
+            competitionChange(val) {
+                this.querySeason(val);
+                this.matchForm.seasonId = '';
             },
             querySeason(coId) {
                 this.$http.get("/season", {
@@ -348,13 +374,30 @@
                             size: 100,
                             current: 1
                         }
-                    })
-                    .then(res => {
-                        this.teamList = res.data.records;
-                    });
+                    }).then(res => {
+                    this.teamList = res.data.records;
+                }).finally(res => {
+                        this.queryTeamBySeason();
+                    }
+                )
+            },
+            queryTeamBySeason() {
+                this.$http.get("/sete", {
+                    params: {
+                        size: 100,
+                        current: 1,
+                        seasonId: this.seasonId,
+                    }
+                }).then(res => {
+                    this.seTeamList = res.data.records;
+                    for (const item of this.seTeamList) {
+                        item.name = filters.idFormatter(item.teamId, this.teamList)
+                    }
+                })
             },
             saveSeasonId(val) {
                 this.seasonId = val;
+                this.queryTeamBySeason()
             },
             // 分页组件点击事件
             pageChange(val) {

@@ -4,11 +4,7 @@
             <!-- 人员列表 -->
             <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                       style="width: 100%" v-loading="$store.state.loading">
-                <el-table-column align="center" label="姓名" prop="name">
-                    <template slot-scope="scope">
-                        {{ scope.row.personId | idFormatter(personList)}}
-                    </template>
-                </el-table-column>
+                <el-table-column align="center" label="姓名" prop="name"></el-table-column>
                 <el-table-column align="center" label="球队" prop="teamId">
                     <template slot-scope="scope">
                         {{ scope.row.teamId | idFormatter(teamList)}}
@@ -51,14 +47,9 @@
         name: "personRole",
         data() {
             return {
-                name: '',
-                teamId: '',
-                roleId: '',
-                shirtnumber: '',
-                start: '',
-                end: '',
                 selectedRows: [],
                 teamList: [],
+                roleList: [],
                 personList: [],
                 bucketName: "public",
                 pager: {current: 1, size: 10, total: 0, records: []}
@@ -66,10 +57,10 @@
         },
         created() {
             this.peId = this.$route.query.personId;
+            this.name = this.$route.query.name;
         },
         mounted() {
             this.queryTeam();
-            this.queryPerson();
             this.queryRole();
             this.queryTeamByPerson();
         },
@@ -77,11 +68,6 @@
             queryTeam() {
                 this.$http.get("/team", {params: {current: 1, size: 100}}).then(res => {
                     this.teamList = res.data.records;
-                })
-            },
-            queryPerson() {
-                this.$http.get("/person", {params: {current: 1, size: 10000}}).then(res => {
-                    this.personList = res.data.records;
                 })
             },
             queryRole() {
@@ -97,6 +83,9 @@
                         peId: this.peId,
                     }
                 }).then(res => {
+                    for (var item of res.data.records) {
+                        item.name = this.name;
+                    }
                     this.pager = res.data;
                 })
             },

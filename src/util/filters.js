@@ -10,7 +10,7 @@ Vue.use(Vuex);
  */
 let idFormatter = (id,entityList) => {
     if (!id) {
-        return 'IdIsNull'
+        return '--'
     }
     if (!entityList) {
         return 'nameListIsNull'
@@ -31,7 +31,7 @@ let idFormatter = (id,entityList) => {
     }
     //console.log(tempMap);
     if (!tempMap.get(id)) {
-        return 'error';
+        return 'Loading....';
     }
     return tempMap.get(id);
 };

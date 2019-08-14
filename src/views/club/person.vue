@@ -45,18 +45,26 @@
                         {{scope.row.countryId | idFormatter(countryList)}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="出生国家" prop="personDetail.birthCountryId">
+               <!-- <el-table-column align="center" label="出生国家" prop="personDetail">
                     <template slot-scope="scope">
-                        {{scope.row.personDetail.birthCountryId | idFormatter(countryList)}}
+                        {{!scope.row.personDetail? '&#45;&#45;' : (scope.row.personDetail.birthCountryId | idFormatter(countryList))}}
+                    </template>
+                </el-table-column>-->
+                <el-table-column align="center" label="出生地" prop="personDetail">
+                    <template slot-scope="scope">
+                        {{!scope.row.personDetail? '--' : (scope.row.personDetail.birthPlace | idFormatter(countryList))}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="出生地" prop="personDetail.birthPlace"></el-table-column>
-                <el-table-column align="center" label="惯用脚" prop="personDetail.preferredSide">
+                <el-table-column align="center" label="惯用脚" prop="personDetail">
                     <template slot-scope="scope">
-                    {{scope.row.personDetail.preferredSide=="left_foot" ? '左脚' : scope.row.personDetail.preferredSide=="right_foot" ?  '右脚' :scope.row.personDetail.preferredSide=="double_foot" ?  '双脚'  :'--'}}
+                    {{!scope.row.personDetail? '--' : (scope.row.personDetail.preferredSide=="left_foot" ? '左脚' : scope.row.personDetail.preferredSide=="right_foot" ?  '右脚' :scope.row.personDetail.preferredSide=="double_foot" ?  '双脚'  :'--')}}
                     </template>
                 </el-table-column>
-                <el-table-column align="center" label="球鞋尺寸" prop="personDetail.shoesize"></el-table-column>
+                <el-table-column align="center" label="球鞋尺寸" prop="personDetail">
+                    <template slot-scope="scope">
+                        {{!scope.row.personDetail? '--' : (scope.row.personDetail.shoesize | idFormatter(countryList))}}
+                    </template>
+                </el-table-column>
                <!-- <el-table-column align="center" label="第二国籍" prop="personDetail.nationality2">
                     <template slot-scope="scope">
                         {{scope.row.personDetail.nationality2 | idFormatter(countryList)}}
@@ -66,7 +74,7 @@
                     <template slot-scope="scope">
                         <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small"
                                    title="编辑"></el-button>
-                        <router-link :to="{path: '/club/player/personRole', query: {personId: scope.row.id}}">
+                        <router-link :to="{path: '/club/player/personRole', query: {personId: scope.row.id,name: scope.row.name}}">
                             <el-button circle icon="el-icon-menu" size="small" style="width: 32px"
                                        title="分配信息查看"></el-button>
                         </router-link>
@@ -183,6 +191,7 @@
 </template>
 
 <script>
+    import filters from "../../util/filters";
     export default {
         name: "player",
         data() {
@@ -225,7 +234,7 @@
             this.queryCountry();
         },
         methods: {
-            getPosition: function (id) {
+            getPosition(id) {
                 const positions = this.areas.filter(function (position) {
                     return position.pid == id;
                 });
@@ -313,7 +322,9 @@
                 document.getElementsByClassName("el-dialog__title")[0].innerText = "编辑人员";
                 this.dialogVisible = true;
                 this.person = person;
-                this.personDetail = person.personDetail
+                if (person.personDetail) {
+                    this.personDetail = person.personDetail
+                }
             },
             query() {
                 this.$http.get('/person', {

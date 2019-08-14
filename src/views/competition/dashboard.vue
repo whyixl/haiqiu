@@ -40,7 +40,7 @@
             {{scope.row.countryId | idFormatter(countryList)}}
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" align="center" label="联盟" prop="federationId">
+        <el-table-column :show-overflow-tooltip="true" align="center" label="联盟" prop="federationId" width="120px">
           <template slot-scope="scope">
             {{scope.row.federationId | idFormatter(federationList)}}
           </template>

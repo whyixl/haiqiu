@@ -28,26 +28,26 @@
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="teamId" type="selection" width="55"></el-table-column>
-        <el-table-column align="center" label="球队名称" prop="name" width="200"></el-table-column>
-        <el-table-column align="center" label="简称" prop="shortname" width="140">
+        <el-table-column align="center" label="球队名称" prop="name" width="250"></el-table-column>
+        <el-table-column align="center" label="简称" prop="shortname" >
           <template slot-scope="scope">
             {{!scope.row.shortname ? scope.row.name : scope.row.shortname}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="性别" prop="gender" width="140">
+        <el-table-column align="center" label="性别" prop="gender" width="120">
           <template slot-scope="scope">
-            {{scope.row.gender=="male" ? '男性':(scope.row.gender==="female"? '女性':'混合' )}}
+            {{!scope.row.gender? '--' : scope.row.gender=="male" ? '男性': scope.row.gender==="female"? '女性':'混合'}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="年龄" prop="ageId" width="140">
+        <el-table-column align="center" label="年龄" prop="ageId" width="120">
           <template slot-scope="scope">
-            {{scope.row.ageId==1 ? '职业' : scope.row.ageId==11 ? 'U23' :scope.row.ageId==2 ? 'U21' :scope.row.ageId==3 ? 'U20'
-            :scope.row.ageId==4 ? 'U19' :scope.row.ageId==5 ? 'U18' :scope.row.ageId==6 ? 'U17' :scope.row.ageId==7 ? 'U16'
-            :scope.row.ageId==8 ? 'U15' :scope.row.ageId==9 ? 'U14' :scope.row.ageId==10 ? 'U13' :scope.row.ageId==12 ? 'U12'
-            :scope.row.ageId==13 ? 'U11' :scope.row.ageId==14 ? 'U10' :'U9'}}
+            {{!scope.row.ageId? '--' : scope.row.ageId==1 ? '职业' : scope.row.ageId==2 ? 'U23' :scope.row.ageId==3 ? 'U21' :scope.row.ageId==4 ? 'U20'
+            :scope.row.ageId==5 ? 'U19' :scope.row.ageId==6 ? 'U18' :scope.row.ageId==7 ? 'U17' :scope.row.ageId==8 ? 'U16'
+            :scope.row.ageId==9 ? 'U15' :scope.row.ageId==10 ? 'U14' :scope.row.ageId==11 ? 'U13' :scope.row.ageId==12 ? 'U12'
+            :scope.row.ageId==13 ? 'U11' :scope.row.ageId==14 ? 'U10' :scope.row.ageId==15 ? 'U9' :scope.row.ageId==16 ? 'U8' :'U7'}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="俱乐部名称" prop="clubId" width="180">
+        <el-table-column align="center" label="俱乐部名称" prop="clubId" >
           <template slot-scope="scope">
             {{scope.row.clubId | idFormatter(clubList)}}
           </template>
@@ -56,7 +56,7 @@
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
             <router-link :to="{path: '/club/team/teamPlayer', query: {teamId: scope.row.id}}">
-              <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="添加人员"></el-button>
+              <el-button circle icon="el-icon-menu" size="small" style="width: 32px" title="队员管理"></el-button>
             </router-link>
             <!--<router-link :to="{path: '/club/team/teamStaff', query: {teamId: scope.row.id}}">-->
               <!--<el-button circle icon="el-icon-news" size="small" style="width: 32px" title="添加职员"></el-button>-->

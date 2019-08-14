@@ -17,7 +17,7 @@
 
         <!--<br>-->
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-        <el-button @click="deleteBatch":disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
+        <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
       </div>
 
       <!-- 球员列表 -->
