@@ -29,7 +29,7 @@
         <el-table-column align="center" fixed="right" label="操作" width="150">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-            <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete" size="small"
+            <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small"
                        title="删除"></el-button>
           </template>
         </el-table-column>
@@ -129,9 +129,17 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 } else if (res.data.status == 'FAILED') {
-                                    alert(res.data.data);
-                                }
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });                                }
                             }).finally(() => {
                                 this.dialogVisible = false;
                             })
@@ -141,9 +149,17 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 } else {
-                                    alert("修改失败")
-                                }
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });                                }
                             }).finally(() => {
                                 this.dialogVisible = false;
                             })

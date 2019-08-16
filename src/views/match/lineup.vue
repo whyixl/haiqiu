@@ -163,9 +163,17 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
-                                } else if (res.data.status == 'FAILED' && !res.data.data) {
-                                    alert(res.data.data);
-                                }
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
+                                } else if (res.data.status == 'FAILED' || !res.data.data) {
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });                                }
                             }).finally(() => {
                                 this.dialogVisible = false;
                             })
@@ -176,9 +184,17 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 } else {
-                                    alert("修改失败")
-                                }
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });                                }
                             }).finally(() => {
                                 this.dialogVisible = false;
                             })

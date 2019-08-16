@@ -61,7 +61,7 @@
             <!--<router-link :to="{path: '/club/team/teamStaff', query: {teamId: scope.row.id}}">-->
               <!--<el-button circle icon="el-icon-news" size="small" style="width: 32px" title="添加职员"></el-button>-->
             <!--</router-link>-->
-            <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
+            <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small"
                        title="删除"></el-button>
           </template>
         </el-table-column>
@@ -171,8 +171,17 @@
                                 .then(res => {
                                     if (res.data.status == "SUCCESS") {
                                         this.query();
+                                        this.$notify.success({
+                                            title: '成功',
+                                            duration: 1800,
+                                            message: res.data.data
+                                        });
                                     } else if (res.data.status == "FAILED") {
-                                        alert(res.data.data);
+                                        this.$notify.error({
+                                            title: '错误',
+                                            duration: 1800,
+                                            message: res.data.data
+                                        });
                                     }
                                 })
                                 .finally(() => {
@@ -184,9 +193,17 @@
                                 .then(res => {
                                     if (res.data.status == "SUCCESS") {
                                         this.query();
+                                        this.$notify.success({
+                                            title: '成功',
+                                            duration: 1800,
+                                            message: res.data.data
+                                        });
                                     } else {
-                                        alert("修改失败");
-                                    }
+                                        this.$notify.error({
+                                            title: '错误',
+                                            duration: 1800,
+                                            message: res.data.data
+                                        });                                    }
                                 })
                                 .finally(() => {
                                     this.dialogVisible = false;
@@ -213,18 +230,68 @@
                     gender: ""
                 };
             },
-            remove(id, rowNum) {
-                this.$confirm("此操作将永久删除, 是否继续?", "提示", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning"
-                }).then(() => {
-                    this.$http
-                        .delete("/team", {
-                            params: {
-                                id: id
+            remove(id,flag) {
+                this.$http.get('/teamPerson/selectByTeam', {
+                    params: {size:1,current:1,teamId:id}
+                }).then(res=>{
+                    const records = res.data.records;
+                    if (flag && (!records||records.length===0)) {
+                        this.$http.delete("/team", {
+                                params: {
+                                    id: id
+                                }
+                            }).then(res => {
+                            if (res.status == 200 && res.data.status == 'SUCCESS') {
+                                console.log('ssssssss');
+                                this.query();
+                                this.$notify.success({
+                                    title: '成功',
+                                    duration: 1800,
+                                    message: res.data.data
+                                });
+                            } else if (res.status != 200 || res.data.status == 'FAILED') {
+                                this.$notify.error({
+                                    title: '错误',
+                                    duration: 1800,
+                                    message: res.data.data
+                                })
                             }
-                        }).then(this.query);
+                        });
+                    } else if (!flag && (!records||records.length===0)) {
+                        this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+                            confirmButtonText: "确定",
+                            cancelButtonText: "取消",
+                            type: "warning"
+                        }).then(() => {
+                            this.$http
+                                .delete("/team", {
+                                    params: {
+                                        id: id
+                                    }
+                                }).then(res => {
+                                if (res.status == 200 && res.data.status == 'SUCCESS') {
+                                    this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
+                                } else if (res.status != 200 || res.data.status == 'FAILED') {
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    })
+                                }
+                            });
+                        });
+                    } else {
+                        this.$message({
+                            message:"目前该球队下仍存在球员，请处理",
+                            showClose:true,
+                            type:'error'
+                        })
+                    }
                 });
             },
             deleteBatch() {
@@ -233,20 +300,8 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    let temp = 1;
                     for (let i = 0; i < this.selectedRows.length; i++) {
-                        this.$http.delete("/team", {
-                            params: {
-                                id: this.selectedRows[i]
-                            },
-                        }).then(res => {
-                            if (res.status != 200) {
-                                alert("批量删除遇到问题，请重试");
-                            }
-                            if (temp++ == this.selectedRows.length) {
-                                this.query();
-                            }
-                        });
+                        this.remove(this.selectedRows[i],true);
                     }
                 });
             },

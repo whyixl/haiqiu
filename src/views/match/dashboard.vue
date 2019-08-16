@@ -69,7 +69,7 @@
                 :to="{path: '/match/dashboard/matchStatistics',query: {homeId: scope.row.homeId, maId: scope.row.id, awayId: scope.row.awayId}}">
               <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="统计"></el-button>
             </router-link>
-            <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete" size="small"
+            <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small"
                        title="删除"></el-button>
           </template>
         </el-table-column>
@@ -116,12 +116,14 @@
           </el-form-item>
           <el-form-item label="主队" prop="homeId">
             <el-select clearable filterable placeholder="请选择主场球队" style="width:100%" v-model="matchForm.homeId">
-              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in seTeamList"></el-option>
+              <el-option :key="item.teamId" v-bind:label="item.name" v-bind:value="item.teamId"
+                         v-for="item in seTeamList"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="客队" prop="awayId">
             <el-select clearable filterable placeholder="请选择客场球队" style="width:100%" v-model="matchForm.awayId">
-              <el-option v-bind:label="item.name" v-bind:value="item.id" v-for="item in seTeamList"></el-option>
+              <el-option :key="item.teamId" v-bind:label="item.name" v-bind:value="item.teamId"
+                         v-for="item in seTeamList"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="比分" prop="matchResults">
@@ -129,7 +131,7 @@
             :
             <el-input placeholder="客队得分" v-model="matchResults[1].matchResult" style="width: 47.8%"></el-input>
           </el-form-item>
-          <el-form-item label="是否结束" prop="finished">
+          <el-form-item label="结束" prop="finished">
             <!--<el-select  clearable filterable placeholder="比赛是否结束" v-model="matchForm.finished" style="width:100%">
               <el-option :label="'是'" :value="'yes'"></el-option>
               <el-option :label="'否'" :value="'no'"></el-option>
@@ -138,6 +140,8 @@
                 v-model="matchForm.finished"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
+                active-text="是"
+                inactive-text="否"
                 active-value="yes"
                 inactive-value="no">
             </el-switch>
@@ -221,9 +225,18 @@
                                 .then(res => {
                                     if (res.status == 200 && res.data.status == "SUCCESS") {
                                         this.query();
+                                        this.$notify.success({
+                                            title: '成功',
+                                            duration: 1800,
+                                            message: res.data.data
+                                        });
                                         this.dialogVisible = false;
                                     } else if (res.status != 200 || res.data.status == "FAILED") {
-                                        alert(res.data.data);
+                                        this.$notify.error({
+                                            title: '错误',
+                                            duration: 1800,
+                                            message: res.data.data
+                                        });
                                     }
                                 });
                         } else {
@@ -235,8 +248,17 @@
                                 .then(res => {
                                     if (res.data.status == "SUCCESS") {
                                         this.query();
+                                        this.$notify.success({
+                                            title: '成功',
+                                            duration: 1800,
+                                            message: res.data.data
+                                        });
                                     } else {
-                                        alert(res.data.data);
+                                        this.$notify.error({
+                                            title: '错误',
+                                            duration: 1800,
+                                            message: res.data.data
+                                        });
                                     }
                                 })
                                 .finally(() => {
@@ -244,23 +266,44 @@
                                 });
                         }
                     } else {
-                        console.log("error submit!!");
+
                         return false;
                     }
                 });
             },
-            remove(id, rowNum) {
-                this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+            remove(id) {
+                this.$prompt("永久删除该比赛及首发阵容和比赛事件，输入 <span style='color:red'>yes</span> 确认", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
-                    type: "warning"
-                }).then(() => {
+                    inputPattern: /^yes$/,
+                    inputErrorMessage: "不能删除",
+                    dangerouslyUseHTMLString: true
+                }).then(({value}) => {
                     this.$http
                         .delete("/match", {
-                            params: {
-                                id: id
-                            }
-                        }).then(this.query);
+                            params: {id: id}
+                        }).then(res => {
+                        if (res.data && res.data.status == "SUCCESS") {
+                            this.query();
+                            this.$notify.success({
+                                title: '成功',
+                                duration: 1800,
+                                message: res.data.data
+                            });
+                        } else {
+                            this.$notify.error({
+                                title: '错误',
+                                duration: 1800,
+                                message: res.data.data
+                            });
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        message: "取消删除",
+                        showClose: true,
+                        type: 'error'
+                    })
                 });
             },
             deleteBatch() {

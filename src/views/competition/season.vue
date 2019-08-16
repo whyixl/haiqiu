@@ -35,7 +35,7 @@
             <router-link :to="{path: '/competition/dashboard/season/round',query: {seId: scope.row.id, coId: competitionId, start: scope.row.start}}">
               <el-button @click="saveId" circle icon="el-icon-news" size="small" style="width: 32px" title="轮次"></el-button>
             </router-link>
-            <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
+            <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -128,8 +128,17 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
-                                } else if (res.data.status == 'FAILED' && !res.data.data) {
-                                    alert(res.data.data);
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
+                                } else if (res.data.status == 'FAILED' || !res.data.data) {
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 }
                             }).finally(() => {
                                 this.dialogVisible = false;
@@ -141,9 +150,17 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 } else {
-                                    alert("修改失败")
-                                }
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });                                }
                             }).finally(() => {
                                 this.dialogVisible = false;
                             })
@@ -163,18 +180,77 @@
                 };
                 this.dateRange = '';
             },
-            remove(id, rowNum) {
-                this.$confirm("此操作将永久删除, 是否继续?", "提示", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning"
-                }).then(() => {
-                    this.$http.delete('/season', {
-                        params: {
-                            id: id
-                        }
-                    }).then(this.query);
+            remove(id, flag) {
+                this.$http('/sete',{
+                    params: {size:1,current:1,seasonId:id}
+                }).then(res=>{
+                    const records = res.data.records;
+                    if (flag && (!records||records.length===0)) {
+                        this.$http.delete("/season", {
+                            params: {
+                                id: id
+                            }
+                        }).then(res => {
+                            if (res.status == 200 && res.data.status == 'SUCCESS') {
+                                this.query();
+                                this.$notify.success({
+                                    title: '成功',
+                                    duration: 1800,
+                                    message: res.data.data
+                                });
+                            } else if (res.status != 200 || res.data.status == 'FAILED') {
+                                this.$notify.error({
+                                    title: '错误',
+                                    duration: 1800,
+                                    message: res.data.data
+                                })
+                            }
+                        });
+                    } else if (!flag && (!records||records.length===0)) {
+                        this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+                            confirmButtonText: "确定",
+                            cancelButtonText: "取消",
+                            type: "warning"
+                        }).then(() => {
+                            this.$http
+                                .delete("/season", {
+                                    params: {
+                                        id: id
+                                    }
+                                }).then(res => {
+                                if (res.status == 200 && res.data.status == 'SUCCESS') {
+                                    this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
+                                } else if (res.status != 200 || res.data.status == 'FAILED') {
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    })
+                                }
+                            });
+                        });
+                    } else {
+                        this.$message({
+                            message:"目前该赛季下仍有关联的球队，请处理",
+                            showClose:true,
+                            type:'error'
+                        })}
                 });
+                this.$http.get('/round',{
+                    params:{size:1000,current:1,seasonId:id}
+                }).then(res=>{
+                    const records = res.data.records;
+                    if (records && records.length!=0) {
+                        for (let round of records) {
+                            this.$http('/round',{params:{id:round.id}})
+                        }
+                    }
+                })
             },
             deleteBatch() {
                 this.$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -182,20 +258,8 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    let temp = 1;
                     for (let i = 0; i < this.selectedRows.length; i++) {
-                        this.$http.delete("/season", {
-                            params: {
-                                id: this.selectedRows[i]
-                            },
-                        }).then(res => {
-                            if (res.status != 200) {
-                                alert("批量删除遇到问题，请重试");
-                            }
-                            if (temp++ == this.selectedRows.length) {
-                                this.query();
-                            }
-                        });
+                        this.remove(this.selectedRows[i],true);
                     }
                 });
             },

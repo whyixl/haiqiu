@@ -9,15 +9,15 @@
       <!-- 这一部分是赛事列表 -->
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
-        <el-table-column align="center" prop="competitionId" type="selection" width="40"></el-table-column>
-        <el-table-column align="center" label="描述" prop="name" width="200"></el-table-column>
-        <el-table-column align="center" label="简称" prop="shortname" width="110"></el-table-column>
-        <el-table-column align="center" label="性别" prop="gender" width="100">
+        <el-table-column align="center" prop="competitionId" type="selection" width="50"></el-table-column>
+        <el-table-column align="center" label="描述" prop="name" width="250"></el-table-column>
+        <el-table-column align="center" label="简称" prop="shortname"></el-table-column>
+        <el-table-column align="center" label="性别" prop="gender" >
           <template slot-scope="scope">
             {{ scope.row.gender==="male" ? '男性':(scope.row.gender==="female"? '女性':'混合' )}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="年龄" prop="ageId" width="100">
+        <el-table-column align="center" label="年龄" prop="ageId" >
           <template slot-scope="scope">
             {{scope.row.ageId==1 ? '职业' : scope.row.ageId==11 ? 'U23' :scope.row.ageId==2 ? 'U21' :scope.row.ageId==3 ? 'U20'
             :scope.row.ageId==4 ? 'U19' :scope.row.ageId==5 ? 'U18' :scope.row.ageId==6 ? 'U17' :scope.row.ageId==7 ? 'U16'
@@ -25,7 +25,7 @@
             :scope.row.ageId==13 ? 'U11' :scope.row.ageId==14 ? 'U10' :'U9'}}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="类型" prop="type" width="100">
+        <el-table-column align="center" label="类型" prop="type" >
           <template slot-scope="scope">
             {{ scope.row.type == "club" ? '俱乐部': '国际' }}
           </template>
@@ -35,12 +35,12 @@
             <!--{{ scope.row.starttime | moment('YYYY-MM-DD') }}-->
           <!--</template>-->
         <!--</el-table-column>-->
-        <el-table-column align="center" label="国家/地区" prop="countryId" width="110">
+        <el-table-column align="center" label="国家/地区" prop="countryId" >
           <template slot-scope="scope">
             {{scope.row.countryId | idFormatter(countryList)}}
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" align="center" label="联盟" prop="federationId" width="120px">
+        <el-table-column :show-overflow-tooltip="true" align="center" label="联盟" prop="federationId" >
           <template slot-scope="scope">
             {{scope.row.federationId | idFormatter(federationList)}}
           </template>
@@ -51,7 +51,7 @@
             <router-link :to="{path: '/competition/dashboard/season',query: {coId: scope.row.id}}">
               <el-button circle icon="el-icon-news" size="small" style="width: 32px" title="赛季"></el-button>
             </router-link>
-            <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete" size="small"
+            <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small"
                        title="删除"></el-button>
           </template>
         </el-table-column>
@@ -180,7 +180,7 @@
                 genderOptions: [{label: "男性", value: "male"}, {label: "女性", value: "female"},{label: "混合", value: "mixed"}],
                 dialogVisible: false,
                 selectedRows: [],
-                pager: {current: 1, size: 5, total: 0, records: []},
+                pager: {current: 1, size: 10, total: 0, records: []},
                 //表单过滤规则
                 competitionRule: {
                     name: [{
@@ -207,9 +207,17 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 } else if (res.data.status == 'FAILED') {
-                                    alert(res.data.data);
-                                }
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });                                }
                             }).finally(() => {
                                 this.dialogVisible = false;
                             })
@@ -219,15 +227,22 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 } else {
-                                    alert("修改失败")
-                                }
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });                                }
                             }).finally(() => {
                                 this.dialogVisible = false;
                             })
                         }
                     } else {
-                        console.log('error submit!!');
                         return false;
                     }
                 });
@@ -246,17 +261,66 @@
                     starttime: null,
                 }
             },
-            remove(id, rowNum) {
-                this.$confirm("此操作将永久删除, 是否继续?", "提示", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning"
-                }).then(() => {
-                    this.$http.delete('/competition', {
-                        params: {
-                            id: id
-                        }
-                    }).then(this.query);
+            remove(id,flag) {
+                this.$http.get('/season',{
+                    params:{competitionId: id, size: 1, current: 1}
+                }).then(res=>{
+                    const records = res.data.records;
+                    if (flag && (!records||records.length===0)) {
+                        this.$http.delete("/competition", {
+                            params: {
+                                id: id
+                            }
+                        }).then(res => {
+                            if (res.status == 200 && res.data.status == 'SUCCESS') {
+                                this.query();
+                                this.$notify.success({
+                                    title: '成功',
+                                    duration: 1800,
+                                    message: res.data.data
+                                });
+                            } else if (res.status != 200 || res.data.status == 'FAILED') {
+                                this.$notify.error({
+                                    title: '错误',
+                                    duration: 1800,
+                                    message: res.data.data
+                                })
+                            }
+                        });
+                    } else if (!flag && (!records||records.length===0)) {
+                        this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+                            confirmButtonText: "确定",
+                            cancelButtonText: "取消",
+                            type: "warning"
+                        }).then(() => {
+                            this.$http
+                                .delete("/competition", {
+                                    params: {
+                                        id: id
+                                    }
+                                }).then(res => {
+                                if (res.status == 200 && res.data.status == 'SUCCESS') {
+                                    this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
+                                } else if (res.status != 200 || res.data.status == 'FAILED') {
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    })
+                                }
+                            });
+                        });
+                    } else {
+                        this.$message({
+                            message:"目前该赛事下仍有关联的赛季，请处理",
+                            showClose:true,
+                            type:'error'
+                        })}
                 });
             },
             deleteBatch() {
@@ -265,20 +329,8 @@
                     cancelButtonText: "取消",
                     type: "warning"
                 }).then(() => {
-                    let temp = 1;
                     for (let i = 0; i < this.selectedRows.length; i++) {
-                        this.$http.delete("/competition", {
-                            params: {
-                                id: this.selectedRows[i]
-                            },
-                        }).then(res => {
-                            if (res.status != 200) {
-                                alert("批量删除遇到问题，请重试");
-                            }
-                            if (temp++ == this.selectedRows.length) {
-                                this.query();
-                            }
-                        });
+                        this.remove(this.selectedRows[i],true);
                     }
                 });
             },

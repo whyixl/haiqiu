@@ -23,7 +23,7 @@
         <el-table-column align="center" fixed="right" label="操作" width="350">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-            <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
+            <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small" title="删除"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -112,8 +112,22 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
-                                } else if (res.data.status == 'FAILED' && !res.data.data) {
-                                    alert(res.data.data);
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
+                                } else if (res.data.status == 'FAILED' || !res.data.data) {
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 }
                             }).finally(() => {
                                 this.dialogVisible = false;
@@ -125,15 +139,23 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 } else {
-                                    alert("修改失败")
+                                    this.$notify.error({
+                                        title: '错误',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 }
                             }).finally(() => {
                                 this.dialogVisible = false;
                             })
                         }
                     } else {
-                        console.log('error submit!!');
                         return false;
                     }
                 });
@@ -158,7 +180,22 @@
                         params: {
                             id: id
                         }
-                    }).then(this.query);
+                    }).then(res => {
+                        if (res.status == 200 && res.data.status == 'SUCCESS') {
+                            this.query();
+                            this.$notify.success({
+                                title: '成功',
+                                duration: 1800,
+                                message: res.data.data
+                            });
+                        } else if (res.status != 200 || res.data.status == 'FAILED') {
+                            this.$notify.error({
+                                title: '错误',
+                                duration: 1800,
+                                message: res.data.data
+                            })
+                        }
+                    });
                 });
             },
             deleteBatch() {

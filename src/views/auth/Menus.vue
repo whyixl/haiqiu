@@ -35,7 +35,7 @@
                         <template slot-scope="scope">
                             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small"
                                        title="编辑"></el-button>
-                            <el-button @click="remove(scope.row.id,scope.$index)" circle icon="el-icon-delete"
+                            <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete"
                                        size="small" title="删除"></el-button>
                         </template>
                     </el-table-column>
@@ -137,6 +137,11 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 } else if (res.data.status == 'FAILED') {
                                     alert(res.data.data);
                                 }
@@ -149,6 +154,11 @@
                             ).then(res => {
                                 if (res.data.status == 'SUCCESS') {
                                     this.query();
+                                    this.$notify.success({
+                                        title: '成功',
+                                        duration: 1800,
+                                        message: res.data.data
+                                    });
                                 } else {
                                     alert("修改失败")
                                 }
