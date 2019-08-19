@@ -24,8 +24,8 @@
       <!-- 球员列表 -->
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" row-key="id" v-bind:tree-props="{children: 'children',hasChildren: 'hasChildren'}"
-                lazy :load="load">
-
+                lazy :load="load" v-loading="loading"  element-loading-text="拼命加载中"
+                element-loading-spinner="el-icon-loading" element-loading-background="rgba(255, 255, 255, 0.8)">
         <!--<el-table
             :data="tableData"
             style="width: 100%;margin-bottom: 20px;"
@@ -35,7 +35,7 @@
             :tree-props="{children: 'children', hasChildren: 'hasChildren'}">-->
 
         <el-table-column align="center" prop="personId" type="selection" width="55"></el-table-column>
-        <el-table-column align="center" label="姓名" prop="personId">
+        <el-table-column align="left" label="姓名" prop="personId" width="120">
           <template slot-scope="scope">
             {{scope.row.personId | idFormatter(personList)}}
           </template>
@@ -134,33 +134,7 @@
         name: "player",
         data() {
             return {
-                tableData: [{
-                    id: 1,
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    id: 2,
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    id: 3,
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄',
-                    children: [{
-                        id: 31,
-                        date: '2016-05-01',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1519 弄'
-                    }, {
-                        id: 32,
-                        date: '2016-05-01',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1519 弄'
-                    }]
-                }],
+                loading: true,
                 distributionForm: {
                     id: '',
                     teamId: '',
@@ -205,12 +179,14 @@
                 {name: '俱乐部支持', id: 60, pid: 21},
                 {name: '理疗师', id: 61, pid: 21}
             ];
-            var positions = this.areas.filter(function (area) {
+            const positions = this.areas.filter(function (area) {
                 return area.pid == 0;
             });
             this.positions = positions;
             this.teamId = this.$route.query.teamId;
-
+            setTimeout(()=> {
+                this.loading = false
+            },3000)
         },
         mounted() {
             this.query(this.teamId);
@@ -342,7 +318,7 @@
             load(tree, treeNode, resolve) {
                 setTimeout(()=>{
                     resolve(tree.children)
-                },300)
+                },200)
             },
             query() {
                 const re = [];

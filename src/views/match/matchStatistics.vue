@@ -21,16 +21,8 @@
           </template>
         </el-table-column>
         <el-table-column label="分钟" align="center" prop="minute"></el-table-column>
-        <el-table-column label="事件" align="center" prop="action">
-          <template slot-scope="scope">
-            {{ scope.row.action | idFormatter(areas) }}
-          </template>
-        </el-table-column>
-        <el-table-column label="类型" align="center" prop="kind">
-          <template slot-scope="scope">
-            {{ scope.row.kind | idFormatter(areas) }}
-          </template>
-        </el-table-column>
+        <el-table-column label="事件" align="center" prop="action"></el-table-column>
+        <el-table-column label="类型" align="center" prop="kind"></el-table-column>
         <el-table-column label="相关球员" align="center" prop="additionalPersonId">
           <template slot-scope="scope">
             {{ scope.row.additionalPersonId | idFormatter(allPersonList) }}
@@ -44,7 +36,7 @@
         <el-table-column fixed="right" align="center" label="操作" width="120">
           <template slot-scope="scope">
             <el-button @click="edit(scope.row)" circle icon="el-icon-edit" size="small" title="编辑"></el-button>
-            <el-button @click="remove(scope.row.id, scope.$index)" circle icon="el-icon-delete" size="small"
+            <el-button @click="remove(scope.row.id)" circle icon="el-icon-delete" size="small"
                        title="删除"></el-button>
           </template>
         </el-table-column>
@@ -113,7 +105,6 @@
   </div>
 </template>
 
-
 <script>
     import filters from "../../util/filters";
 
@@ -121,6 +112,7 @@
         name: "matchEvent",
         data() {
             return {
+
                 selectedRows: [],
                 match_eventRule: null,
                 match_eventForm: {

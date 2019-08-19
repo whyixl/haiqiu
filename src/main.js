@@ -8,6 +8,8 @@ import router from "./router";
 import store from "./store";
 import "./registerServiceWorker";
 import filters from "./util/filters";
+import '@/assets/font/iconfont.css';
+import '@/assets/font/iconfont.js';
 
 Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
 

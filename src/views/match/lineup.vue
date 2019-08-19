@@ -4,16 +4,17 @@
       <div slot="header">
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
         <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
+        <span  style="text-align:center;display:block;color:#409EFF">{{matchName}}</span>
       </div>
 
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
                 style="width: 100%" v-loading="$store.state.loading">
         <el-table-column align="center" prop="lineupId" type="selection" width="55"></el-table-column>
-        <el-table-column align="center" label="比赛名称" width="180">
+        <!--<el-table-column align="center" label="比赛名称" width="220">
           <template slot-scope="scope">
             {{matchName}}
           </template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column align="center" label="球队" prop="teamId" width="120">
           <template slot-scope="scope">
             {{ scope.row.teamId | idFormatter(teamList) }}

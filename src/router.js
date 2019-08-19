@@ -165,7 +165,7 @@ export const asyncRouter = [
                     {
                         path: "/match/dashboard/lineup",
                         name: "lineup",
-                        component: () => import("@/views/match/lineup.vue")
+                        component: () => import("@/views/match/lineup-1.vue")
                     },
                     {
                         path: "/match/dashboard/matchStatistics",
