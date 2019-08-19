@@ -21,8 +21,19 @@
           </template>
         </el-table-column>
         <el-table-column label="分钟" align="center" prop="minute"></el-table-column>
-        <el-table-column label="事件" align="center" prop="action"></el-table-column>
-        <el-table-column label="类型" align="center" prop="kind"></el-table-column>
+        <el-table-column label="事件" align="center" prop="action">
+          <template slot-scope="scope">
+            {{ scope.row.action=='goal' ? '进球' : scope.row.action=='playing' ? '比赛中' : scope.row.action=='card' ? '红黄牌':'点球决胜'}}
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" align="center" prop="kind">
+          <template slot-scope="scope">
+            {{ scope.row.kind=='yellow' ? '黄牌' : scope.row.kind=='red' ? '红牌' :scope.row.kind=='yellow-red' ? '第二张黄牌' : scope.row.kind=='substitute-in' ? '换人'
+            :scope.row.kind=='lineup' ? '先发' : scope.row.kind=='bench' ? '替补' :scope.row.kind=='left-foot' ? '左脚' : scope.row.kind=='right-foot' ? '右脚'  :scope.row.kind=='head' ? '头球'
+            : scope.row.kind=='free-kick' ? '任意球' :scope.row.kind=='direct-free-kick' ? '直接任意球' : scope.row.kind=='penalty' ? '点球' : scope.row.kind=='back-heel' ? '足跟踢球'
+            : scope.row.kind=='overhead-kick' ? '倒钩球' : scope.row.kind=='own-goal' ? '乌龙球' : scope.row.kind=='goal' ? '命中':'未命中'}}
+          </template>
+        </el-table-column>
         <el-table-column label="相关球员" align="center" prop="additionalPersonId">
           <template slot-scope="scope">
             {{ scope.row.additionalPersonId | idFormatter(allPersonList) }}
@@ -140,27 +151,30 @@
         },
         created: function () {
             this.areas = [
-                {name: "进球", id: 1, pid: 0},
-                {name: "黄牌", id: 2, pid: 0},
-                {name: "红牌", id: 3, pid: 0},
-                {name: "第二张黄牌", id: 4, pid: 0},
-                {name: "替补", id: 5, pid: 0},
-                {name: "点球决胜", id: 6, pid: 0},
-                {name: "左脚", id: 11, pid: 1},
-                {name: "右脚", id: 12, pid: 1},
-                {name: "头球", id: 13, pid: 1},
-                {name: "任意球", id: 14, pid: 1},
-                {name: "直接任意球", id: 15, pid: 1},
-                {name: "点球", id: 16, pid: 1},
-                {name: "足跟踢球", id: 17, pid: 1},
-                {name: "倒钩球", id: 18, pid: 1},
-                {name: "乌龙球", id: 19, pid: 1},
-                {name: "其他", id: 120, pid: 1},
-                {name: null, id: 21, pid: 2},
-                {name: null, id: 31, pid: 3},
-                {name: null, id: 41, pid: 4},
-                {name: null, id: 51, pid: 5},
-                {name: "命中", id: 61, pid: 6}
+                {name: "进球", id: 'goal', pid: 0},
+                {name: "比赛中", id: 'playing', pid: 0},
+                {name: "红黄牌", id: 'card', pid: 0},
+                {name: "特殊事件", id: 'special', pid: 0},
+                {name: "黄牌", id: 'yellow', pid: 'card'},
+                {name: "红牌", id: 'red', pid: 'card'},
+                {name: "第二张黄牌", id: 'yellow-red', pid: 'card'},
+                {name: "换人", id: 'substitute-in', pid: 'playing'},
+                {name: "先发", id: 'lineup', pid: 'playing'},
+                {name: "替补", id: 'bench', pid: 'playing'},
+                {name: "点球决胜", id: 'pso', pid: 0},
+                {name: "左脚", id: 'left-foot', pid: 'goal'},
+                {name: "右脚", id: 'right-foot', pid: 'goal'},
+                {name: "头球", id: 'head', pid: 'goal'},
+                {name: "任意球", id: 'free-kick', pid: 'goal'},
+                {name: "直接任意球", id: 'direct-free-kick', pid: 'goal'},
+                {name: "点球", id: 'penalty', pid: 'goal'},
+                {name: "足跟踢球", id: 'back-heel', pid: 'goal'},
+                {name: "倒钩球", id: 'overhead-kick', pid: 'goal'},
+                {name: "乌龙球", id: 'own-goal', pid: 'goal'},
+                {name: "其它", id: 'goal', pid: 'goal'},
+                {name: "点球未进", id: 'missed-penalty', pid: 'special'},
+                {name: "命中", id: 'goal', pid: 'pso'},
+                {name: "未命中", id: 'miss', pid: 'pso'}
             ];
             var actions = this.areas.filter(function (area) {
                 return area.pid == 0;
