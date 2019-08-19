@@ -4,25 +4,36 @@
       <div slot="header">
         <!-- 查询功能暂时屏蔽 -->
         <!--<el-row :gutter="10">-->
-          <!--<el-col :span="3">-->
-            <!--<el-input placeholder="姓名" v-model="nameSearch"></el-input>-->
-          <!--</el-col>-->
-          <!--<el-col :span="3">-->
-            <!--<el-input placeholder="英文名" v-model="surnameSearch"></el-input>-->
-          <!--</el-col>-->
-          <!--<el-col :span="2">-->
-            <!--<el-button icon="el-icon-search" type="primary">查询</el-button>-->
-          <!--</el-col>-->
+        <!--<el-col :span="3">-->
+        <!--<el-input placeholder="姓名" v-model="nameSearch"></el-input>-->
+        <!--</el-col>-->
+        <!--<el-col :span="3">-->
+        <!--<el-input placeholder="英文名" v-model="surnameSearch"></el-input>-->
+        <!--</el-col>-->
+        <!--<el-col :span="2">-->
+        <!--<el-button icon="el-icon-search" type="primary">查询</el-button>-->
+        <!--</el-col>-->
         <!--</el-row>-->
 
         <!--<br>-->
         <el-button @click="add" icon="el-icon-plus" size="medium" type="primary">新增</el-button>
-        <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除</el-button>
+        <el-button @click="deleteBatch" :disabled="selectedRows.length===0" icon="el-icon-delete" size="medium">删除
+        </el-button>
       </div>
 
       <!-- 球员列表 -->
       <el-table :data="pager.records" @selection-change="onSelectionChange" highlight-current-row stripe
-                style="width: 100%" v-loading="$store.state.loading">
+                style="width: 100%" row-key="id" v-bind:tree-props="{children: 'children',hasChildren: 'hasChildren'}"
+                lazy :load="load">
+
+        <!--<el-table
+            :data="tableData"
+            style="width: 100%;margin-bottom: 20px;"
+            row-key="id"
+            border
+            default-expand-all
+            :tree-props="{children: 'children', hasChildren: 'hasChildren'}">-->
+
         <el-table-column align="center" prop="personId" type="selection" width="55"></el-table-column>
         <el-table-column align="center" label="姓名" prop="personId">
           <template slot-scope="scope">
@@ -36,8 +47,10 @@
         </el-table-column>
         <el-table-column align="center" label="角色" prop="roleId">
           <template slot-scope="scope">
-            {{scope.row.roleId==1 ? '守门员' : scope.row.roleId==2 ? '后卫' :scope.row.roleId==3 ? '中场' :scope.row.roleId==4 ? '前锋'
-            :scope.row.roleId==5 ? '主教练' :scope.row.roleId==6 ? '助力教练' :scope.row.roleId==7 ? '守门员教练' :scope.row.roleId==56 ? '运动教练'
+            {{scope.row.roleId==1 ? '守门员' : scope.row.roleId==2 ? '后卫' :scope.row.roleId==3 ? '中场' :scope.row.roleId==4
+            ? '前锋'
+            :scope.row.roleId==5 ? '主教练' :scope.row.roleId==6 ? '助力教练' :scope.row.roleId==7 ? '守门员教练'
+            :scope.row.roleId==56 ? '运动教练'
             :scope.row.roleId==59 ? '随队医生' :scope.row.roleId==60 ? '俱乐部支持' :scope.row.roleId==61 ? '理疗师' :'无位置'}}
           </template>
         </el-table-column>
@@ -76,7 +89,7 @@
       <el-form :label-position="'right'" label-width="80px">
         <el-form :model="distributionForm" label-width="80px" ref="distributionForm">
           <el-form-item label="所属球队" prop="teamId">
-            <el-select  disabled filterable placeholder="请选择球队" style="width:100%" v-model="distributionForm.teamId">
+            <el-select disabled filterable placeholder="请选择球队" style="width:100%" v-model="distributionForm.teamId">
               <el-option :label="item.name" :value="item.id" v-for="item in teamList"></el-option>
             </el-select>
           </el-form-item>
@@ -86,11 +99,13 @@
             </el-select>
           </el-form-item>
           <el-form-item label="球衣号" prop="shirtnumber">
-            <el-input clearable  placeholder="请输入球衣号" v-model="distributionForm.shirtnumber"></el-input>
+            <el-input clearable placeholder="请输入球衣号" v-model="distributionForm.shirtnumber"></el-input>
           </el-form-item>
           <el-form-item label="人员属性" prop="position">
-            <el-select @change="getPosition(distributionForm.position)" filterable placeholder="请选择人员属性" style="width:50%" v-model="distributionForm.position">
-              <el-option :label="position.name " :value="position.id" v-for="position in positions">{{position.name}}</el-option>
+            <el-select @change="getPosition(distributionForm.position)" filterable placeholder="请选择人员属性"
+                       style="width:50%" v-model="distributionForm.position">
+              <el-option :label="position.name " :value="position.id" v-for="position in positions">{{position.name}}
+              </el-option>
             </el-select>
             <el-select filterable placeholder="请选择角色" style="width:50%" v-model="distributionForm.roleId">
               <el-option :label="role.name " :value="role.id" v-for="role in roles">{{role.name}}</el-option>
@@ -119,11 +134,38 @@
         name: "player",
         data() {
             return {
+                tableData: [{
+                    id: 1,
+                    date: '2016-05-02',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1518 弄'
+                }, {
+                    id: 2,
+                    date: '2016-05-04',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1517 弄'
+                }, {
+                    id: 3,
+                    date: '2016-05-01',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1519 弄',
+                    children: [{
+                        id: 31,
+                        date: '2016-05-01',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1519 弄'
+                    }, {
+                        id: 32,
+                        date: '2016-05-01',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1519 弄'
+                    }]
+                }],
                 distributionForm: {
-                    id:'',
+                    id: '',
                     teamId: '',
                     roleId: '',
-                    person:'',
+                    person: '',
                     personId: '',
                     shirtnumber: '',
                     start: '',
@@ -138,8 +180,8 @@
                 personList: [],
                 countryList: [],
                 roles: [],
-                areas:[],
-                persons:[],
+                areas: [],
+                persons: [],
                 selectedRows: [],
                 bucketName: "public",
                 pager: {current: 1, size: 10, total: 0, records: []}
@@ -185,7 +227,7 @@
             submit(form) {
                 this.$refs[form].validate((valid) => {
                     if (valid) {
-                        if(!this.distributionForm.id) {
+                        if (!this.distributionForm.id) {
                             // 新增
                             this.$http.post('/teamPerson',
                                 this.distributionForm
@@ -224,7 +266,8 @@
                                         title: '错误',
                                         duration: 1800,
                                         message: res.data.data
-                                    });                                }
+                                    });
+                                }
                             }).finally(() => {
                                 this.dialogVisible = false;
                             })
@@ -239,14 +282,14 @@
                 document.getElementsByClassName("el-dialog__title")[0].innername = "添加球员";
                 this.dialogVisible = true;
                 this.distributionForm = {
-                        id:'',
-                        teamId: parseInt(this.teamId),
-                        roleId: '',
-                        person:'',
-                        personId: '',
-                        shirtnumber: '',
-                        start: '',
-                        end: ''
+                    id: '',
+                    teamId: parseInt(this.teamId),
+                    roleId: '',
+                    person: '',
+                    personId: '',
+                    shirtnumber: '',
+                    start: '',
+                    end: ''
                 };
             },
             remove(id, rowNum) {
@@ -296,15 +339,39 @@
                 this.dialogVisible = true;
                 this.distributionForm = player
             },
+            load(tree, treeNode, resolve) {
+                setTimeout(()=>{
+                    resolve(tree.children)
+                },300)
+            },
             query() {
+                const re = [];
                 this.$http.get('/teamPerson/selectByTeam', {
                     params: {
                         size: this.pager.size,
                         current: this.pager.current,
-                        teamId:this.teamId
+                        teamId: this.teamId
                     },
                 }).then(res => {
-                    this.pager = res.data;
+                    this.pager.total = res.data.total;
+                    const records = res.data.records;
+                    console.log(records, 'init');
+                    for (let i = 0; i < records.length; i++) {
+                        if (i > 1 && (records[i].personId == records[i - 1].personId)) {
+                            console.log(records[i], 'if');
+                            if (!re[re.length - 1].children) {
+                                re[re.length - 1].children = [];
+                                re[re.length - 1].hasChildren = true;
+                            }
+                            re[re.length - 1].children.push(records[i])
+                        } else {
+                            console.log(records[i], 'else');
+                            re.push(records[i])
+                        }
+                    }
+                    this.pager.records = re;
+                    console.log(this.pager.records, 're');
+                    console.log(this.tableData, 'ta');
                 });
             },
             queryTeam() {
