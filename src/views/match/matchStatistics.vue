@@ -29,7 +29,7 @@
         <el-table-column label="类型" align="center" prop="kind">
           <template slot-scope="scope">
             {{ scope.row.kind=='yellow' ? '黄牌' : scope.row.kind=='red' ? '红牌' :scope.row.kind=='yellow-red' ? '第二张黄牌' : scope.row.kind=='substitute-in' ? '换人'
-            :scope.row.kind=='lineup' ? '先发' : scope.row.kind=='bench' ? '替补' :scope.row.kind=='left-foot' ? '左脚' : scope.row.kind=='right-foot' ? '右脚'  :scope.row.kind=='head' ? '头球'
+            :scope.row.kind=='lineup' ? '首发' : scope.row.kind=='bench' ? '替补' :scope.row.kind=='left-foot' ? '左脚' : scope.row.kind=='right-foot' ? '右脚'  :scope.row.kind=='head' ? '头球'
             : scope.row.kind=='free-kick' ? '任意球' :scope.row.kind=='direct-free-kick' ? '直接任意球' : scope.row.kind=='penalty' ? '点球' : scope.row.kind=='back-heel' ? '足跟踢球'
             : scope.row.kind=='overhead-kick' ? '倒钩球' : scope.row.kind=='own-goal' ? '乌龙球' : scope.row.kind=='goal' ? '命中':'未命中'}}
           </template>
@@ -97,9 +97,8 @@
               <el-option :label="item.name " :value="item.id" v-for="item in actions"></el-option>
             </el-select>
             <el-select clearable filterable placeholder="请选择类型" name="" id="" v-model="match_eventForm.kind"
-                       style="width:50%;">
-              <el-option :label="kind.name " v-for="kind in kinds" :value="kind.id">{{kind.name}}
-              </el-option>
+                       style="width:50%;" @change="change">
+              <el-option :label="kind.name " :value="kind.id" v-for="kind in kinds">{{kind.name}}</el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="创建时间" prop="created">
@@ -123,7 +122,6 @@
         name: "matchEvent",
         data() {
             return {
-
                 selectedRows: [],
                 match_eventRule: null,
                 match_eventForm: {
@@ -159,7 +157,7 @@
                 {name: "红牌", id: 'red', pid: 'card'},
                 {name: "第二张黄牌", id: 'yellow-red', pid: 'card'},
                 {name: "换人", id: 'substitute-in', pid: 'playing'},
-                {name: "先发", id: 'lineup', pid: 'playing'},
+                {name: "首发", id: 'lineup', pid: 'playing'},
                 {name: "替补", id: 'bench', pid: 'playing'},
                 {name: "点球决胜", id: 'pso', pid: 0},
                 {name: "左脚", id: 'left-foot', pid: 'goal'},
@@ -176,7 +174,7 @@
                 {name: "命中", id: 'goal', pid: 'pso'},
                 {name: "未命中", id: 'miss', pid: 'pso'}
             ];
-            var actions = this.areas.filter(function (area) {
+            const actions = this.areas.filter(function (area) {
                 return area.pid == 0;
             });
             this.actions = actions;
@@ -189,11 +187,15 @@
             this.queryAllPerson();
         },
         methods: {
-            getPosition: function (id) {
-                var kinds = this.areas.filter(function (kind) {
+            change() {
+                this.$forceUpdate();
+            },
+            getPosition(id) {
+                const kinds = this.areas.filter(function (kind) {
                     return kind.pid == id;
                 });
                 this.kinds = kinds;
+                this.match_eventForm.kind = kinds[0].id;
             },
             submit(form) {
                 this.$refs[form].validate((valid) => {

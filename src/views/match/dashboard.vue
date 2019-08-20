@@ -168,8 +168,8 @@
                 competitionList: [],
                 seasonList: [],
                 seTeamList: [],
-                seasonId: 20192,
-                competitionId: 2,
+                seasonId: '',
+                competitionId: '',
                 teamId: '',
                 matchRule: null,
                 seasonSearch: null,
@@ -198,9 +198,6 @@
             this.query();
             this.queryCompetition();
             this.queryTeam();
-        },
-        created() {
-            this.seasonId = 20192;
         },
         methods: {
             add() {
