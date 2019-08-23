@@ -197,6 +197,17 @@ export const asyncRouter = [
                 component: () => import("@/views/auth/Menus.vue")
             }
         ]
+    },
+    {
+        path: "/pdf",
+        component: BasicLayout,
+        children: [
+            {
+                path: "/pdf/editor",
+                name: "pdfEditor",
+                component: () => import("@/views/pdf/pdfEditor.vue")
+            }
+        ]
     }
 ];
 

@@ -64,6 +64,12 @@ export default {
           this.$store.commit("setToken", res.data.data);
           this.$router.push({ path: "/club/dashboard" });
           window.localStorage.setItem('userName',this.user.name);
+        } else {
+            this.$notify.error({
+                title: '登录失败',
+                duration: 1800,
+                message: '用户名密码不正确或网络错误'
+            });
         }
       });
     }
