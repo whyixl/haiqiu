@@ -40,10 +40,8 @@
       <el-upload
           class="upload-demo inline-block"
           style="left: 20px;"
-          action="http://192.168.155.146:8090/fileHandle/pdfB"
-          :on-change="handleChange"
-          :on-success="error"
-          :show-file-list="false"
+          action="http://183.84.17.233:8090/xmlparse/fileHandle/pdfB"
+          :on-error="error"
           :http-request="uploadPdf"
           :before-upload="beforeUploadMatchBefore">
         <el-button size="medium" type="primary">赛前报告</el-button>
@@ -52,10 +50,8 @@
       <el-upload
           class="upload-demo inline-block "
           style="float:right"
-          action="http://192.168.155.146:8090/fileHandle/pdfA"
-          :on-change="handleChange"
-          :on-success="error"
-          :show-file-list="false"
+          action="http://183.84.17.233:8090/xmlparse/fileHandle/pdfA"
+          :on-error="error"
           :http-request="uploadPdf"
           :before-upload="beforeUploadMatchAfter">
         <el-button size="medium" type="primary">赛后报告</el-button>
@@ -137,6 +133,11 @@
                 let url = param.action;
                 let formData = new FormData();
                 formData.append("file",param.file);
+                this.$message({
+                    message:"文件上传中，请稍后",
+                    showClose:true,
+                    type:'success'
+                });
                 this.$http.post(url,formData, {
                     headers: {'Content-Type':'multipart/form-data'},
                     responseType: 'blob'
